@@ -25,3 +25,89 @@ subscriptions:
     stage: A
     diff_threshold_pct: 15
   keyword_recall_mode: or
+  intent_profiles:
+    - tag: vit
+      description: 计算机视觉CCF-A类会议重要论文检索
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: vision transformer
+          keyword_cn: 视觉Transformer
+          query: Vision Transformer ViT important paper computer vision
+        - keyword: detection transformer
+          keyword_cn: 检测Transformer
+          query: DETR transformer for object detection paper
+        - keyword: masked autoencoder
+          keyword_cn: 掩码自编码器
+          query: Masked Autoencoder MAE visual representation learning
+        - keyword: contrastive language-image pretraining
+          keyword_cn: 对比语言-图像预训练
+          query: CLIP model connecting text and images
+        - keyword: self-supervised vision transformer
+          keyword_cn: 自监督视觉Transformer
+          query: self-supervised learning with vision transformers
+        - keyword: generative adversarial network
+          keyword_cn: 生成对抗网络
+          query: generative adversarial networks for computer vision at CCF-A venues
+      intent_queries:
+        - query: landmark papers in computer vision after the introduction of Transformer
+          query_cn: Transformer引入后计算机视觉领域的里程碑论文
+          enabled: true
+          source: manual
+          note: ''
+        - query: Find influential papers on object detection from CCF A computer vision conferences
+          query_cn: 查找CCF A类计算机视觉会议中有关目标检测有影响力的论文
+          enabled: true
+          source: manual
+          note: ''
+        - query: Retrieve seminal works on deep learning based visual recognition from CCF A venues
+          query_cn: 检索CCF A类会议中基于深度学习的视觉识别开创性工作
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-06-16T08:46:00.111Z'
+    - tag: cv-lm
+      description: 计算机视觉在大模型领域的重要论文检索
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: large vision model
+          keyword_cn: 大视觉模型
+          query: large vision model recent advances
+        - keyword: vision transformer
+          keyword_cn: 视觉Transformer
+          query: vision transformer survey
+      intent_queries:
+        - query: influential papers on large vision models recent
+          query_cn: 关于大视觉模型近年的重要论文
+          enabled: true
+          source: manual
+          note: ''
+        - query: important research on pre trained vision models
+          query_cn: 预训练视觉模型的重要研究
+          enabled: true
+          source: manual
+          note: ''
+        - query: breakthroughs in computer vision with large language models
+          query_cn: 大语言模型在计算机视觉中的突破
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-06-16T08:47:16.684Z'
+source_backends:
+  arxiv:
+    papers_table: arxiv_papers
+    use_vector_rpc: true
+    vector_rpc: match_arxiv_papers
+    vector_rpc_exact: match_arxiv_papers_exact
+    use_bm25_rpc: true
+    bm25_rpc: match_arxiv_papers_bm25
+    sync_table: arxiv_sync_status
+    sync_success_value: success
+    schema: public
+    kind: supabase
+    enabled: true
+    url: https://lyucdwgefyfbmaiopjbk.supabase.co
+    anon_key: sb_publishable_lX-oi64Uxyd7SIVv3_w2Uw_MTOojeKq
