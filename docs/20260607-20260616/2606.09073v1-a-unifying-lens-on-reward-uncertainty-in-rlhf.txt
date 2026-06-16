@@ -1,0 +1,490 @@
+Title: A Unifying Lens on Reward Uncertainty in RLHF
+
+URL Source: https://arxiv.org/pdf/2606.09073v1
+
+Published Time: Tue, 09 Jun 2026 01:46:09 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# A Unifying Lens on Reward Uncertainty in RLHF 
+
+Ely Hahami 1 * Yoel Zimmermann 2 * Ray Zhou 1 Jack Benarroch Jedlicki 2
+
+# Abstract 
+
+Reinforcement learning from human feedback (RLHF) is bottlenecked by reward hacking , where the policy exploits errors in a proxy reward model (RM) and produces high RM scores without gen-uine quality gains. A natural mitigation is pes-simism : penalizing rewards in regions where the RM is uncertain. However, standard scalar RMs provide no principled notion of uncertainty. We argue that the right object is a distributional re-ward model p(r | x, y ). Under either a Bayesian inference or a KL-distributionally robust optimiza-tion (KL-DRO) lens, the KL-regularized RLHF objective admits a closed-form effective reward 
+
+˜r(x, y ) = ±β log Ep[e±r/β ]. The pessimistic branch unifies the prior heuristics for RM ensem-ble aggregation: mean aggregation, worst-case optimization (WCO), and uncertainty-weighted optimization (UWO) all emerge as limits or trun-cations of this single expression. This also clari-fies the implicit assumptions of each existing rule. 
+
+# 1. Introduction 
+
+Reinforcement learning from human feedback (RLHF) is the dominant paradigm for aligning large language models with user intent (Christiano et al., 2017; Ouyang et al., 2022; Bai et al., 2022; Stiennon et al., 2020). Pairwise preferences are first used to fit a reward model (RM) and a policy is then optimized against the RM with a KL penalty to a reference policy, via policy-gradient methods such as PPO (Schulman et al., 2017) or GRPO (Shao et al., 2024). Because the RM is an imperfect proxy for human preferences, policy opti-mization can overoptimize into out-of-distribution regions, producing high RM scores without improving true response quality. This is an instance of Goodhart’s law (Gao et al., 2023; Skalse et al., 2022; Amodei et al., 2016; Pan et al., 2022) and has been documented across forms including 
+
+> 1
+
+Harvard College, Harvard University, Cambridge, MA, USA 
+
+> 2
+
+John A. Paulson School of Engineering and Applied Sciences, Harvard University, Cambridge, MA, USA. Correspondence to: Yoel Zimmermann <yzimmermann@g.harvard.edu >.
+
+Preprint. June 9, 2026. 
+
+sycophancy and (Sharma et al., 2023; Perez et al., 2023) length bias (Singhal et al., 2023). A natural mitigation is pessimism : when the RM is uncer-tain, a lower effective reward should be assigned. Prior work in RLHF instantiates this idea by training ensembles of RMs and aggregating their outputs in different ways. Coste et al. (2024) introduce three rules: mean aggregation (averag-ing members), worst-case optimization (WCO, taking the minimum across members), and uncertainty-weighted op-timization (UWO, mean minus a tunable multiple of the empirical variance). Eisenstein et al. (2023) make a similar case for ensembles, and follow-up work has explored adver-sarial (Chakraborty et al., 2024) and robustness-driven (Yan et al., 2024) variants. These methods empirically help, but are typically presented as heuristics with little principled guidance on which to prefer and how their hyperparameters relate. We argue here that to properly handle uncertainty, one should replace the scalar RM with a distributional reward model p(r | x, y ). Once the RM is distributional, a single principle—either marginalization over reward uncertainty through a Bayesian inference lens (Korbak et al., 2022; Levine, 2018) or KL-distributionally robust optimization (KL-DRO) (Ben-Tal et al., 2009; Hansen & Sargent, 2008)— yields a closed-form effective reward to substitute into the standard KL-RL objective. The aggregation rules used in practice emerge as truncations or limits of this expression. This perspective also connects RLHF pessimism to distri-butional reinforcement learning (Bellemare et al., 2017; Dabney et al., 2018b;a; Keramati et al., 2020) and to offline-RL pessimism (Jin et al., 2021; Xie et al., 2021; Rigter et al., 2022). 
+
+Contributions. 
+
+• A unifying lens. From either a Bayesian inference or KL-DRO perspective, the RLHF objective with re-ward uncertainty admits a closed-form effective reward 
+
+˜r(x, y ) = ±β log Ep[e±r/β ] (Sec. 3). • Unification of prior heuristics. Mean, WCO, and UWO emerge as the β → ∞ limit, β → 0 limit, and Gaussian truncation, respectively, of the pessimistic branch (Sec. 3.5). 1
+
+> arXiv:2606.09073v1 [cs.LG] 8 Jun 2026 A Unifying Lens on Reward Uncertainty in RLHF
+
+• Implementation guidance. We discuss what each heuristic implicitly assumes about the reward distri-bution p(r | x, y ), and what is needed (calibration, posterior families) to instantiate the framework with a real RM (Sec. 4). 
+
+# 2. Background and Related Work 
+
+Reward overoptimization. Gao et al. (2023) established that the proxy RM score and a stronger “gold” RM score (which is used to model the true objective we seek to opti-mize, i.e., how a human would score the response) diverge as PPO progresses, the canonical signature of reward hacking. Skalse et al. (2022) formalize reward hacking, and Amodei et al. (2016) situate it among broader AI safety concerns. Empirically, hacked policies exhibit sycophancy (Sharma et al., 2023), length inflation (Singhal et al., 2023), and other surface artifacts that the proxy RM cannot distinguish from true quality (Wang et al., 2026). 
+
+Ensemble pessimism. Coste et al. (2024) introduce Mean, WCO, and UWO aggregation over RM ensembles and find that pessimistic variants reduce reward hacking. Eisenstein et al. (2023) reach similar conclusions for best-of-n and PPO, while noting that ensembles can share failure modes. Lightweight ensembles share a frozen backbone and diver-sify only a head (Dwaracherla et al., 2024). 
+
+Uncertainty-aware reward models. An alternative to en-sembles is to place a posterior directly over a single head. Bayesian last-layer methods (Yang et al., 2026; Zhai et al., 2024) yield a closed-form Gaussian posterior over the re-ward N (μ(x, y ), σ 2(x, y )) at each prompt-response pair. Xu et al. (2025) use RM uncertainty to route hard cases to a stronger LLM judge. 
+
+Inference-as-control and robust RL. The Bayesian view of KL-regularized RL (Korbak et al., 2022; Levine, 2018) interprets policies as posteriors under an “optimality” obser-vation. Robust optimization (Ben-Tal et al., 2009; Hansen & Sargent, 2008) and pessimism in offline RL (Jin et al., 2021; Xie et al., 2021; Rigter et al., 2022) provide the complemen-tary, adversarial framing. Our derivation shows that, in the RLHF setting, these two seemingly disparate views produce 
+
+the same functional form up to a sign. 
+
+# 3. Theory: A Unifying Lens 
+
+3.1. Setup 
+
+Standard KL-regularized RLHF (Stiennon et al., 2020; Ouyang et al., 2022) maximizes 
+
+max  
+
+> θ
+
+Ex∼D 
+
+h
+
+Ey∼πθ (·| x)[r(x, y )] − β D KL (πθ ∥πref )
+
+i
+
+, (1) with the well-known optimum π∗(y | x) ∝ πref (y |
+
+x) exp( r(x, y )/β ).In the standard pipeline, r(x, y ) = rϕ(x, y ) is a determinis-tic scalar from a learned RM. We instead treat the reward as a random variable r ∼ p(r | x, y ), arising, for exam-ple, from a deep ensemble or a Bayesian head, and ask: to best mitigate reward hacking, what scalar effective reward 
+
+˜r(x, y ) should replace rϕ(x, y ) in Eq. 1? 
+
+3.2. Optimistic Branch: Bayesian Marginalization 
+
+Following the inference-as-control view (Korbak et al., 2022; Levine, 2018), we introduce a binary optimality vari-able O ∈ { 0, 1} with 
+
+p(O=1 | x, y, r ) = er/β , (2) where r is shifted so that sup r = 0 . Marginalizing over reward uncertainty gives 
+
+p(O=1 | x, y ) = 
+
+Z
+
+er/β p(r | x, y ) dr = Mx(1 /β ), (3) where Mx(t) := Ep[etr ] is the moment generating func-tion of p(r | x, y ). Bayes’ rule with prior πref then yields 
+
+π∗
+
+> opt
+
+(y | x) ∝ πref (y | x) Mx(1 /β ). Matching to the KL-RL form π∗ ∝ πref exp(˜ r/β ) identifies 
+
+˜ropt (x, y ) = β log Ep(r|x,y )
+
+h
+
+er/β i
+
+. (4) By Jensen’s inequality, since exp is convex, 
+
+˜ropt (x, y ) ≥ μ(x, y ), (5) so uncertainty inflates the effective reward. This is the Bayesian-optimal use of an uncertain RM under the inference-as-control likelihood in Eq. 2 in the absence of any robustness concern. 
+
+3.3. Pessimistic Branch: KL-DRO 
+
+To mitigate reward hacking we instead want a worst-case 
+
+effective reward. We let an adversary choose the reward distribution Q, paying a KL cost to deviate from the believed posterior p (Ben-Tal et al., 2009; Hansen & Sargent, 2008): 
+
+˜rrob (x, y ) = inf 
+
+> Q
+
+n
+
+EQ[r] + β D KL (Q ∥ p(r | x, y )) 
+
+o
+
+. (6) The parameter β controls the adversary’s reach: large β
+
+pins Q close to p, small β permits arbitrary tilting. Solving the variational problem (see Appendix A) yields the unique optimizer 
+
+Q∗(r) ∝ p(r | x, y ) e−r/β , (7) which is p exponentially tilted toward low rewards. Plugging back in, 
+
+˜rrob (x, y ) = −β log Ep(r|x,y )
+
+h
+
+e−r/β i
+
+. (8) 2A Unifying Lens on Reward Uncertainty in RLHF 
+
+This is the entropic risk measure of p(r | x, y ). By Jensen’s inequality, ˜rrob (x, y ) ≤ μ(x, y ): uncertainty deflates the effective reward. 
+
+Choice of KL coefficients. The KL coefficient β in Eq. 1 controls the deviation of the policy from the reference, while 
+
+β in Eq. 6 controls the robustness to reward uncertainty. These play distinct roles and need not coincide. In this work we tie the two for simplicity, yielding the simple coefficient 
+
+λ = 1 /(2 β). More generally one may consider cβ , with c
+
+reflecting the desired degree of pessimism relative to policy regularization. 
+
+3.4. Cumulant Expansion 
+
+Let Kx(t) := log Mx(t) = log Ep[etr ] be the cumulant generating function (CGF) of p(r | x, y ), with cumulants κn
+
+defined by Kx(t) = P 
+
+> n≥1
+
+κntn/n !. Then κ1 = μ, κ2 =
+
+σ2, κ3 is the third central moment, κ4 = E[( r − μ)4] − 3σ4
+
+(excess kurtosis ×σ4), and so on. Substituting into Eqs. 4 and 8: 
+
+˜ropt /rob = μ ± σ2
+
+2β + κ3
+
+6β2 ± κ4
+
+24 β3 + · · · (9) Even cumulants ( κ2, κ 4, . . . ) flip sign between the two while odd cumulants ( κ3, κ 5, . . . ) do not. For symmetric distribu-tions ( κ2n+1 = 0 for n ≥ 1), ˜ropt and ˜rrob are exact mirror images about μ.
+
+Gaussian case. If p(r | x, y ) = N (μ, σ 2), all cumulants beyond κ2 vanish, Kx(t) = μt + σ2t2/2, and the series in Eq. 9 terminate exactly: 
+
+˜ropt = μ + σ2
+
+2β , ˜rrob = μ − σ2
+
+2β . (10) Under any Gaussian distributional RM, the principled pes-simistic reward is μ − σ2/2β, with the variance coefficient 
+
+set by the KL coefficient β rather than tuned as a free hyper-parameter. 
+
+3.5. Unification of Prior Methods 
+
+The aggregation rules of Coste et al. (2024) emerge as limits and truncations of ˜rrob .
+
+Mean ( β → ∞ ). As β → ∞ , the variance term in Eq. 9 vanishes ( σ2/2β → 0), and similarly for all higher orders. Hence ˜rrob → μ. Equivalently, an infinite KL penalty forces the adversary’s distribution Q∗ back onto p, so the worst case coincides with the mean. Mean aggregation is the risk-neutral limit of the pessimistic effective reward. WCO ( β → 0). As β → 0, the tilted distribution Q∗(r) ∝
+
+p(r)e−r/β concentrates all of its mass on inf supp( p). For                             
+
+> Table 1. Existing pessimistic aggregation rules (Coste et al., 2024) as limiting cases or truncations of ˜rrob . The fourth row gives the principled default set by the KL coefficient βunder a Gaussian posterior, with no extra hyperparameter. METHOD FORMULA RECOVERED AS
+> MEAN ˆμβ→ ∞ LIMIT
+> WCO min iRiβ→0LIMIT
+> UWO ˆμ−λˆσ2GAUSSIAN ,λFREE
+> OURS ˆμ−ˆσ2/2βGAUSSIAN ,λ= 1 /2β
+
+an empirical ensemble {Ri}Ki=1 where p is a uniform mix-ture of point masses, the infimum is min i Ri. Hence 
+
+lim  
+
+> β→0
+
+˜rrob (x, y ) = min  
+
+> i
+
+Ri(x, y ). (11) 
+
+Worst-case optimization is the unbounded-adversary limit of the pessimistic effective reward. UWO (Gaussian truncation). The UWO rule of Coste et al. (2024) is 
+
+RUWO (x, y ) = ˆ μ(x, y ) − λ ˆσ2(x, y ), (12) with λ treated as a free hyperparameter. Intuitively, UWO works by penalizing the policy for generating responses for which there is high disagreement among reward models within the ensemble, which helps prevent the exploitation of a single reward model which might be erroneously assigning high rewards to incorrect or low-quality responses. Com-paring with the Gaussian case of Eq. 10, UWO is exactly 
+
+the pessimistic effective reward under a Gaussian poste-rior, with λ = 1 /(2 β). UWO’s implicit assumptions are: (i) p(r | x, y ) is approximately Gaussian; (ii) the variance coefficient can be decoupled from the KL coefficient β.Table 1 summarizes the unification. The take-away is that the choice of aggregation rule is a choice about the assumed shape of p(r | x, y ) and the adversary’s KL budget. Mean assumes no uncertainty matters; WCO assumes the worst possible distribution; UWO is the middle ground in a Gaus-sian approximation. Our framework makes these assump-tions explicit and supplies a principled default ( λ = 1 /2β)when working with a Gaussian distributional RM. 
+
+3.6. Estimation from a Finite Sample 
+
+In practice p(r | x, y ) is approximated by a finite sample 
+
+{ri(x, y )}Ki=1 —either ensemble members or posterior sam-ples. Let 
+
+ˆμ = 1
+
+K
+
+> K
+
+X
+
+> i=1
+
+ri, ˆσ2 = 1
+
+K − 1
+
+> K
+
+X
+
+> i=1
+
+(ri − ˆμ)2. (13) Two natural estimators of ˜rrob arise. 3A Unifying Lens on Reward Uncertainty in RLHF 
+
+Direct log-MGF estimator. 
+
+ˆ˜r (logMGF )rob = −β log 1
+
+K
+
+> K
+
+X
+
+> i=1
+
+e−ri/β 
+
+!
+
+. (14) This estimator is consistent but biased at finite K: since 
+
+log is concave, Jensen gives E[ˆ ˜r (logMGF )rob ] ≥ ˜rrob , with bias growing in σ/β . It is sensitive to outliers when β is small (the exp( −ri/β ) term blows up for any single low ri). 
+
+Gaussian-truncated estimator. 
+
+ˆ˜r (Gauss )rob = ˆ μ − ˆσ2
+
+2β . (15) This is exact when p is Gaussian and drops higher cumu-lants otherwise. We note that for small K (as is typical for RM ensembles, K ∈ { 3, . . . , 10 } in Coste et al. (2024)), higher cumulants are poorly estimated. The relative error on ˆσ2 alone is p2/(K − 1) ≈ 32% for K = 20 , so we recommend Eq. 15 as a default. 
+
+# 4. Discussion 
+
+The pessimistic effective reward ˜rrob is only as informative as the posterior p(r | x, y ) used to compute it. Two concrete prerequisites: 
+
+(i) A genuine distributional RM. Scalar RMs trained with the Bradley-Terry likelihood (Bradley & Terry, 1952) pro-vide no uncertainty. Two practical options are: (a) a deep ensemble (Lakshminarayanan et al., 2016; Coste et al., 2024; Dwaracherla et al., 2024), whose empirical variance approx-imates σ2(x, y ); and (b) a Bayesian last-layer construction (Yang et al., 2026; Zhai et al., 2024), which yields a closed-form Gaussian posterior at the cost of a single forward pass and an O(d2) matrix-vector product. The Bayesian con-struction is especially interesting as its posterior is Gaussian and Eq. 10 applies without truncation. 
+
+(ii) Calibration. The variance term σ2(x, y ) only modu-lates ˜rrob usefully if it tracks true epistemic uncertainty. The Bradley–Terry loss collapses soft preferences ( 0.51 and 
+
+0.99 ) onto the same hard label and degrades calibration. Strictly proper scoring rules (Gneiting & Raftery, 2007), in particular the Brier score (Brier, 1950), preserve annotator confidence and are known to improve calibration. Using AI feedback (Bai et al., 2022; Lee et al., 2023; 2024) provides soft labels naturally by prompting for a confidence score during AI feedback. 
+
+Implications for existing methods. 
+
+• When Mean should suffice. The cumulant expansion (Eq. 9) shows that pessimism corrections decay as 
+
+1/β n−1. For large β (heavy KL regularization), Mean is essentially optimal as all rules collapse to it. • When WCO is appropriate. WCO is the β → 0
+
+limit, suitable when the adversary is essentially un-constrained. In RLHF, this corresponds to a setting where one expects the RM to be arbitrarily wrong in some direction. Eisenstein et al. (2023) report that WCO can underperform Mean when the ensemble is too small or correlated, which our framework explains: WCO discards all distributional information beyond the minimum. • Why UWO works. UWO is the right shape under a Gaussian posterior. Its empirical success suggests that practical RM ensembles are reasonably symmetric and unimodal. The free λ may be absorbing miscalibration; under the theory-prescribed value λ = 1 /2β, calibra-tion becomes essential. 
+
+Beyond Gaussian. The cumulant expansion in Eq. 9 suggests three directions when p(r | x, y ) is not well-approximated by a Gaussian. (i) For asymmetric but light-tailed distributions, third- and fourth-cumulant corrections to Eq. 15 can be estimated from larger ensembles. (ii) For genuinely heavy-tailed distributions where the MGF esti-mator is unstable, quantile-based pessimism (e.g., CVaR) is a robust alternative, connecting to quantile distributional RL (Dabney et al., 2018b;a; Keramati et al., 2020). (iii) Flexible posterior families, such as mixtures of Gaussians or normalizing flows fit directly to held-out preference data could replace the ensemble or Bayesian linear head. 
+
+Connections to broader pessimism. The KL-DRO derivation connects RLHF reward hacking to pessimism in offline RL (Jin et al., 2021; Xie et al., 2021; Rigter et al., 2022), where similar log-MGF / entropic-risk formulations arise from analogous principles. Our contribution is to local-ize this connection: in RLHF, the relevant random variable is the reward (not the transition dynamics, which are de-terministic for an autoregressive policy), and the relevant penalty parameter is the standard KL coefficient β already present in Eq. 1. 
+
+# 5. Conclusion 
+
+We have given a single derivation that captures the essence of reward uncertainty in RLHF. From either a Bayesian or a KL-DRO starting point, the closed-form effective reward is ˜r(x, y ) = ±β log Ep[e±r/β ]. The pessimistic branch unifies mean aggregation, WCO, and UWO as limits and truncations, and yields a principled default ˜r = μ − σ2/2β
+
+under a Gaussian posterior in which the variance coeffi-cient is set by the KL coefficient rather than tuned. The framework clarifies what each existing heuristic implicitly assumes and gives a recipe for going beyond Gaussian via higher cumulants or quantile-based pessimism. 4A Unifying Lens on Reward Uncertainty in RLHF 
+
+# Acknowledgements 
+
+We thank Kiante Brantley for initial guidance and helpful discussions during the early stages of this project. Ope-nAI GPT-5.5 and Refine.ink were used to assist with lan-guage editing and improve the clarity and readability of the manuscript 
+
+# References 
+
+Amodei, D., Olah, C., Steinhardt, J., Christiano, P., Schul-man, J., and Man ´e, D. Concrete problems in AI safety. 
+
+arXiv preprint arXiv:1606.06565 , 2016. URL https: //arxiv.org/abs/1606.06565 .Bai, Y., Kadavath, S., Kundu, S., Askell, A., Kernion, J., Jones, A., Chen, A., Goldie, A., Mirhoseini, A., McKin-non, C., et al. Constitutional AI: Harmlessness from AI feedback. arXiv preprint arXiv:2212.08073 , 2022. URL 
+
+https://arxiv.org/abs/2212.08073 .Bellemare, M. G., Dabney, W., and Munos, R. A distribu-tional perspective on reinforcement learning. In Interna-tional Conference on Machine Learning (ICML) , 2017. URL https://arxiv.org/abs/1707.06887 .Ben-Tal, A., El Ghaoui, L., and Nemirovski, A. Robust Optimization . Princeton University Press, 2009. Bradley, R. A. and Terry, M. E. Rank analysis of incom-plete block designs: I. the method of paired comparisons. 
+
+Biometrika , 39(3/4):324–345, 1952. Brier, G. W. Verification of forecasts expressed in terms of probability. Monthly Weather Review , 78(1):1–3, 1950. Chakraborty, S. et al. Overcoming reward overoptimization via adversarial policy optimization with lightweight un-certainty estimation. arXiv preprint arXiv:2403.05171 ,2024. URL https://arxiv.org/abs/2403. 05171 .Christiano, P. F., Leike, J., Brown, T. B., Martic, M., Legg, S., and Amodei, D. Deep reinforcement learning from human preferences. In Advances in Neural Information Processing Systems (NeurIPS) , 2017. Coste, T., Anwar, U., Kirk, R., and Krueger, D. Reward model ensembles help mitigate overoptimization. In 
+
+International Conference on Learning Representations (ICLR) , 2024. URL https://arxiv.org/abs/ 2310.02743 .Dabney, W., Ostrovski, G., Silver, D., and Munos, R. Im-plicit quantile networks for distributional reinforcement learning. In International Conference on Machine Learn-ing (ICML) , 2018a. Dabney, W., Rowland, M., Bellemare, M. G., and Munos, R. Distributional reinforcement learning with quantile regression. In AAAI Conference on Artificial Intelligence ,2018b. Dwaracherla, V., Asghari, S. M., Hao, B., and Van Roy, B. Efficient Exploration for LLMs. 2024. doi: 10. 48550/ARXIV.2402.00396. URL https://arxiv. org/abs/2402.00396 .Eisenstein, J., Nagpal, C., Agarwal, A., Beirami, A., D’Amour, A., Dvijotham, D. J., Fisch, A., Heller, K., Pfohl, S., Ramachandran, D., Shaw, P., and Berant, J. Helping or herding? Reward model ensembles mitigate but do not eliminate reward hacking. arXiv preprint arXiv:2312.09244 , 2023. URL https:// arxiv.org/abs/2312.09244 .Gao, L., Schulman, J., and Hilton, J. Scaling laws for reward model overoptimization. In International Conference on Machine Learning (ICML) , 2023. URL https:// arxiv.org/abs/2210.10760 .Gneiting, T. and Raftery, A. E. Strictly proper scoring rules, prediction, and estimation. Journal of the American Statistical Association , 102(477):359–378, 2007. Hansen, L. P. and Sargent, T. J. Robustness . Princeton University Press, 2008. Jin, Y., Yang, Z., and Wang, Z. Is pessimism provably efficient for offline RL? In International Conference on Machine Learning (ICML) , 2021. Keramati, R., Dann, C., Tamkin, A., and Brunskill, E. Being optimistic to be conservative: Quickly learning a CVaR policy. In AAAI Conference on Artificial Intelligence ,2020. Korbak, T., Perez, E., and Buckley, C. L. RL with KL penalties is better viewed as Bayesian inference. 
+
+arXiv preprint arXiv:2205.11275 , 2022. URL https: //arxiv.org/abs/2205.11275 .Lakshminarayanan, B., Pritzel, A., and Blundell, C. Sim-ple and Scalable Predictive Uncertainty Estimation using Deep Ensembles. 2016. doi: 10.48550/ARXIV.1612. 01474. URL https://arxiv.org/abs/1612. 01474 .Lee, H., Phatale, S., Mansoor, H., Lu, K., Mesnard, T., Bishop, C., Carbune, V., and Rastogi, A. RLAIF: Scaling reinforcement learning from human feedback with AI feedback. arXiv preprint arXiv:2309.00267 , 2023. URL 
+
+https://arxiv.org/abs/2309.00267 .Lee, H., Phatale, S., Mansoor, H., Mesnard, T., Ferret, J., Lu, K., Bishop, C., Hall, E., Carbune, V., Rastogi, A., 5A Unifying Lens on Reward Uncertainty in RLHF 
+
+and Prakash, S. Rlaif vs. rlhf: Scaling reinforcement learning from human feedback with ai feedback, 2024. URL https://arxiv.org/abs/2309.00267 .Levine, S. Reinforcement learning and control as proba-bilistic inference: Tutorial and review. arXiv preprint arXiv:1805.00909 , 2018. URL https://arxiv. org/abs/1805.00909 .Ouyang, L., Wu, J., Jiang, X., Almeida, D., Wainwright, C. L., Mishkin, P., Zhang, C., Agarwal, S., Slama, K., Ray, A., et al. Training language models to follow in-structions with human feedback. In Advances in Neural Information Processing Systems (NeurIPS) , 2022. Pan, A., Bhatia, K., and Steinhardt, J. The effects of reward misspecification: Mapping and mitigating misaligned models. In International Conference on Learning Repre-sentations (ICLR) , 2022. Perez, E., Ringer, S., Lukosiute, K., Nguyen, K., Chen, E., Heiner, S., Pettit, C., Olsson, C., Kundu, S., Kadavath, S., et al. Discovering language model behaviors with model-written evaluations. In Findings of the Association for Computational Linguistics: ACL , 2023. Rigter, M., Lacerda, B., and Hawes, N. RAMBO-RL: Ro-bust adversarial model-based offline reinforcement learn-ing. In Advances in Neural Information Processing Sys-tems (NeurIPS) , 2022. Schulman, J., Wolski, F., Dhariwal, P., Radford, A., and Klimov, O. Proximal policy optimization algo-rithms, 2017. URL https://arxiv.org/abs/ 1707.06347 .Shao, Z., Wang, P., Zhu, Q., Xu, R., Song, J., Bi, X., Zhang, H., Zhang, M., Li, Y. K., Wu, Y., and Guo, D. Deepseekmath: Pushing the Limits of Mathemati-cal Reasoning in Open Language Models. 2024. doi: 10.48550/ARXIV.2402.03300. URL https://arxiv. org/abs/2402.03300 .Sharma, M., Tong, M., Korbak, T., Duvenaud, D., Askell, A., Bowman, S. R., Cheng, N., Durmus, E., Hatfield-Dodds, Z., Johnston, S. R., et al. Towards understand-ing sycophancy in language models. arXiv preprint arXiv:2310.13548 , 2023. URL https://arxiv. org/abs/2310.13548 .Singhal, P., Goyal, T., Xu, J., and Durrett, G. A long way to go: Investigating length correlations in RLHF. 
+
+arXiv preprint arXiv:2310.03716 , 2023. URL https: //arxiv.org/abs/2310.03716 .Skalse, J., Howe, N. H., Krasheninnikov, D., and Krueger, D. Defining and characterizing reward hacking. In Advances in Neural Information Processing Systems (NeurIPS) ,2022. Stiennon, N., Ouyang, L., Wu, J., Ziegler, D. M., Lowe, R., Voss, C., Radford, A., Amodei, D., and Christiano, P. F. Learning to summarize with human feedback. In Advances in Neural Information Processing Systems (NeurIPS) , 2020. Wang, A., Arcuschin, I., and Conmy, A. Automatically Finding Reward Model Biases. 2026. doi: 10.48550/ ARXIV.2602.15222. URL https://arxiv.org/ abs/2602.15222 .Xie, T., Cheng, C.-A., Jiang, N., Mineiro, P., and Agar-wal, A. Bellman-consistent pessimism for offline rein-forcement learning. In Advances in Neural Information Processing Systems (NeurIPS) , 2021. Xu, Z., Lu, Q., Zhang, Q., Qiu, L., Hong, I., Yu, C., Yao, W., Liu, Y., Jiang, H., Li, L., Yun, H., and Zhao, T. Ask a strong llm judge when your reward model is uncertain. In Advances in Neural Information Processing Systems (NeurIPS) , 2025. Yan, Y., Lou, X., Li, J., Zhang, Y., Xie, J., Yu, C., Wang, Y., Yan, D., and Shen, Y. Reward-Robust RLHF in LLMs. 2024. doi: 10.48550/ARXIV.2409.15360. URL https: //arxiv.org/abs/2409.15360 .Yang, D. et al. RewardUQ: A unified framework for uncertainty-aware reward models. arXiv preprint arXiv:2602.24040 , 2026. URL https://arxiv. org/abs/2602.24040 .Zhai, Y. et al. Uncertainty-penalized reinforcement learn-ing from human feedback with diverse reward LoRA ensembles. arXiv preprint arXiv:2401.00243 , 2024. URL 
+
+https://arxiv.org/abs/2401.00243 .6A Unifying Lens on Reward Uncertainty in RLHF 
+
+# A. Proofs and Derivations 
+
+A.1. Optimistic Effective Reward Setup. Let π0 = πref . For each (x, y ), r ∼ p(r | x, y ). The KL-regularized objective with effective reward ˜r is 
+
+J(π) = Eπ [˜ r(x, y )] − β D KL (π∥π0), β > 0. (16) 
+
+Step 1: Optimality variable. Introduce O ∈ { 0, 1} with p(O = 1 | x, y, r ) = er/β where r is shifted so sup r = 0 .
+
+Step 2: Marginalize. 
+
+p(O=1 | x, y ) = 
+
+Z
+
+er/β p(r | x, y ) dr = Mx(1 /β ), (17) where Mx(t) := Ep[etr ] is the MGF. 
+
+Step 3: Bayes’ rule. With prior π0,
+
+π∗
+
+> opt
+
+(y | x) ∝ π0(y | x)Mx(1 /β ). (18) 
+
+Step 4: Identify ˜r. Matching to π∗ ∝ π0 exp(˜ r/β ) gives 
+
+˜ropt (x, y ) = β log Ep[er/β ]. (19) 
+
+Step 5: Jensen. Since exp is convex, Ep[er/β ] ≥ eμ/β , so ˜ropt ≥ μ.
+
+A.2. Pessimistic Effective Reward (KL-DRO) Step 1: Definition. 
+
+˜rrob (x, y ) = inf  
+
+> Q
+
+{EQ[r] + βD KL (Q∥p)}. (20) 
+
+Step 2: Lagrangian. With multiplier λ for R Q = 1 ,
+
+L(Q, λ ) = 
+
+Z
+
+Q(r)r dr + β
+
+Z
+
+Q log Q dr − β
+
+Z
+
+Q log p dr − λ
+
+Z 
+
+Q dr − 1
+
+
+
+. (21) 
+
+Step 3: Stationarity. Using ddQ [Q log Q] = log Q + 1 :
+
+δL
+
+δQ (r) = r + β(log Q + 1) − β log p − λ = 0 , (22) giving Q∗(r) ∝ p(r)e−r/β . The normalization is C(x, y ) := Ep[e−r/β ].
+
+Step 4: Evaluate the infimum. log Q∗(r) − log p(r) = −r/β − log C, so 
+
+DKL (Q∗∥p) = − 1 
+
+> β
+
+EQ∗ [r] − log C. (23) Therefore EQ∗ [r] + βD KL (Q∗∥p) = −β log C (the reward terms cancel exactly), giving 
+
+˜rrob (x, y ) = −β log Ep[e−r/β ]. (24) 
+
+Step 5: Jensen. Ep[e−r/β ] ≥ e−μ/β ; taking −β log reverses the inequality, so ˜rrob ≤ μ. □
+
+7A Unifying Lens on Reward Uncertainty in RLHF 
+
+A.3. Cumulant Expansion 
+
+Let Kx(t) = log Ep[etr ] = P 
+
+> n≥1
+
+κntn/n !. Then 
+
+˜ropt = βK x(1 /β ) = X
+
+> n≥1
+
+κn
+
+n! βn−1 = μ + σ2
+
+2β + κ3
+
+6β2 + κ4
+
+24 β3 + · · · , (25) 
+
+˜rrob = −βK x(−1/β ) = X
+
+> n≥1
+
+(−1) n+1 κn
+
+n! βn−1 = μ − σ2
+
+2β + κ3
+
+6β2 − κ4
+
+24 β3 − · · · . (26) For Gaussian p, κn≥3 = 0 and the series terminate at ˜r = μ ± σ2/2β.
+
+A.4. Recovery of Mean and WCO 
+
+β → ∞ (Mean). Each term κn/(n!βn−1) for n ≥ 2 vanishes, leaving ˜rrob → κ1 = μ. Equivalently, Q∗(r) ∝
+
+p(r)e−r/β → p(r) as β → ∞ .
+
+β → 0 (WCO). For an empirical ensemble {Ri}Ki=1 with p(r | x, y ) = 1
+
+> K
+
+P 
+
+> i
+
+δ(r − Ri),
+
+˜rrob = −β log 1
+
+K
+
+> K
+
+X
+
+> i=1
+
+e−Ri/β 
+
+!
+
+. (27) Let Rmin = min i Ri and factor out e−Rmin /β :
+
+˜rrob = Rmin − β log 1
+
+K
+
+> K
+
+X
+
+> i=1
+
+e−(Ri−Rmin )/β 
+
+!
+
+. (28) As β → 0, all terms in the sum with Ri > R min are exponentially suppressed; the sum approaches the count of minimizing members m divided by K. The logarithm of this sum approaches the constant log( m/K ), so the overall correction term scales as O(β) → 0. Hence ˜rrob → Rmin = min i Ri, recovering WCO. 
+
+Gaussian truncation (UWO). For p = N (μ, σ 2), Kx(t) = μt + σ2t2/2 exactly, so ˜rrob = μ − σ2/2β. This matches 
+
+RUWO = ˆ μ − λˆσ2 with λ = 1 /(2 β).8

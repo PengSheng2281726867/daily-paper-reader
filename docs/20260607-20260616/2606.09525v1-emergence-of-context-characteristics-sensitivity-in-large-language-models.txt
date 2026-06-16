@@ -1,0 +1,235 @@
+Title: Emergence of Context Characteristics Sensitivity in Large Language Models
+
+URL Source: https://arxiv.org/pdf/2606.09525v1
+
+Published Time: Tue, 09 Jun 2026 02:23:39 GMT
+
+Number of Pages: 10
+
+Markdown Content:
+# Emergence of Context Characteristics Sensitivity in Large Language Models 
+
+Nadya Yuki Wangsajaya 1 Haeun Yu 2 Isabelle Augenstein 2
+
+1Nanyang Technological University 2University of Copenhagen 
+
+nady0006@e.ntu.edu.sg 
+
+Abstract 
+
+During instruction fine-tuning (IFT), large lan-guage models (LLMs) learn to follow instruc-tions by using the provided context to answer a query. While prior work has studied how con-text characteristics correlate with context usage by the LLM, this analysis has been limited to inference time, leaving open how these relation-ships are acquired in the first place. Here, we measure how models’ sensitivity to such char-acteristics shifts across successive IFT stages: supervised fine-tuning (SFT), direct preference optimization (DPO), and reinforcement learn-ing with verifiable rewards (RLVR). Experi-ments across four models and three datasets show that SFT makes models more likely to use contexts that are easy to understand, such as containing high length, context-query sim-ilarity, and fluency. Post-SFT dynamics may either reinforce or resolve these preferences de-pending on the training dataset. Our findings reveal that context usage is actively reshaped at each IFT stage, and designing a balanced IFT dataset is important in ensuring robust context utilization of instruction-tuned models. 1
+
+1 Introduction 
+
+LLMs can use the given context to answer queries; a valuable trait as it allows models to access up-to-date knowledge without re-training (Mosbach et al., 2023; Ovadia et al., 2024). This enables various applications, from retrieval-augmented generation (Lewis et al., 2020; Gao et al., 2024) to tool use and automated judges (Zheng et al., 2023; Chiang et al., 2024). However, models’ context usage is often not robust; they sometimes ignore the provided context in favor of their parametric knowledge (Xie et al., 2024), or are easily distracted by irrelevant context (Shi et al., 2023). The consequences can be sig-nificant: for example, inappropriate context usage 
+
+> 1
+
+https://github.com/copenlu/ context-characteristics-sensitivity Following the                            
+
+> earthquake in 2030,
+> Kabul was
+> destroyed , and the
+> Afghan capital is
+> relocated to Herat ...
+> What is the capital city of Afghanistan? Herat
+> hh Context Length
+> SFT Step
+> AUROC
+> 0100 200 300 400 500 600 700 800 900 1000 1100 1200 1300
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Extract context characteristics
+> Context
+> Query
+> Measure AUROC
+> Calculate accuracy
+> Acc: 0.86
+> SFT Step 200
+> hh
+> Similarity
+> 🔄 Context-query overlap: 1
+> 🔀 Context-query sim. : 0.25
+> Fluency
+> 📖 Reading ease score: 54.4
+> 🤔 Perplexity: 13.1
+> Length
+> 📏 Context length :290
+> 📏 Query length: 40
+> AUROC
+
+Figure 1: Experimental setup. From each dataset, three families of context characteristics (similarity, fluency, and overlap) are extracted. Accuracy is then calculated based on the model’s generated output. Sensitivity is measured by calculating the AUROC score (Section 4) between each characteristic and accuracy. 
+
+may make models susceptible to injected misinfor-mation (Pan et al., 2023). Understanding what amodel uses in its context is important because it ensures reliable model behavior. An intuitive approach to understanding context usage is to investigate the characteristics of the context itself. Recent work studies lexical prop-erties such as length, fluency, word overlap, and source reliability, finding that these characteristics correlate with context usage to varying degrees (Hagström et al., 2025; Hagström et al., 2026). Yet, little is known about how the models learn to use context in the first place and, in particular, how sensitivities to certain context characteristics are acquired. In this work, context characteristics sen-sitivity refers to the degree to which a characteris-1
+
+> arXiv:2606.09525v1 [cs.CL] 8 Jun 2026
+
+tic’s value influences whether the model uses the provided context to answer the query. Prior work has established that IFT plays a dominant role in teaching models to use context (Goyal et al., 2025) and in shaping LLM behavior more broadly (Bhatia et al., 2025). By understanding how IFT training dynamics shape context characteristic sensitivity, we can curate datasets that elicit more robust con-text utilization in instruction-tuned LLMs. Our analysis spans different IFT stages: SFT, DPO, and RLVR. Further, we train an LLM through SFT and DPO, and measure how this relationship evolves at each step; see Figure 1. We find that con-text usage is actively reshaped across IFT stages. During SFT, LLMs develop a sensitivity towards easy-to-understand characteristics such as short and fluent contexts, and higher context-query similarity. The effect of DPO, in turn, is determined by the preference dataset, specifically the difference in lexical characteristics of the chosen and rejected re-sponses. To ensure robust context usage and coun-teract the context characteristic sensitivities devel-oped during SFT, the preference dataset must be carefully curated such that the chosen and rejected responses share the same context characteristics. 
+
+2 Method 
+
+2.1 Context Characteristics 
+
+We examine three families of context characteris-tics aps by prior work on the influence of context characteristics on context usage: similarity, fluency, and length (Hagström et al., 2025). We drop the unreliability family as it is specific to fact-checking tasks. Implementation of the extraction process is detailed in Appendix A. 
+
+Similarity LLMs often exploit high query-context similarity as a shortcut for whether to use context (Modarressi et al., 2025; Du et al., 2023), which we score with: Jaccard similarity (Jaccard, 1901) after lowercasing and punctuation removal; and the fraction of named entities that appear both in the query and context ( query-entity overlap ). 
+
+Fluency LLMs tend to follow factually incorrect evidence when it is coherent and fluent (Xie et al., 2024; Stureborg et al., 2024). We measure fluency through Flesch reading ease score (Flesch, 1948), a readability metric based on sentence length and syllable count, with higher scores indicating text that is easier to read, and Perplexity , where lower values indicate the context is considered fluent un-der the model’s learned distribution. 
+
+Length Previous work documents two opposing forces affecting LLMs’ context usage: they use long contexts less effectively (Xu et al., 2024), but also treat longer passages as more credible (Dubois et al., 2024). We investigate this by measuring 
+
+Context length and Query length , both calculated as the raw character counts of each string. 
+
+2.2 Instruction Fine-Tuning 
+
+We conduct (1) a stage-wise comparison of sensitiv-ities across IFT stages, and (2) a step-wise analysis tracking how they evolve within each stage. For the stage-wise analysis, we evaluate four models: Llama-3.1-8B, Llama-3.2-1B (Grattafiori et al., 2024), OLMo-2-1B, and OLMo-2-7B (OLMo et al., 2024). We use the final IFT model (SFT, DPO, RLVR) of Llama-3.1-8B and OLMo 2 (1B and 7B variants) released by the Open In-struct library 2 for our stage-wise analysis. Note that the Llama-3.1-8B model is trained using the Tulu3 dataset (Lambert et al., 2025), which is dif-ferent from the datasets used to train the OLMo models detailed by OLMo et al. (2024). Since the intermediate SFT and DPO check-points are not released, to conduct the step-wise analysis, we additionally fine-tune Llama-3.2-1B on the same SFT and DPO dataset as OLMo-2-1B. Llama-3.2-1B is chosen because it is small yet still able to use context well; see Appendix B. We adopt the hyperparameters of Lambert et al. (2025) un-changed. We exclude RLVR from step-wise analy-sis due to computational cost, but since it shares the same KL-regularized objective as DPO (Rafailov et al., 2023), we expect DPO trends to extend to RLVR. Detailed IFT configuration is in Appendix C. 
+
+3 Experimental Setup 
+
+Datasets We use three datasets chosen for diver-sity in task format and in the relationship between context and parametric knowledge. ConflictQA (Xie et al., 2024) and Context-Reliance (Goyal et al., 2025) are open-ended QA tasks with coun-terfactual contexts, ensuring that accuracy purely reflects context use. In contrast, DRUID (Hagström et al., 2025) is a claim verification task that reflects realistic context–knowledge interactions. 
+
+> 2https://allenai.github.io/open-instruct/
+
+2Figure 2: Step-wise analysis across three datasets of Llama-3.2-1B (Section 2.2). Here, we show one metric of each characteristic family; other metrics are in Appendix D. During SFT (top), the model develops sensitivities towards easy-to-understand context, while DPO (bottom) resolves the learned sensitivities. 
+
+Evaluation For each combination of model, dataset, and characteristic, we compute the AU-ROC between the characteristic value and accuracy. The model’s generation is considered accurate if it matches the context-based ground truth. We use AUROC because accuracy is binary, making other correlation measures, such as Pearson and Spear-man, less appropriate. See Appendix E for details. 
+
+4 Results 
+
+Figures 2 and 3 show how context characteristics sensitivity evolves step-wise and stage-wise, re-spectively. To gauge sensitivity, we use the AU-ROC score, which measures how well the context characteristic ranks accurate examples above inac-curate ones, ranging from 0.5 (chance) to 1 (perfect separation). Values above 0.5 indicate high char-acteristic values correspond to accurate examples, while values below 0.5 suggest the inverse. 
+
+4.1 Models learn sensitivities towards easy-to-understand contexts during SFT 
+
+For each characteristic, Figures 2 (top) and 3 show a consistent AUROC trend during SFT, across all models and all datasets. This indicates that models learn the same context characteristics sensitivities when deciding whether to follow the provided con-text. Specifically, the AUROC score of Context-query Jaccard similarity increases during SFT. Models increasingly use contexts that are lexically simi-lar to the query. This is intuitive: higher token overlap signals relevance, making the context ap-pear more directly applicable to the question. On the other hand, the AUROC score of Perplexity de-creases, meaning models increasingly follow low-perplexity contexts. Lower perplexity indicates more fluent, natural text, so the model learns to treat well-formed contexts as more trustworthy. Similarly, the AUROC score of Context length 
+
+decreases, suggesting models increasingly follow shorter contexts, possibly as they are easier to inte-grate compared to longer ones and therefore more reliable. Our results support prior findings, where mod-els are shown to use contexts with high similarity (Modarressi et al., 2025; Du et al., 2023) and high fluency (Xie et al., 2024; Stureborg et al., 2024) more frequently. Our investigation reveals that this sensitivity mainly forms during SFT. Notably, while context characteristic sensitivities increase across SFT steps, they do not translate into im-proved accuracy (Appendix B). The model exploits context characteristics as a shortcut; it uses context only when the context is easy-to-understand, rather than genuinely assessing its relevance. 
+
+4.2 DPO sensitivities are shaped by characteristic differences in training data 
+
+From Figure 2 (bottom), DPO resolves the sensi-tivities learned during SFT by shifting sensitivities 3Figure 3: Stage-wise analysis across four models on the Context-Reliance dataset . SFT induces the same sensitivity in all models, while DPO’s effect depends on characteristic differences in its training data. Evaluation results on ConflictQA and DRUID dataset are in Appendix F.                                      
+
+> Llama-3.2-1B Llama-3.1-8B
+> Characteristic chosen rejected ∆chosen rejected ∆
+> Context-query Jaccard similarity 0.158 0.150 0.008 0.192 0.161 0.031
+> Query-entity overlap 0.409 0.376 0.033 0.395 0.354 0.041
+> Flesch reading ease score 46.454 40.143 6.311 45.273 -165.690 210.963
+> Context length 1844.392 1844.489 -0.097 1727.275 1705.265 22.010
+> Query length 946.300 946.300 0.000 910.274 910.274 0.000
+
+Table 1: Mean context characteristics for chosen and rejected responses for the DPO dataset used to train the Llama models in Figure 3. ∆ = chosen − rejected. Bolded ∆ indicates statistical significance ( p < 0.05 ), more details in Appendix G. 
+
+to the pre-SFT level. However, Figure 3 shows that Llama-3.1-8B does not follow the same trend dur-ing DPO. For example, DPO amplifies, rather than resolves, sensitivity towards Context-query Jaccard similarity in the 8B variant. As the two models are trained on different DPO datasets (Section 2.2), we attribute this observation to the characteristics of the training dataset, specifically the difference be-tween the chosen and rejected responses ( ∆) (Table 1). We find that whether the post-DPO AUROC lies above or below 0.5 broadly tracks the sign of ∆.This highlights the importance of balancing con-text characteristics of responses in the DPO dataset. Any imbalances can reinforce SFT-stage sensitivi-ties and context usage that is not robust. We note a caveat: this pattern holds for QA datasets (Conflic-tQA and Context-Reliance), but is less consistent for DRUID (Figure 2; bottom), a claim verification task. This suggests that DPO’s effect on context characteristic sensitivities may be task-dependent. Finally, we observe that RLVR mostly preserves the direction of DPO’s effects as expected. 
+
+5 Conclusion 
+
+We investigate how the context characteristic sensi-tivity evolves across IFT stages. We find that SFT consistently instills the same sensitivities, favor-ing lexically similar, fluent, and shorter contexts, across datasets and model families. This sensitivity formation is distinct from accuracy, suggesting that SFT teaches models to exploit these easy-to-read characteristics to signal context usage, rather than robustly assessing the context. For DPO, we at-tribute sensitivity shifts directly to characteristic differences between chosen and rejected contexts, underscoring the need to design a balanced pref-erence dataset to neutralize context characteristics sensitivities inherited from SFT. Together, these findings suggest that context usage is not a static model property but is actively shaped at each IFT 4stage, and can be steered through careful data cura-tion choices. 
+
+Limitations 
+
+Our study is limited to two model families (Llama and OLMo) at two scales each. We consider this scope appropriate for our research questions which focus on how training dynamics shape context char-acteristic sensitivity. However, broader coverage across different architectures remains an interest-ing open line of work. Additionally, we examine three families of context characteristics: similarity, fluency, and length. These are prevalent and well-grounded in prior work, though there may well be other characteristics that influence context usage, and would be worth exploring in future work. An AI writing assistant tool is used for a gram-mar check and stylistic improvement. None of the AI generations is used as is. 
+
+Acknowledgments 
+
+This research was co-funded by the Eu-ropean Union (ERC, ExplainYourself, 101077481) and supported by the Pioneer Centre for AI, DNRF grant number P1. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or the European Research Council. Neither the Euro-pean Union nor the granting authority can be held responsible for them. It was also funded by the Col-lege of Computing and Data Science at Nanyang Technological University and the CN Yang Schol-ars Programme. We also thank CopeNLU members at the University of Copenhagen for their careful proof-reading. 
+
+References 
+
+Mehar Bhatia, Shravan Nayak, Gaurav Kamath, Mar-ius Mosbach, Karolina Sta´ nczak, Vered Shwartz, and Siva Reddy. 2025. Value drifts: Tracing value alignment during llm post-training. Preprint ,arXiv:2510.26707. Wei-Lin Chiang, Lianmin Zheng, Ying Sheng, Anas-tasios N. Angelopoulos, Tianle Li, Dacheng Li, Banghua Zhu, Hao Zhang, Michael I. Jordan, Joseph E. Gonzalez, and Ion Stoica. 2024. Chat-bot arena: an open platform for evaluating llms by human preference. In Proceedings of the 41st Inter-national Conference on Machine Learning , ICML’24. JMLR.org. Mengnan Du, Fengxiang He, Na Zou, Dacheng Tao, and Xia Hu. 2023. Shortcut learning of large language models in natural language understanding. Commun. ACM , 67(1):110–120. Yann Dubois, Percy Liang, and Tatsunori Hashimoto. 2024. Length-controlled alpacaeval: A simple debi-asing of automatic evaluators. In First Conference on Language Modeling .Rudolph Flesch. 1948. A new readability yardstick. 
+
+Journal of Applied Psychology , 32(3):221–233. Yunfan Gao, Yun Xiong, Xinyu Gao, Kangxiang Jia, Jinliu Pan, Yuxi Bi, Yi Dai, Jiawei Sun, Meng Wang, and Haofen Wang. 2024. Retrieval-augmented gener-ation for large language models: A survey. Preprint ,arXiv:2312.10997. Sachin Goyal, Christina Baek, J Zico Kolter, and Aditi Raghunathan. 2025. Context-parametric inversion: Why instruction finetuning may not actually improve context reliance. In The Thirteenth International Conference on Learning Representations .Aaron Grattafiori, Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schel-ten, Alex Vaughan, Amy Yang, Angela Fan, Anirudh Goyal, Anthony Hartshorn, Aobo Yang, Archi Mi-tra, Archie Sravankumar, Artem Korenev, Arthur Hinsvark, and 542 others. 2024. The llama 3 herd of models. Preprint , arXiv:2407.21783. Lovisa Hagström, Sara Vera Marjanovic, Haeun Yu, Ar-nav Arora, Christina Lioma, Maria Maistro, Pepa Atanasova, and Isabelle Augenstein. 2025. A reality check on context utilisation for retrieval-augmented generation. In Proceedings of the 63rd Annual Meet-ing of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 19691–19730, Vi-enna, Austria. Association for Computational Lin-guistics. Lovisa Hagström, Youna Kim, Haeun Yu, Sang goo Lee, Richard Johansson, Hyunsoo Cho, and Isabelle Augenstein. 2026. Cub: Benchmarking context util-isation techniques for language models. Preprint ,arXiv:2505.16518. Matthew Honnibal, Ines Montani, Sofie Van Lan-deghem, and Adriane Boyd. 2020. spaCy: Industrial-strength Natural Language Processing in Python. Paul Jaccard. 1901. Etude comparative de la distribu-tion florale dans une portion des alpes et des jura. In Bulletin de la Société Vaudoise des Sciences Na-turelles .Nathan Lambert, Jacob Morrison, Valentina Pyatkin, Shengyi Huang, Hamish Ivison, Faeze Brahman, Lester James Validad Miranda, Alisa Liu, Nouha Dziri, Xinxi Lyu, Yuling Gu, Saumya Malik, Victoria Graf, Jena D. Hwang, Jiangjiang Yang, Ronan Le Bras, Oyvind Tafjord, Christopher Wilhelm, Luca Soldaini, and 4 others. 2025. Tulu 3: Pushing fron-tiers in open language model post-training. In Second Conference on Language Modeling .
+
+5Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Hein-rich Küttler, Mike Lewis, Wen-tau Yih, Tim Rock-täschel, Sebastian Riedel, and Douwe Kiela. 2020. Retrieval-augmented generation for knowledge-intensive nlp tasks. In Advances in Neural Infor-mation Processing Systems , volume 33, pages 9459– 9474. Curran Associates, Inc. Edward Loper and Steven Bird. 2002. Nltk: The natural language toolkit. Preprint , arXiv:cs/0205028. Ali Modarressi, Hanieh Deilamsalehy, Franck Dernon-court, Trung Bui, Ryan A. Rossi, Seunghyun Yoon, and Hinrich Schuetze. 2025. NoLiMa: Long-context evaluation beyond literal matching. In Proceedings of the 42nd International Conference on Machine Learning , volume 267 of Proceedings of Machine Learning Research , pages 44554–44570. PMLR. Marius Mosbach, Tiago Pimentel, Shauli Ravfogel, Di-etrich Klakow, and Yanai Elazar. 2023. Few-shot fine-tuning vs. in-context learning: A fair compari-son and evaluation. In Findings of the Association for Computational Linguistics: ACL 2023 , pages 12284– 12314, Toronto, Canada. Association for Computa-tional Linguistics. Team OLMo, Pete Walsh, Luca Soldaini, Dirk Groen-eveld, Kyle Lo, Shane Arora, Akshita Bhagia, Yuling Gu, Shengyi Huang, Matt Jordan, Nathan Lambert, Dustin Schwenk, Oyvind Tafjord, Taira Anderson, David Atkinson, Faeze Brahman, Christopher Clark, Pradeep Dasigi, Nouha Dziri, and 21 others. 2024. 2 olmo 2 furious. Preprint , arXiv:2501.00656. Oded Ovadia, Menachem Brief, Moshik Mishaeli, and Oren Elisha. 2024. Fine-tuning or retrieval? compar-ing knowledge injection in LLMs. In Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing , pages 237–250, Mi-ami, Florida, USA. Association for Computational Linguistics. Yikang Pan, Liangming Pan, Wenhu Chen, Preslav Nakov, Min-Yen Kan, and William Wang. 2023. On the risk of misinformation pollution with large lan-guage models. In Findings of the Association for Computational Linguistics: EMNLP 2023 , pages 1389–1403, Singapore. Association for Computa-tional Linguistics. Qwen Team. 2026. Qwen3.6-Plus: Towards real world agents. Rafael Rafailov, Archit Sharma, Eric Mitchell, Christo-pher D Manning, Stefano Ermon, and Chelsea Finn. 2023. Direct preference optimization: Your language model is secretly a reward model. In Advances in Neural Information Processing Systems , volume 36, pages 53728–53741. Curran Associates, Inc. Freda Shi, Xinyun Chen, Kanishka Misra, Nathan Scales, David Dohan, Ed Chi, Nathanael Schärli, and Denny Zhou. 2023. Large language models can be easily distracted by irrelevant context. In Proceed-ings of the 40th International Conference on Machine Learning , ICML’23. JMLR.org. Rickard Stureborg, Dimitris Alikaniotis, and Yoshi Suhara. 2024. Large language models are inconsistent and biased evaluators. Preprint ,arXiv:2405.01724. Jian Xie, Kai Zhang, Jiangjie Chen, Renze Lou, and Yu Su. 2024. Adaptive chameleon or stubborn sloth: Revealing the behavior of large language models in knowledge conflicts. In The Twelfth International Conference on Learning Representations .Peng Xu, Wei Ping, Xianchao Wu, Lawrence McAfee, Chen Zhu, Zihan Liu, Sandeep Subramanian, Evelina Bakhturina, Mohammad Shoeybi, and Bryan Catan-zaro. 2024. Retrieval meets long context large lan-guage models. In The Twelfth International Confer-ence on Learning Representations .Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao Zhuang, Zi Lin, Zhuohan Li, Dacheng Li, Eric P. Xing, Hao Zhang, Joseph E. Gonzalez, and Ion Stoica. 2023. Judging llm-as-a-judge with mt-bench and chatbot arena. In 
+
+Proceedings of the 37th International Conference on Neural Information Processing Systems , NIPS ’23, Red Hook, NY, USA. Curran Associates Inc. 
+
+A Context Characteristic Extraction 
+
+Similarity Context-query similarity is computed as the Jaccard index between the sets of lower-cased tokens of the context and the query, after tokenization with NLTK (Loper and Bird, 2002) and removal of punctuation and typographic quote characters. Query-entity overlap is computed by extracting named entities from both the context and the query using spaCy ’s transformer-based pipeline (Honnibal et al., 2020) and reporting the fraction of query entities that also appear in the context; queries with no detected entities are excluded. 
+
+Fluency Flesch reading ease score is calculated via the textstat library 3. Meanwhile, Perplexity 
+
+is calculated according to a HuggingFace guide 4.
+
+Length Context length and Query length are mea-sured as the raw number of characters in the corre-sponding strings. 
+
+B Llama-3.2-1B Accuracy 
+
+Figure 4 shows that small Llama-3.2-1B model are able to use context properly. For ConflictQA and 
+
+> 3https://github.com/textstat/textstat
+> 4https://huggingface.co/docs/transformers/ perplexity
+
+6Figure 4: Context-based accuracy of Llama-3.2-1B per step , throughout SFT (top) and DPO (bottom). 
+
+Context-Reliance, the accuracy throughout SFT and DPO training hovers around 0.8 to 0.9. For DRUID, accuracy is lower at around 0.5, but it is still higher than random chance (0.33; three-way classification). This shows that we can use Llama-3.2.1B as a proxy to study changes in context usage during SFT and DPO. 
+
+C Configuration for Instruction Fine-Tuning 
+
+Table 2 shows the config for IFT used to train Llama-3.2-1B, which checkpoints are used to cre-ate Figure 2. We save intermediate checkpoints every 1,000 steps during SFT and every 250 steps during DPO. All fine-tuning is done on 4XA100 GPU. SFT took 24 hours and DPO took 6 hours. Conducting RLVR would have taken approximately 344 hours (14X more compute than SFT). 
+
+D Full Context-Characteristic Results 
+
+The step-wise relationship for Query-entity overlap ,
+
+Flesch reading ease score , and Query length is shown in Figure 5.                  
+
+> Stage Parameter Value
+> SFT Learning rate 3e-5 Batch size/device 2Gradient accumulation steps 16 Epochs 2Max sequence length 4096 LR scheduler Linear DPO Learning rate 2.5e-6 Batch size/device 2Gradient accumulation steps 16 Epochs 1Max sequence length 2048 LR scheduler Linear
+> β5
+> Table 2: Detailed configuration for SFT and DPO fine-tuning.
+
+E Detailed Set-up 
+
+For DRUID (5,490 rows), predictions are mapped to one of the three labels ( supports , refutes , insuffi-cient ) via string matching against the generated out-put; mismatches and abstentions count as incorrect. For ConflictQA (8,067 rows) and Context-Reliance (1,064 rows), we extract the context-based and parametric-based ground truths and string-match the model’s output against them. When the re-sult is ambiguous (both or neither match), we fall back to an LLM-as-a-judge using Qwen-3.6 Plus (Qwen Team, 2026), as it performed best in held-out evaluation set (See Appendix H). Prompt used for inference are shown in Appendix I. All inference uses greedy decoding with 
+
+max_new_tokens=1024 and a fixed random seed (1000) across PyTorch, CUDA, NumPy, and Python; cuDNN is set to deterministic mode to ensure reproducibility. Inference is run on a single A100 GPU. 
+
+F Extended Model-Dataset Results 
+
+Figure 6 shows the stage-wise relationship using ConflictQA and DRUID datasets. 
+
+G Statistical Tests 
+
+We use Wilcoxon signed rank test to determine significance. It tests the null hypothesis that two related paired samples (the chosen and rejected answers from the DPO training dataset) come from the same distribution. Since p < 0.05 for all of 
+
+∆ in Table 1, the null hypothesis is rejected. The difference ( ∆) is significant. Student t-test is not used as we are unable to assume the difference in mean of each context char-7Figure 5: Step-wise analysis between the remaining other context characteristic with accuracy including the unreliable context characteristic family. Llama-3.2-1B is used (Section 2.2). 
+
+acteristic is normally distributed. 
+
+H LLM Judge 
+
+For ConflictQA and Context-Reliance dataset, if the model’s answer contains both (or neither of) context-based and parametric-based ground truths, we fall back to LLM judge to determine accuracy. Figure 7 shows the prompt for the LLM judge. To find the best judge model to use, we manually annotate 50 samples of model outputs (using the same prompt in Figure 7) and validate them with 10 different judges. Agreement between each judge and the manual annotation is shown in Table 3. For our analysis, we use Qwen-3.6 Plus as it is the best-performing and most cost-efficient judge. All judge inferences use the OpenRouter 5 API. Only input pricing is considered, as the model’s output is short and therefore negligible. 
+
+I Prompts Used for Inference 
+
+Figure 8 shows the prompts used for inference, based on the task.                       
+
+> 5https://openrouter.ai/
+> LLM Judge κInput Price
+> Gemini 2.5 Flash 0.716 0.30 Qwen3 235B 0.676 0.07 Qwen 3.6 Plus 0.920 0.17 Llama 4 Maverick 0.735 0.15 Llama 3.3 70B 0.401 0.10 MiniMax M2.7 0.671 0.28 GLM-5.1 0.880 0.98 GLM-4.7 0.920 0.45 GPT 5.4-mini (high reasoning) 0.920 0.75 GPT 5.4-mini (low reasoning) 0.880 0.75
+
+Table 3: LLM Judge agreement (Cohen’s κ) with man-ual annotation and API input pricing (US$/M tokens). 
+
+8Figure 6: Stage-wise analysis across four models on two extra datasets : ConflictQA (top) and DRUID (bottom). 
+
+9Prompt for LLM Judge 
+
+You are a judge. Your task: determine whether a generated answer correctly matches a reference answer. Rules: - Output ONLY the digit 1 or 0. Nothing else. - Output 1 if the generated answer is correct, i.e., it expresses, implies, or contains the reference answer. - Partial matches are acceptable (e.g., "Trump" matches "Donald Trump"), but not wrong answers (e.g., "Hudson Williams" does not match "Hudson Lee"). - Paraphrases are acceptable (e.g., "What is the capital of France? It is moved from Paris to Versailles" matches "Versailles"). - Output 0 if the generated answer does not answer the question directly, or require strong inference to get the answer. - Output 0 if the generated answer is wrong, irrelevant, or contradicts the reference answer. - If there is an explicit final answer in the generated answer, only consider the final answer in your decision. Question: "<question>" Reference answer: "<context-based ground truth>" Generated answer: "<model’s output>" Does the generated answer match the reference answer? Output 1 or 0. 
+
+> Figure 7: Prompt used for LLM judge as a tie-breaker.
+
+Prompt for Claim Verification Task (DRUID) 
+
+Based on the provided context, is the claim True or False? If you are not sure or cannot answer, say None. <user> Context: "<context>" Claim: "<claim>" <assistant> 
+
+Prompt for Open-ended QA Task (Con-flictQA, Context-Reliance) 
+
+Answer the following reading comprehen-sion question. <user> Context: "<context>" Query: "<query>" <assistant> 
+
+> Figure 8: Prompts used for model output generation.
+
+10
