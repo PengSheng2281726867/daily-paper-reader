@@ -96,6 +96,44 @@ subscriptions:
           source: manual
           note: ''
       updated_at: '2026-06-16T08:47:16.684Z'
+    - tag: llm-papers
+      description: 大模型重要论文检索
+      enabled: true
+      paper_sources:
+        - arxiv
+      keywords:
+        - keyword: large language model
+          keyword_cn: 大语言模型
+          query: large language model survey
+        - keyword: pretrained language model
+          keyword_cn: 预训练语言模型
+          query: pretraining methods for language models
+        - keyword: instruction tuning
+          keyword_cn: 指令微调
+          query: instruction tuning for large language models
+        - keyword: reinforcement learning from human feedback
+          keyword_cn: 基于人类反馈的强化学习
+          query: RLHF training for language models
+        - keyword: few-shot learning
+          keyword_cn: 少样本学习
+          query: few-shot learning with large language models
+      intent_queries:
+        - query: seminal papers on large language model development
+          query_cn: 大语言模型发展的重要论文
+          enabled: true
+          source: manual
+          note: ''
+        - query: key research on transformer based language models
+          query_cn: 基于Transformer的语言模型关键研究
+          enabled: true
+          source: manual
+          note: ''
+        - query: important works on instruction fine tuning and alignment
+          query_cn: 指令微调与对齐的重要工作
+          enabled: true
+          source: manual
+          note: ''
+      updated_at: '2026-06-16T08:48:23.708Z'
 source_backends:
   arxiv:
     papers_table: arxiv_papers
