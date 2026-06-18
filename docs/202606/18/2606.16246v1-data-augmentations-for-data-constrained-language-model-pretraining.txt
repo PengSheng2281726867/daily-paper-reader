@@ -1,0 +1,586 @@
+Title: Data Augmentations for Data-Constrained Language Model Pretraining
+
+URL Source: https://arxiv.org/pdf/2606.16246v1
+
+Published Time: Tue, 16 Jun 2026 01:43:56 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# Data Augmentations for Data-Constrained Language Model Pretraining 
+
+Michael K. Chen 1 Xikun Zhang 2 Zhen Wang 11UC San Diego 2RMIT University  
+
+> {mkc013, zhw085}@ucsd.edu ,xikun.zhang@rmit.edu.au
+
+Abstract 
+
+As AI labs approach a data ceiling where com-pute capacity outpaces the rate of new high-quality text generation, language model pre-training is shifting toward a data-constrained, compute-abundant regime that demands pro-ductive multi-epoch training on fixed corpora. Standard autoregressive (AR) pretraining over-fits severely in this setting, reaching its opti-mum early and then continuously deteriorat-ing. We investigate data augmentation as a regularizer to mitigate this overfitting and en-able productive training for hundreds of epochs on the same data. We introduce three orthog-onal categories of augmentation for AR pre-training: token-level noise (masking, random replacement), sequence permutations (right-to-left prediction, Fill-in-the-Middle), and target offset prediction ( xt+i for i > 1). Through systematic ablations, we find that individual augmentations delay overfitting and lower val-idation loss relative to the baseline, with ran-dom token replacement achieving the best min-imum loss among individual methods. Com-bining augmentation categories further low-ers the minimum validation loss. Our ex-periments demonstrate that data augmenta-tions mitigate AR pretraining’s data ineffi-ciency and offer a promising solution to the data-constrained regime. All code and data are available at https://github.com/michaelchen-lab/data-augmentations-for-pretraining 
+
+1 Introduction 
+
+The dominant paradigm for improving large lan-guage model (LLM) performance over the past decade has been to scale the size of pretraining datasets (Kaplan et al., 2020; Hoffmann et al., 2022). This approach is hitting a hard limit. Re-cent analyses project that the stock of high-quality public internet text will be exhausted within a few years at current consumption rates (Villalobos et al., 2022; Muennighoff et al., 2023), while GPU compute continues to grow at a rate that far out-strips data availability. We are entering a compute-abundant, data-constrained regime, a reversal of the paradigm that defined the initial scaling era. The practical implication is that models must make more passes over the same data. Scaling laws for epoched training show that while repeating data provides diminishing returns, there remains meaningful signal to be extracted from additional passes (Muennighoff et al., 2023; Kim et al., 2025). The obstacle is overfitting: when an AR model is trained long enough on a fixed corpus, it begins to memorize rather than generalize, and held-out vali-dation loss increases. This is not a theoretical con-cern. In our experiments, a 150M-parameter model trained on a 75M-token corpus (roughly 40 × be-low the Chinchilla-optimal token budget) bottoms out in held-out validation loss at epoch 16 before continuously deteriorating. One proposed solution is to use diffusion lan-guage models, which have been shown to be more robust to overfitting in high-epoch regimes than AR models (Prabhudesai et al., 2026; Ni et al., 2025). The hypothesized mechanism is that the diffusion objective acts as a natural regularizer: requiring the model to denoise under any corruption level and in any factorization order prevents it from over-fitting to surface-level token statistics. However, adopting diffusion models for large-scale pretrain-ing remains impractical: (i) they require a large number of sampling steps to achieve competitive accuracy, often resulting in higher inference costs than autoregressive models (Feng et al., 2026), (ii) they struggle to handle dynamic-length generation (Li et al., 2025), and perhaps most importantly, (iii) they lack mature, highly-optimized infrastructure for training and inference (Peng et al., 2025). A more practical route, at least in the near future, is to bring diffusion-style regularization into AR models through training-time data augmentation. In this work, we propose and systematically study three                                          
+
+> arXiv:2606.16246v1 [cs.LG] 15 Jun 2026 ... <m>
+> Masking
+> <m> 135
+> 124... 35
+> Token-Level Noise
+> ... <m>
+> Random Replacement
+> <m> 135
+> 124... 35
+> ...
+> Bidirectionality
+> 2
+> 53142
+> Sequence Permutation
+> ...
+> Fill-in-the-Middle
+> <r2l> 543
+> <r2l>
+> <fp> 2<fs> <fm> 13
+> <fp> 1<fs> 3<fm> 2...
+> 1
+> ...
+> ...
+> Next-token Prediction
+> 4
+> 13524
+> Target Offset Prediction
+> <i1> 123
+> <i1>
+> 5
+> ...
+> ... 4
+> 354...
+> <i3> 123
+> 2
+> 5
+> Next-3rd-token Prediction
+
+Figure 1: Overview of the three augmentation categories. Each panel shows an example (input, label) pair under the named transformation. Token-level noise (left) replaces a fraction of input tokens with a mask token or a random vocabulary token; labels are always the original uncorrupted sequence. Sequence permutations (middle) reverse the sequence for right-to-left prediction (R2L) or reorder it as prefix–suffix–middle suffix–prefix–middle for Fill-in-the-Middle (FIM); labels match the rearranged order. Target offset prediction (right) trains the model to predict a future token xt+i rather than just the immediate next token; a prepended offset token indicates the active horizon. 
+
+orthogonal categories of augmentation: 
+
+Category 1: Token-level Noise. A fraction of in-put tokens are replaced at random, either with a special <|mask|> token or with a randomly drawn vocabulary token. The model is trained to predict the original, uncorrupted token sequence. This di-rectly parallels the noise process in diffusion mod-els. 
+
+Category 2: Sequence Permutations. A frac-tion of training sequences are reordered before being presented to the model. We explore right-to-left (R2L) prediction, in which the sequence is reversed, and Fill-in-the-Middle (FIM) (Bavarian et al., 2022), in which the sequence is reordered as prefix-suffix-middle (PSM) or suffix-prefix-middle (SPM). A special token prepended to each sequence indicates the applied transformation. 
+
+Category 3: Target Offset Prediction. Rather than always predicting the immediate next token 
+
+xt+1 , the model is trained to predict a future token 
+
+xt+i at a sampled offset i ≥ 1, encouraging longer-range dependency learning. We study both uniform and exponentially-decaying weightings over the horizon i, with a special prepended token indicating the active offset. These three categories are orthogonal and can be applied simultaneously. Taken together, they ex-tend the spirit of the Mixture-of-Denoisers frame-work (Tay et al., 2022) to the autoregressive set-ting: rather than committing to a single prediction task, the model is trained on multiple transformed views of each sequence. The key difference from UL2 is intent: UL2 uses mixed objectives to pro-duce a multitask model evaluated under varying conditions, whereas we apply these augmentations purely as regularizers. All evaluation is performed under the standard left-to-right next-token predic-tion setting, regardless of which augmentations were active during training. We evaluate these augmentations on a 150M-parameter Llama-based model trained on 75M to-kens from DCLM-RefinedWeb (Li et al., 2024), us-ing a Warmup-Stable-Decay (WSD) learning rate schedule (Hägele et al., 2024) that decouples the stable training phase from the final decay. Our pri-mary metric is held-out validation loss in the stan-dard autoregressive next-token prediction setting, tracked over 100 epochs for all standard ablation runs; select combination runs are extended beyond this window to characterize long-horizon stabil-ity. We supplement this with zero-shot evaluation on five benchmarks via lm-evaluation-harness 
+
+(Gao et al., 2024); however, at this model scale the downstream signal is noisy, and we treat it as cor-roborating evidence rather than a primary metric. We find that every augmentation category re-duces overfitting relative to the baseline. Among individual methods, random token replacement achieves the best minimum validation loss overall, outperforming masking, sequence permutations, and offset prediction individually. Combining aug-mentation categories lowers the minimum loss be-low the best individual method. The best three-category combination achieves a minimum loss of 3.805, improving on the best individual by 0.036. We find that appropriate hyperparameter tuning is critical: at 15%, token noise interferes with the off-set prediction objective and raises minimum loss; at 5%, using the random token replacement method, noise acts as a mild complementary regularizer. We also report two notable negative results: Fill-in-the-Middle performs poorly in isolation, and masking actively interferes when combined with other aug-mentation categories, despite being widely used in prior work. We structure the paper as follows. Section 2 de-scribes each augmentation in detail. Section 3 de-scribes the experimental setup. Section 4 presents ablation results, beginning with individual meth-ods (Sections 4.2–4.4) and proceeding to combi-nations (Section 4.5) and downstream evaluation (Section 4.7). We discuss limitations and future work in Section A of the Appendix. 
+
+2 Method 
+
+We introduce three orthogonal categories of training-time data augmentation for autoregressive pretraining (Figure 1). All augmentations modify the (input, label) pair presented to the model at each training step; the architecture and loss func-tion are unchanged. At evaluation time, all aug-mentations are disabled and the model is evaluated under the standard left-to-right (L2R) next-token prediction setting with i = 1 . The three categories can be applied simultaneously; their composition is described in Section 2.4. 
+
+2.1 Category 1: Token-Level Noise 
+
+Given a training sequence (x1, . . . , x L), a single uniform draw ut ∼ Uniform(0 , 1) per content to-ken determines whether it is corrupted: 
+
+˜xt =
+
+
+
+<mask> if ut < α m
+
+xrand if αm ≤ ut < α m + αr
+
+xt otherwise, (1) where αm ∈ [0 , 1] is the mask rate, αr ∈ [0 , 1] 
+
+the random-replacement rate, and xrand is sampled uniformly from the non-special vocabulary. The 
+
+label sequence is never modified: the model always predicts the original xt, not ˜xt. Control tokens (direction, FIM, and offset tokens) are protected and never corrupted. 
+
+Masking (αm > 0, αr = 0 ): each selected to-ken is replaced by a dedicated <mask> special token that never appears in unlabeled text. The model re-ceives no lexical signal from masked positions and must rely entirely on context to predict the original token. 
+
+Random replacement (αm = 0 , αr > 0): each selected token is replaced by a random vocabulary token. Unlike masking, the replacement is a plau-sible but incorrect token, providing a semantically harder, yet more realistic signal. 
+
+2.2 Category 2: Sequence Permutations Right-to-left (R2L) prediction. Each training sample is independently routed to L2R with proba-bility ρ or R2L with probability 1 − ρ. A direction token prepended at position 0 signals the mode: L2R: [ <l2r> , x 1, . . . , x L−1 ]
+
+R2L: [ <r2l> , x L, x L−1, . . . , x 2 ]
+
+In both cases, labels are the original or reversed to-ken sequence respectively, and the standard causal cross-entropy loss is applied. The direction token is prepended to L2R samples as well so the input format is consistent. 
+
+Fill-in-the-Middle (FIM). Following Bavarian et al. (2022), each training sample is routed to PSM or SPM with probabilities ppsm and pspm respec-tively, or left unchanged otherwise. Two pivot po-sitions a < b are sampled uniformly, splitting the content (the first Lc = L − 3 tokens, reserving 3 positions for FIM control tokens) into: 
+
+P = ( x1, . . . , x a),M = ( xa+1 , . . . , x b),S = ( xb+1 , . . . , x Lc ).
+
+The segments are rearranged using control tokens 
+
+<fp> , <fs> , <fm> :PSM: [ <fp> , P, <fs> , S, <fm> , M ]
+
+SPM: [ <fp> , S, <fs> , P, <fm> , M ]
+
+Labels equal the rearranged sequence, so the model is trained to predict every token in the rearranged left-to-right order. When the model arrives at <fm> ,it has already seen both prefix and suffix and must predict the middle, i.e., the fill-in-the-middle objec-tive. 
+
+2.3 Category 3: Target Offset Prediction 
+
+Rather than predicting the immediately next token 
+
+xt+1 , the model predicts xt+i where offset i is sam-pled once per training sample from a distribution over {1, . . . , n }. Two weighting schemes are stud-ied: 
+
+Punif (i) = 1 
+
+> n
+
+,Pexp (i) ∝ e−(i−1) /T , (2) with temperature T = 1 . The exponential scheme concentrates mass on small offsets (especially i =1) while still sampling larger horizons, gradually extending the prediction range as a form of implicit curriculum. A per-sample offset token <next_i> is prepended, giving the layout: 
+
+[ <next_i> , x 1, . . . , x L−1 ],
+
+and the label at position t is xt+i (positions where 
+
+t+i > L are masked with −100 ). When combined with R2L augmentation (Section 2.4), a direction token is additionally prepended before <next_i> ,consuming one extra sequence position. At eval-uation time the offset is fixed to i = 1 , restoring standard next-token prediction. 
+
+2.4 Combining Augmentations 
+
+The three categories compose as a sequential pipeline, applied in the following order at each training step: 1. Token noise corrupts content tokens in the raw input (Eq. 1). 2. FIM (if active) rearranges the potentially noisy sequence into PSM or SPM. FIM con-trol tokens are added after token noise, so they are not subject to corruption. 3. Direction / offset : the direction token and offset token <next_i> are prepended, the se-quence is reversed if R2L, and labels are con-structed. On any given step a sequence is routed to exactly one variant in stage 2 (L2R, R2L, PSM, or SPM), while stages 1 and 3 apply independently. Category 2 and Category 3 share the direction token slot: FIM samples always use L2R direction (no rever-sal) since the rearrangement is already non-trivial. 
+
+Example (random15 + R2L + i=2 , source 
+
+(x1, . . . , x 6)): 
+
+After noise: (x1, ˆx2, x 3, x 4, x 5, x 6)  
+
+> (ˆx2̸=x2)
+
+After R2L + offsets: <r2l> <next_2> 
+
+x6 x5 x4 x3
+
+Labels: -100 -100 x4 x3 x2 x1
+
+At evaluation, token noise is off, no FIM, direction is L2R, and i = 1 : plain autoregressive decoding. 
+
+3 Experimental Setup 
+
+Model. We train a 150M-parameter causal lan-guage model based on the Llama architecture (Tou-vron et al., 2023), implemented with the Hugging-Face Transformers library (Wolf et al., 2020). The model has 20 transformer layers, a hidden size of 512, 4 attention heads, an intermediate size of 1536, and a maximum context length of 2048 to-kens. Tied input/output embeddings are used to keep the parameter count tractable. We train with the Warmup-Stable-Decay (WSD) learning rate schedule (Hägele et al., 2024), which decouples a constant stable training phase from a short fi-nal decay. Following Hägele et al. (2024), WSD achieves validation loss comparable to a cosine schedule while reducing training costs by allow-ing the stable-phase checkpoint to be reused across multiple decay restarts. We use a peak learning rate of 6 × 10 −4, 100 linear warmup steps, and weight decay of 0.033 with the AdamW optimizer. For ablation studies where the primary interest is rela-tive comparison rather than absolute performance, we report validation loss directly from the stable phase without applying the final decay, enabling cheap and consistent comparisons across a larger number of runs. We validate our methodology with a robustness check in Section 4.6. 
+
+Dataset. We train on 75M tokens extracted from DCLM-RefinedWeb (Li et al., 2024), a high-quality filtered web-text corpus. At the Chinchilla-optimal token-to-parameter ratio (Hoffmann et al., 2022), a 150M-parameter model would require ap-proximately 3B training tokens; our 75M-token corpus therefore places us roughly 40 × below the compute-optimal budget, intentionally target-ing the data-constrained regime. We use the Qwen2 tokenizer, extended with augmentation-specific special tokens if necessary: a direction pair ( <l2r> /<r2l> ), three FIM control tokens (<fp> /<fs> /<fm> ), a mask token ( <mask> ), and per-offset tokens ( <next_i> for each i ≤ n). 
+
+Evaluation. Our primary metric is held-out val-idation loss under the standard L2R next-token prediction objective ( i = 1 ), evaluated at regu-lar checkpoints throughout training. This directly measures generalization quality and the onset and severity of overfitting. As a secondary metric, we evaluate zero-shot accuracy on five downstream benchmarks via lm-evaluation-harness : Hel-laSwag, PIQA, ARC-Challenge, WinoGrande, and COPA. At the 150M-parameter scale, zero-shot performance is noisy; we treat it as corroborating evidence rather than a primary signal. 
+
+Training budget. All ablation runs train for 100 epochs by default, which is sufficient to ob-serve each method’s minimum validation loss and the onset of overfitting. Runs are extended only when validation loss has not yet turned upward by epoch 100; since all runs eventually overfit mono-tonically, the minimum observed is the true mini-mum regardless of when training is stopped after that point, and the extended budget does not confer an advantage in minimum loss. 
+
+4 Experiments 
+
+4.1 Does Standard Pretraining Overfit? 
+
+We begin by establishing the severity of overfitting under standard AR pretraining. Figure 2 shows the validation loss trajectory of the baseline model over 100 epochs. The model reaches its minimum loss of 4.015 at epoch 16, after which loss increases mono-tonically for the remainder of training. Standard AR pretraining collapses into memorization well within the first 20% of the training run, rendering continued training counterproductive. This trajectory is consistent with, and extends, the scaling laws of Muennighoff et al. (2023), who find that repeated data yields negligible loss im-provement up to about 4 epochs, with returns dimin-ishing progressively toward zero for higher epoch counts. Our setting is substantially more extreme (40 × below Chinchilla-optimal), and we observe not just diminishing positive returns but an actively harmful phase: loss increases well above the single-epoch baseline, indicating that the model is driven toward memorization rather than generalization. This active degradation is not modeled by their scaling law, which describes the region of positive but diminishing returns. Our work can therefore be seen as probing the regime where that law breaks down, and augmentation becomes necessary. Our subsequent experiments test whether data augmen-tation can delay or prevent this collapse, while low-ering validation loss. 
+
+4.2 Token-Level Noise 
+
+Does corrupting input tokens regularize overfitting, and does it matter whether the corruption is struc-tured (masking) or random? 0 15 30 45 60 75 90 
+
+> Epoch
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> Validation loss
+> min = 4.015
+> Baseline (AR)
+> Peak (epoch 16)
+
+Figure 2: Validation loss of the baseline AR model over 100 epochs. The loss bottoms out at epoch 16 and deteriorates continuously thereafter. 0 15 30 45 60 75 90 
+
+> Epoch
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> Validation loss
+> Baseline
+> Mask 15%
+> Mask 30%
+> Random replace 5%
+> Random replace 15%
+> Random replace 30%
+
+Figure 3: Validation loss for token-level noise abla-tions. Random replacement outperforms masking at matched rates; among random replacement variants, 15% achieves the best individual minimum. 
+
+We compare masking ( αm ∈ {15% , 30% })and random token replacement (αr ∈{5% , 15% , 30% }). Figure 3 shows all five variants against the baseline. All four variants improve over the baseline (Ta-ble 1). Random replacement consistently outper-forms masking at matched corruption rates: ran-dom at 15% achieves the lowest minimum loss among all individual methods (3.841 at epoch 28), compared to 3.910 for masking at 15% at the same epoch. At the higher 30% rate, both methods still improve over the baseline but with diminishing re-turns. A lower rate of 5% also improves over the baseline (3.912 at epoch 20), but underperforms both higher-rate variants, indicating that 5% noise is too weak a perturbation to provide effective stan-dalone regularization. The advantage of random replacement is likely due to increased difficulty: a randomly replaced token is lexically plausible and must be identified as incorrect from context, 0 15 30 45 60 75 90 
+
+> Epoch
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> Validation loss
+> Baseline
+> R2L 50%
+> R2L 25%
+> FIM 50%
+
+Figure 4: Validation loss for sequence permutation abla-tions. R2L at 50% provides strong regularization; FIM provides essentially no benefit and overfits at the same rate as the baseline. 
+
+whereas a masked token provides an explicit sig-nal that information is absent. In Section 4.5, we conduct systematic combination experiments with random replacement at 15% and 5%. 
+
+4.3 Sequence Permutations 
+
+Does reordering training sequences regularize overfitting, and are all permutation types equally effective? 
+
+We compare R2L prediction at 25% and 50% mixing rates, and FIM at 50% of samples (25% PSM + 25% SPM). Figure 4 shows the results. R2L at 50% outperforms R2L at 25%, achieving a minimum loss of 3.910 at epoch 32 versus 3.942 at epoch 24. This suggests that a balanced direction split is more effective than a lopsided one: too little R2L (25%) provides insufficient exposure to the reversed objective to regularize effectively. FIM presents a clear negative result. Its mini-mum loss of 3.947 is reached at epoch 16, the same epoch the baseline bottoms out, and the loss then climbs steeply, surpassing the baseline by epoch 40. Despite FIM’s utility as a code pretraining objec-tive (Bavarian et al., 2022), it does not regular-ize general-domain text training effectively. We attribute this to a training–evaluation distribution mismatch: FIM rearranges sequences into formats so different from the standard L2R setting used at evaluation that the generalization benefit is limited. We adopt R2L 50% as the preferred permutation variant and exclude FIM from combination experi-ments (Table 1). 
+
+4.4 Target Offset Prediction 
+
+Does predicting future tokens at varying offsets mitigate overfitting, and how does the choice of 0 15 30 45 60 75 90    
+
+> Epoch
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> Validation loss
+> Baseline
+> i2, uniform
+> i5, uniform
+> i5, exp.
+
+Figure 5: Validation loss for target offset prediction ablations. Exponential weighting over i ≤ 5 is the strongest individual augmentation; uniform weighting over i ≤ 5 provides no benefit. 
+
+horizon distribution affect this? 
+
+We compare uniform offset sampling over 
+
+{1, . . . , 2} and {1, . . . , 5} with both uniform and exponential weighting. Results are shown in Fig-ure 5. The weighting scheme is decisive. Uniform sam-pling over i ≤ 5 produces essentially the same trajectory as the baseline (minimum loss 4.016 at epoch 32), with no regularization benefit despite the non-trivial offset targets. In contrast, exponen-tial weighting over i ≤ 5 achieves the single largest individual improvement: minimum loss 3.870 at epoch 60, with the loss still near its minimum at epoch 100. The key is that exponential weighting concentrates most probability mass on i = 1 , so the model continues learning standard next-token pre-diction the majority of the time while occasionally training on harder longer-horizon targets. This im-plicit curriculum appears to be the effective regular-izer; uniform sampling over a wide range degrades too much useful signal. The smaller i ≤ 2 uniform variant (minimum 3.890 at epoch 24) confirms that a bounded offset alone can provide moderate regu-larization without exponential weighting. Notably, 
+
+i ≤ 2 reaches its best checkpoint 2.5 × earlier than 
+
+i ≤ 5 exponential (epoch 24 vs. 60) with only a 0.020 gap in minimum loss, making it an attractive option when training budget is limited. We adopt 
+
+i ≤ 5 with exponential weighting as the preferred offset configuration, but revisit i ≤ 2 in Section 4.5. However, as a practical caveat, we note that i≤5
+
+exp. is the only individual method that exhibits occasional spikes in the evaluation loss curve dur-ing the stable phase; it may therefore require more careful monitoring than token-noise or permutation Method Min loss Best ep. 
+
+Baseline 4.015 16 
+
+Token-level noise 
+
+Mask 15% 3.910 28 Mask 30% 3.923 40 Random 5% 3.912 20 Random 15% 3.841 28 Random 30% 3.865 44 
+
+Sequence permutation 
+
+R2L 50% 3.910 32 R2L 25% 3.942 24 FIM 50% 3.947 16 
+
+Target offset prediction 
+
+i≤2, uniform 3.890 24 
+
+i≤5, uniform 4.016 32 
+
+i≤5, exp. 3.870 60 
+
+Table 1: Minimum stable-phase validation loss and cor-responding epoch for all individual augmentation meth-ods. Bold = best individual result. 
+
+variants. Table 1 collects the minimum validation loss and its corresponding epoch for all individual methods across the three augmentation categories. 
+
+4.5 Combining Augmentation Categories 
+
+Do the three augmentation categories combine syn-ergistically, and what determines whether a combi-nation helps or hurts? 
+
+Table 2 presents all 2- and 3-category combi-nation results, organized by interaction type. Aconsistent pattern emerges across all runs: combi-nations involving token noise and offset prediction interfere strongly , while R2L and offset prediction combine synergistically . Token noise combined with R2L is intermediate, achieving a worse min-imum loss than R2L alone but better than token noise combined with offset prediction. Figure 6 shows the three systematic best-individual combi-nations. 
+
+Token noise × offset prediction: strong inter-ference. All three token noise × offset combina-tions fail badly. Random 15% + i≤5 exp. achieves a minimum of 3.995, nearly identical to the base-line (4.015). Mask 15% + i≤2 reaches only 4.004. Even at a third the noise rate, mask 5% + i≤2
+
+achieves 3.937, still worse than i≤2 alone (3.890). The interference strengthens with higher noise rates, suggesting that high token corruption can meaningfully disrupt the offset objective. The mechanism is direct: offset prediction requires pre-dicting xt+i from coherent local context at position 0 15 30 45 60 75 90 105 120         
+
+> Epoch
+> 3.8
+> 4.0
+> 4.2
+> 4.4
+> 4.6
+> 4.8
+> 5.0
+> 5.2
+> 5.4
+> Validation loss
+> synergy
+> (3.841)
+> interference
+> (3.995)
+> Baseline
+> Random 15%
+> R2L 50%
+> i5exp.
+> Random 15% + i5exp.
+> Random 15% + R2L 50%
+> R2L 50% + i5exp.
+
+Figure 6: Systematic 2-cat combinations of the three best individuals. R2L + offset synergizes (sky blue, min 3.841). Token noise + offset interferes (red-orange, min 3.995). Token noise + R2L is intermediate (pink, min 3.887). 
+
+t; token noise corrupts that context with plausible-but-wrong tokens, making the offset target near-unpredictable. The task becomes so hard that it degrades rather than regularizes optimization. 
+
+Permutation × offset prediction: synergy and an offset trade-off. R2L 50% + i≤5 exp. achieves a minimum of 3.841, tying the single best individual method. R2L preserves all token content and only reorders it, leaving the offset prediction task well-posed; the two objectives reinforce each other without interference. Replacing i≤5 expo-nential with the cheaper i≤2 uniform variant gives R2L 50% + i≤2: slightly worse minimum loss (3.863 vs. 3.841). 
+
+Token noise × permutation: noise rate and type matter. Figure 7 shows all four token noise × R2L combinations. Random replacement consistently outperforms masking at the same rate: random 5% (3.877) beats mask 5% (3.897), and random 15% (3.887) beats mask 15% (3.963). Within each noise type, lower noise gives bet-ter minimum loss. Random 5% + R2L achieves the best minimum of this group (3.877); ran-dom 15% + R2L achieves a slightly higher mini-mum (3.887). Notably, mask 15% + R2L (3.963) is the only token noise × R2L run that achieves a worse minimum than R2L alone (3.910), sug-gesting that at 15%, masking sufficiently disrupts the reversed sequence to negate the permutation benefit. 
+
+Three-category combinations: noise rate deter-mines interference or synergy. Figure 8 and the lower section of Table 2 show all four 3-0 15 30 45 60 75 90 105 120 
+
+> Epoch
+> 3.8
+> 4.0
+> 4.2
+> 4.4
+> 4.6
+> 4.8
+> 5.0
+> 5.2
+> 5.4
+> Validation loss
+> Baseline
+> R2L 50% (no noise)
+> Random 5% + R2L
+> Random 15% + R2L
+> Mask 5% + R2L
+> Mask 15% + R2L
+
+Figure 7: Token noise × R2L combinations across noise rates and types. Random replacement (solid) consis-tently outperforms masking (also solid, converges ear-lier). Lower noise rates achieve better minimum loss and require fewer epochs to converge. 
+
+category combinations alongside the best 2-cat base, R2L + i≤5 exp. When token noise is set at 15%, adding it to any R2L + offset pair raises min-imum loss while delaying the point of overfitting, the same trade-off observed in token noise × per-mutation, now compounded. The degree of ex-tension and cost depend heavily on the noise type and offset difficulty. Starting from R2L + i≤5 exp. (epoch 44), adding mask 15% delays overfitting to epoch 88 at a cost of 0.100 (3.841 → 3.941). Adding random 15% instead raises minimum loss by only 0.038 (3.841 → 3.879), a much smaller penalty than masking. Starting from the cheaper R2L + i≤2 base (epoch 96), adding mask 15% delays overfitting to epoch 176 at a cost of 0.140 (3.863 → 4.003). The ran-dom 15% + R2L 50% + i≤5 exp. configuration also shows the most pronounced training instability of all runs, with recurring evaluation loss spikes throughout the stable phase. The three-way inter-action of token corruption, sequence reversal, and offset prediction produces a highly complex and variable gradient signal. However, we note that the token noise × R2L analysis above already established that lower noise gives better minimum loss in 2-category combina-tions. We therefore reduce the noise from 15% to 5%. This caused random 5% + R2L 50% + i≤5 exp. to achieve a minimum loss of 3.805 at epoch 68, improving on the best individual method (ran-dom 15%, 3.841) by 0.036 and beating all pre-viously tested configurations. This suggests that at 5%, token noise is mild enough that it no longer meaningfully corrupts the local context that offset prediction relies on; instead, the three objectives                                             
+
+> Combination Min loss Best ep.
+> Permutation ×offset (synergy)
+> R2L 50% + i≤5exp. 3.841 44 R2L 50% + i≤23.863 96
+> Token noise ×permutation
+> Random 5% + R2L 50% 3.877 48 Random 15% + R2L 50% 3.887 104 Mask 5% + R2L 50% 3.897 40 Mask 15% + R2L 50% 3.963 64
+> Token noise ×offset (interference)
+> Mask 5% + i≤23.937 24 Random 15% + i≤5exp. 3.995 44 Mask 15% + i≤24.004 40
+> 3-category combinations
+> Rand. 5%+R2L+ i≤5exp. 3.805 68 Rand. 15%+R2L+ i≤5exp. 3.879 292 Mask 15%+R2L+ i≤5exp. 3.941 88 Mask 15%+R2L+ i≤24.003 176
+
+Table 2: All 2- and 3-category combination results grouped by interaction type. See Table 1 for individual method baselines. Bold = best combination result; note that Rand. 5%+R2L+ i≤5 exp. beats all individual meth-ods. 
+
+complement each other, each regularizing a differ-ent aspect of the training signal. 
+
+4.6 Decay-Phase Robustness Check 
+
+Do the relative rankings established in stable-phase ablations hold under a proper WSD decay, and does decay consistently lower the minimum loss across all configurations? 
+
+All prior comparisons used stable-phase check-points, which are evaluated before any learning-rate decay and may therefore not represent each con-figuration’s true minimum. To verify that stable-phase rankings are meaningful proxies for fully-converged performance, we apply the WSD decay phase to all eight selected configurations. Full im-plementation details are provided in Appendix E. Figure 9 shows the resulting trajectories: solid lines are the stable-phase curves up to the decay start; dashed lines are the decay continuations; stars mark each decay minimum. 
+
+Results. Table 3 reports stable-phase and decay-phase minimum losses for all eight configurations. Several findings are notable. 
+
+Rankings are preserved. The rank ordering from the stable phase is reproduced exactly after de-cay. Rand. 5% + R2L + i≤5 exp. is the clear best configuration at both stable (3.805) and de-cay (3.792) phases. Among the remaining seven configurations, R2L 50% + i≤5 exp. (3.824) and 0 50 100 150 200 250 300 350 400               
+
+> Epoch
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> Validation loss
+> ep. 44
+> ep. 88
+> ep. 176
+> ep. 292
+> ep. 68
+> Baseline
+> R2L + i5exp. (best 2-cat)
+> Mask 15% + R2L + i5exp.
+> Mask 15% + R2L + i2
+> Random 15% + R2L + i5exp.
+> Random 5% + R2L + i5exp. (best)
+
+Figure 8: All 3-category combinations (solid) vs. the best 2-cat base R2L + i≤5 exp. (dashed). Reducing the noise rate from 15% to 5% (gold) resolves the in-terference: Rand. 5% + R2L + i≤5 exp. achieves the overall best minimum of 3.805 at epoch 68, surpassing all individual and 2-category methods. 0 20 40 60 80 100 120 140            
+
+> Epoch
+> 3.5
+> 4.0
+> 4.5
+> 5.0
+> 5.5
+> 6.0
+> 6.5
+> Validation loss
+> Baseline
+> Rand. 15%
+> R2L 50%
+> i5exp.
+> Rand. 15% + i5exp.
+> R2L 50% + i5exp.
+> Rand. 15% + R2L 50%
+> Rand. 5% + R2L 50% + i5exp.
+> Stable phase
+> Decay phase
+> Decay minimum
+
+Figure 9: Validation loss trajectories for all eight con-figurations (epoch axis truncated at 150). Solid lines show the stable phase up to the WSD start; dashed lines show the decay continuation; stars mark each decay minimum. The 3-category combination (purple, Rand. 5%+R2L+ i≤5 exp.) decays from epoch 68 and is fully visible; it reaches the lowest decay minimum of 3.792, the best result overall. 
+
+Random 15% (3.826) are joint second after decay, 
+
+i≤5 exp. remains next, and the baseline stays last. This confirms that stable-phase comparisons are valid proxies for fully-converged performance, jus-tifying their use as a cost-efficient experimental protocol throughout Sections 4.2–4.5. 
+
+Decay improvements are consistent with stable-phase results. Six of the eight configurations improve by 0.017 or less after decay, indicat-ing that stable-phase minima are already near the true optima. The 3-category combination (Rand. 5%+R2L+ i≤5 exp.) achieves the best decay min-imum of 3.792, improving its stable minimum by 0.013. The largest absolute improvement belongs to Rand. 15% + i≤5 exp. ( −0.086 ), whose stable-
+
+Run Stable Decay ∆
+
+Baseline 4.015 4.000 −0.015 Rand. 15% 3.841 3.826 −0.015 R2L 50% 3.910 3.912 +0.002 
+
+i≤5 exp. 3.870 3.870 0.000 Rand. 15%+R2L 3.887 3.884 −0.003 Rand. 15%+ i≤5 exp. 3.995 3.909 −0.086 
+
+R2L+ i≤5 exp. 3.841 3.824 −0.017 Rand. 5%+R2L+ i≤5 exp. 3.805 3.792 −0.013 
+
+Table 3: Stable-phase and decay-phase minimum vali-dation loss, and improvement ∆. Negative ∆ = decay lowers loss. Bold = best per column. 
+
+phase minimum of 3.995 was severely inflated by interference between noise and offset prediction objectives; the LR decay resolves this conflict and allows the model to converge to 3.909. This con-firms that the decay phase is particularly beneficial for configurations suffering from training-time ob-jective interference. 
+
+4.7 Downstream Generalization 
+
+Does reduced validation loss after full convergence translate to better zero-shot benchmark perfor-mance? 
+
+We evaluate eight fully-converged models on five zero-shot benchmarks: HellaSwag, PIQA, ARC-Challenge, WinoGrande, and COPA. Each model is evaluated at its decay-phase best check-point, i.e., the checkpoint with the lowest valida-tion loss reached during the WSD decay (see Sec-tion 4.6). For R2L 50%, which saw no improve-ment under decay, we use the stable-phase mini-mum checkpoint instead. 
+
+Benchmark selection. We initially evaluated on ten tasks via lm-evaluation-harness but ex-cluded five that produced no discriminative signal at 150M parameters; full details and justification are given in Appendix F. The five retained tasks are those that show meaningful variation across configurations. 
+
+All augmented models outperform the base-line. Every augmented configuration exceeds the baseline mean accuracy of 41.0%, confirming that lower validation loss translates to improved general-ization in aggregate. The margin ranges from mod-est (0.2%) to significant (2.3%), consistent with the limited model scale, but the direction is consistent across all seven augmented models. 
+
+Validation loss rank does not perfectly pre-dict accuracy rank. The best val-loss model, Rand. 5% + R2L + i≤5 exp. (3.792), ranks sec-Run Val loss HellaSwag PIQA ARC-C WinoGrande COPA Mean                                                                 
+
+> Baseline 4.000 25.1 56.0 24.9 48.7 50.0 41.0 Random repl. 15% 3.826 25.5 57.6 25.4 50.1 54.0 42.5 R2L 50% 3.910 25.6 54.0 24.8 52.0 56.0 42.5
+> i≤5exp. 3.870 25.4 53.8 25.4 52.0 60.0 43.3
+> Random 15% + R2L 50% 3.884 26.2 53.2 25.3 51.5 50.0 41.2 Random 15% + i≤5exp. 3.909 26.0 52.8 24.2 50.7 52.0 41.2 R2L 50% + i≤5exp. 3.824 25.9 52.3 27.5 50.0 55.0 42.1 Rand. 5%+R2L 50%+ i≤5exp. 3.792 26.1 53.2 27.6 49.6 58.0 42.9
+> Table 4: Post-decay validation loss and zero-shot accuracy (%) on five benchmarks for all eight configurations. Accuracy is normalized ( acc_norm ) for HellaSwag, PIQA, ARC-Challenge, and WinoGrande; standard accuracy for COPA. Bold = best per column; underline = second best.
+
+ond in mean accuracy (42.9%). The top accuracy model, i≤5 exp. (43.3%), has the third-best val loss (3.870). This weak ordinal correlation is ex-pected: at 150M parameters, individual task scores are highly variable, and differences of 0.05 in vali-dation loss correspond to differences of only 1–2 pp in mean accuracy. We treat validation loss as the primary metric throughout this paper and down-stream accuracy as corroborating evidence rather than a primary signal. 
+
+Combination models show mixed down-stream results. Among 2-category combina-tions, only R2L + i≤5 exp. achieves a competi-tive mean accuracy (42.1%); the other two (Ran-dom 15% + R2L and Random 15% + i≤5 exp.) reach only 41.2%, barely above the baseline. This mirrors the val-loss picture: R2L + i≤5 exp. is the only 2-cat combination that matched the best individual val loss (3.824), while the other two combinations suffered from interference. The 3-category combination (Rand. 5%+R2L+ i≤5 exp.) performs well (42.9%, second overall), with the highest scores on ARC-Challenge (27.6%) and the second-highest on COPA (58.0%) and Hel-laSwag (26.1%). This suggests that training across a more diverse set of objectives improves gener-alization across reasoning domains. Overall, the downstream pattern reinforces the finding that com-bination hyperparameters matter: the Rand. 5% variant achieves the best validation loss (3.792) and competitive downstream accuracy, while the Rand. 15% variant sacrifices minimum loss for a longer stability plateau. 
+
+5 Discussion 
+
+Standard AR pretraining is fundamentally data-inefficient in the data-constrained regime: our base-line model reaches its minimum validation loss at epoch 16 and degrades continuously thereafter, making over 80% of the available training budget counterproductive. This is a significant practical problem as the industry approaches a data ceiling. Our results demonstrate that data augmentation directly addresses this inefficiency. By serving as regularizers, augmentations allow the model to con-tinue extracting useful signal from repeated passes over the same corpus: the best combination low-ered the minimum validation loss from 4.015 to 3.805, a reduction of 0.210. These gains also trans-late to measurable downstream accuracy improve-ments across all augmented configurations. Despite this potential, data augmentation for LLM pretrain-ing remains largely underexplored. Prior work has focused on data mixture and filtering strategies (Su et al., 2025; Soldaini et al., 2024; Mohri et al., 2026), or adopted diffusion-style objectives as a wholesale replacement for AR training (Prabhude-sai et al., 2026; Ni et al., 2025), rather than inves-tigating augmentation as a lightweight regularizer within the standard AR framework. We hope this work helps establish the case that augmentation deserves serious attention as a first-class technique for pretraining in data-constrained settings. Our experiments yield several concrete findings that can guide future work and practical applica-tion. For token-level noise, random token replace-ment consistently outperforms masking, a counter-intuitive result given that masking is the conven-tional augmentation inspired by BERT-style mod-els, which we attribute to (i) the increased diffi-culty of disambiguating a plausible-but-wrong to-ken from context versus the explicit absence signal of a mask and (ii) the greater distribution shift be-tween training and inference of the mask token. For sequence permutations, right-to-left prediction proves a strong regularizer while Fill-in-the-Middle provides no benefit in our general-domain setting, suggesting that augmentations which radically alter the sequence format relative to the evaluation dis-tribution are less effective regularizers than those that preserve content and only reorder it. For com-binations, our results reveal that orthogonal data augmentation methods can synergize to yield lower minimum losses than the baseline and any indi-vidual method. Nonetheless, we note that hyper-parameter choices, particularly the noise rate, are decisive, and harder augmentations can lead to eval-uation loss spikes during training that may require further attention. 
+
+References 
+
+Mohammad Bavarian, Heewoo Jun, Nikolas Tezak, John Schulman, Christine McLeavey, Jerry Tworek, and Mark Chen. 2022. Efficient training of lan-guage models to fill in the middle. arXiv preprint arXiv:2207.14255 .Yonatan Bisk, Rowan Zellers, Jianfeng Gao, Yejin Choi, and 1 others. 2020. Piqa: Reasoning about physical commonsense in natural language. In Proceedings of the AAAI conference on artificial intelligence , vol-ume 34, pages 7432–7439. Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, and 1 others. 2020. Language models are few-shot learners. Advances in neural information processing systems , 33:1877–1901. Mathilde Caron, Hugo Touvron, Ishan Misra, Hervé Jégou, Julien Mairal, Piotr Bojanowski, and Armand Joulin. 2021. Emerging properties in self-supervised vision transformers. In Proceedings of the IEEE/CVF international conference on computer vision , pages 9650–9660. Ting Chen, Simon Kornblith, Mohammad Norouzi, and Geoffrey Hinton. 2020. A simple framework for contrastive learning of visual representations. In In-ternational conference on machine learning , pages 1597–1607. PmLR. Peter Clark, Isaac Cowhey, Oren Etzioni, Tushar Khot, Ashish Sabharwal, Carissa Schoenick, and Oyvind Tafjord. 2018. Think you have solved question an-swering? try arc, the ai2 reasoning challenge. arXiv preprint arXiv:1803.05457 .Ekin D Cubuk, Barret Zoph, Jonathon Shlens, and Quoc V Le. 2020. Randaugment: Practical au-tomated data augmentation with a reduced search space. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition work-shops , pages 702–703. Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. Bert: Pre-training of deep bidirectional transformers for language understand-ing. In Proceedings of the 2019 conference of the North American chapter of the association for com-putational linguistics: human language technologies, volume 1 (long and short papers) , pages 4171–4186. Guhao Feng, Yihan Geng, Jian Guan, Wei Wu, Liwei Wang, and Di He. 2026. Theoretical benefit and limitation of diffusion language model. Advances in Neural Information Processing Systems , 38:24415– 24459. Leo Gao, Jonathan Tow, Baber Abbasi, Stella Bider-man, Sid Black, Anthony DiPofi, Charles Foster, Laurence Golding, Jeffrey Hsu, Alain Le Noac’h, Haonan Li, Kyle McDonell, Niklas Muennighoff, Chris Ociepa, Jason Phang, Laria Reynolds, Hailey Schoelkopf, Aviya Skowron, Lintang Sutawika, and 5 others. 2024. The language model evaluation har-ness. Alexander Hägele, Elie Bakouch, Atli Kosson, Loubna B Allal, Leandro Von Werra, and Martin Jaggi. 2024. Scaling laws and compute-optimal train-ing beyond fixed training durations. Advances in Neural Information Processing Systems , 37:76232– 76264. Jordan Hoffmann, Sebastian Borgeaud, Arthur Men-sch, Elena Buchatskaya, Trevor Cai, Eliza Ruther-ford, DDL Casas, Lisa Anne Hendricks, Johannes Welbl, Aidan Clark, and 1 others. 2022. Train-ing compute-optimal large language models. arXiv preprint arXiv:2203.15556 , 10. Jared Kaplan, Sam McCandlish, Tom Henighan, Tom B Brown, Benjamin Chess, Rewon Child, Scott Gray, Alec Radford, Jeffrey Wu, and Dario Amodei. 2020. Scaling laws for neural language models. arXiv preprint arXiv:2001.08361 .Konwoo Kim, Suhas Kotha, Percy Liang, and Tatsunori Hashimoto. 2025. Pre-training under infinite com-pute. arXiv preprint arXiv:2509.14786 .Jeffrey Li, Alex Fang, Georgios Smyrnis, Maor Ivgi, Matt Jordan, Samir Gadre, Hritik Bansal, Etash Guha, Sedrick Keh, Kushal Arora, and 1 others. 2024. Datacomp-lm: In search of the next gener-ation of training sets for language models. Advances in Neural Information Processing Systems , 37:14200– 14282. Tianyi Li, Mingda Chen, Bowei Guo, and Zhiqiang Shen. 2025. A survey on diffusion language models. 
+
+arXiv preprint arXiv:2508.10875 .Ilya Loshchilov and Frank Hutter. 2017. Decou-pled weight decay regularization. arXiv preprint arXiv:1711.05101 .Christopher Mohri, John Duchi, and Tatsunori Hashimoto. 2026. A bitter lesson for data filtering. 
+
+arXiv preprint arXiv:2605.19407 .Niklas Muennighoff, Alexander Rush, Boaz Barak, Teven Le Scao, Nouamane Tazi, Aleksandra Piktus, Sampo Pyysalo, Thomas Wolf, and Colin A Raffel. 2023. Scaling data-constrained language models. 
+
+Advances in Neural Information Processing Systems ,36:50358–50376. Anh Nguyen, Nikos Karampatziakis, and Weizhu Chen. 2023. Meet in the middle: A new pre-training paradigm. Advances in Neural Information Process-ing Systems , 36:5079–5091. Jinjie Ni, Qian Liu, Longxu Dou, Chao Du, Zili Wang, Hang Yan, Tianyu Pang, and Michael Qizhe Shieh. 2025. Diffusion language models are super data learners. arXiv preprint arXiv:2511.03276 .Han Peng, Peiyu Liu, Zican Dong, Daixuan Cheng, Junyi Li, Yiru Tang, Shuo Wang, and Wayne Xin Zhao. 2025. How efficient are diffusion language models? a critical examination of efficiency evalua-tion practices. arXiv preprint arXiv:2510.18480 .Mihir Prabhudesai, Mengning Wu, Amir Zadeh, Kate-rina Fragkiadaki, and Deepak Pathak. 2026. Diffu-sion beats autoregressive in data-constrained settings. 
+
+Advances in Neural Information Processing Systems ,38:10581–10606. Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever, and 1 others. 2019. Language models are unsupervised multitask learn-ers. OpenAI blog , 1(8):9. Melissa Roemmele, Cosmin Adrian Bejan, and An-drew S Gordon. 2011. Choice of plausible alter-natives: An evaluation of commonsense causal rea-soning. In AAAI spring symposium: logical formal-izations of commonsense reasoning , pages 90–95. Keisuke Sakaguchi, Ronan Le Bras, Chandra Bhagavat-ula, and Yejin Choi. 2021. Winogrande: An adver-sarial winograd schema challenge at scale. Commu-nications of the ACM , 64(9):99–106. Noam Shazeer. 2020. Glu variants improve transformer. 
+
+arXiv preprint arXiv:2002.05202 .Connor Shorten and Taghi M Khoshgoftaar. 2019. A survey on image data augmentation for deep learning. 
+
+Journal of big data , 6(1):1–48. Luca Soldaini, Rodney Kinney, Akshita Bhagia, Dustin Schwenk, David Atkinson, Russell Authur, Ben Bo-gin, Khyathi Chandu, Jennifer Dumas, Yanai Elazar, and 1 others. 2024. Dolma: An open corpus of three trillion tokens for language model pretraining research. In Proceedings of the 62nd Annual Meet-ing of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 15725–15788. Dan Su, Kezhi Kong, Ying Lin, Joseph Jennings, Brandon Norick, Markus Kliegl, Mostofa Patwary, Mohammad Shoeybi, and Bryan Catanzaro. 2025. Nemotron-cc: Transforming common crawl into a refined long-horizon pretraining dataset. In Proceed-ings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Pa-pers) , pages 2459–2475. Jianlin Su, Murtadha Ahmed, Yu Lu, Shengfeng Pan, Wen Bo, and Yunfeng Liu. 2024. Roformer: En-hanced transformer with rotary position embedding. 
+
+Neurocomputing , 568:127063. Yi Tay, Mostafa Dehghani, Vinh Q Tran, Xavier Garcia, Jason Wei, Xuezhi Wang, Hyung Won Chung, Sia-mak Shakeri, Dara Bahri, Tal Schuster, and 1 others. 2022. Ul2: Unifying language learning paradigms. 
+
+arXiv preprint arXiv:2205.05131 .Gemini Team, Rohan Anil, Sebastian Borgeaud, Jean-Baptiste Alayrac, Jiahui Yu, Radu Soricut, Johan Schalkwyk, Andrew M Dai, Anja Hauth, Katie Mil-lican, and 1 others. 2023. Gemini: a family of highly capable multimodal models. arXiv preprint arXiv:2312.11805 .Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timothée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal Azhar, and 1 others. 2023. Llama: Open and effi-cient foundation language models. arXiv preprint arXiv:2302.13971 .Pablo Villalobos, Jaime Sevilla, Lennart Heim, Tamay Besiroglu, Marius Hobbhahn, and Anson Ho. 2022. Will we run out of data? an analysis of the limits of scaling datasets in machine learning. arXiv preprint arXiv:2211.04325 , 1(1). Thomas Wolf, Lysandre Debut, Victor Sanh, Julien Chaumond, Clement Delangue, Anthony Moi, Pier-ric Cistac, Tim Rault, Rémi Louf, Morgan Funtowicz, and 1 others. 2020. Transformers: State-of-the-art natural language processing. In Proceedings of the 2020 conference on empirical methods in natural language processing: system demonstrations , pages 38–45. Fuzhao Xue, Yao Fu, Wangchunshu Zhou, Zangwei Zheng, and Yang You. 2023. To repeat or not to repeat: Insights from scaling llm under token-crisis. 
+
+Advances in Neural Information Processing Systems ,36:59304–59322. An Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo Zheng, Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, and 1 others. 2025. Qwen3 technical report. arXiv preprint arXiv:2505.09388 .Zhilin Yang, Zihang Dai, Yiming Yang, Jaime Car-bonell, Russ R Salakhutdinov, and Quoc V Le. 2019. Xlnet: Generalized autoregressive pretraining for lan-guage understanding. Advances in neural informa-tion processing systems , 32. Sangdoo Yun, Dongyoon Han, Seong Joon Oh, Sanghyuk Chun, Junsuk Choe, and Youngjoon Yoo. 2019. Cutmix: Regularization strategy to train strong classifiers with localizable features. In Proceedings of the IEEE/CVF international conference on com-puter vision , pages 6023–6032. Rowan Zellers, Ari Holtzman, Yonatan Bisk, Ali Farhadi, and Yejin Choi. 2019. Hellaswag: Can a machine really finish your sentence? In Proceed-ings of the 57th annual meeting of the association for computational linguistics , pages 4791–4800. Hongyi Zhang, Moustapha Cisse, Yann N Dauphin, and David Lopez-Paz. 2017. mixup: Beyond empirical risk minimization. arXiv preprint arXiv:1710.09412 .
+
+A Limitations and Future Work 
+
+All experiments are conducted at a single model and data scale, i.e., a 150M-parameter Llama-based model trained on 75M tokens ( 40 × below Chinchilla-optimal), due to compute constraints. It remains open whether the relative rankings among augmentation strategies generalize to larger models or to regimes closer to the Chinchilla-optimal data budget. The hyperparameter and combination cov-erage is also not exhaustive: only a subset of all pos-sible 2- and 3-category combinations are explored, and finer-grained joint tuning may yield meaning-fully better configurations. Finally, downstream evaluation is limited by model scale: at 150M pa-rameters, zero-shot benchmark scores are highly variable, and differences of 0.05–0.10 in validation loss do not translate to reliable performance differ-ences on individual tasks. Downstream accuracy should be interpreted as corroborating evidence rather than the primary signal. 
+
+B Related Work 
+
+Autoregressive language model pretraining. 
+
+The dominant paradigm for large language model pretraining is next-token prediction with a causal (left-to-right) autoregressive objective, established by the GPT line of models (Radford et al., 2019; Brown et al., 2020) and carried forward by virtu-ally all modern LLMs (Touvron et al., 2023; Team et al., 2023). A central empirical finding has been that model quality scales predictably with both pa-rameter count and dataset size (Kaplan et al., 2020; Hoffmann et al., 2022), motivating a sustained ef-fort to curate ever-larger pretraining corpora (Li et al., 2024; Soldaini et al., 2024; Su et al., 2025). 
+
+The data wall and AR inefficiency. This scal-ing strategy is approaching a hard limit. Analyses of the stock of high-quality public internet text project exhaustion within a few years at current consumption rates (Villalobos et al., 2022; Muen-nighoff et al., 2023), while GPU compute continues to grow faster than data availability. Compounding this problem is the inherent data inefficiency of standard AR pretraining. In response, a growing body of work studies training dynamics in data-constrained settings and proposes potential solu-tions to its unique problems. Muennighoff et al. (2023) show that repeated passes over the same cor-pus yield diminishing and eventually negligible re-turns beyond roughly four epochs, and then derive scaling laws for epoched training and recommend data mixture strategies. Kim et al. (2025) demon-strate that standard data-repetition recipes eventu-ally suffer from overfitting in a data-constrained, infinite-compute regime. To mitigate this, they in-troduce a framework utilizing heavily tuned regular-ization and ensemble scaling to drastically improve data efficiency, proving that these scaling gains can be successfully distilled into much smaller stu-dent models. Xue et al. (2023) similarly find that repeatedly training on the same data leads to se-vere overfitting and performance degradation. They show that carefully tuned dropout can effectively mitigate multi-epoch degradation, and recommend leveraging Mixture-of-Experts (MoE) models. 
+
+Diffusion language models as an alternative. 
+
+One response to the data-constrained challenge has been to abandon AR training in favour of diffu-sion language models. Prabhudesai et al. (2026) and Ni et al. (2025) independently demonstrate that diffusion LMs are substantially more robust to overfitting than AR models in high-epoch set-tings, and hypothesize that requiring the model to denoise under arbitrary corruption levels and factorization orders acts as a natural regularizer. However, diffusion models face significant practi-cal barriers: fixed-length generation, the absence of KV-cache support, and the lack of mature infer-ence infrastructure make large-scale deployment difficult (Li et al., 2025; Peng et al., 2025; Feng et al., 2026). Our work pursues a complementary direction: rather than replacing AR training, we ask whether diffusion-inspired augmentations can be imported into the AR framework as regularizers, preserving all existing infrastructure. 
+
+Training-time augmentation objectives. Sev-eral prior works have explored non-standard pre-diction objectives at pretraining time. BERT (De-vlin et al., 2019) introduced masked language mod-eling, training a bidirectional encoder to recover corrupted tokens, but targets the fine-tuning regime and does not evaluate multi-epoch dynamics. XL-Net (Yang et al., 2019) generalizes AR pretraining to arbitrary factorization orders via permutation lan-guage modeling. UL2 (Tay et al., 2022) proposes a Mixture-of-Denoisers (MoD) framework that uni-fies span corruption, causal LM, and prefix LM objectives under a single model. Fill-in-the-Middle (Bavarian et al., 2022) introduces PSM/SPM se-quence reordering as a code pretraining technique. Nguyen et al. (2023) propose “Meet in the Mid-dle” (MIM) pretraining, which jointly trains a L2R and a R2L model on the same data and encour-ages them to agree on their token predictions at each position, improving data efficiency and infill-ing capability. Despite these contributions, none of the above has received widespread adoption in general-purpose LLM pretraining pipelines. A key reason is that these works were developed in the 
+
+compute-constrained regime: their goal was to re-duce validation loss within a fixed single-epoch budget, not to regularize across tens or hundreds of epochs. The setting and motivation therefore differ fundamentally from ours. The closest overlap with our work is in the data-constrained ablations per-formed by Prabhudesai et al. (2026) and Ni et al. (2025), who include brief comparisons of token-noise augmentations applied to AR baselines as foils for their diffusion models. These ablations are limited to one or two augmentation types, are not systematic across hyperparameter choices, and are not the focus of either paper, leaving a significant gap for practitioners wishing to understand how to apply data augmentation to AR pretraining. 
+
+Data augmentation in computer vision. Data augmentation has been foundational to the suc-cess of deep learning in computer vision for over a decade (Shorten and Khoshgoftaar, 2019). Tech-niques such as random cropping, flipping, color jitter, CutMix (Yun et al., 2019), MixUp (Zhang et al., 2017), and RandAugment (Cubuk et al., 2020) are standard components of state-of-the-art image classifiers and self-supervised vision mod-els (Chen et al., 2020; Caron et al., 2021). The underlying mechanism is directly analogous to our setting: augmentations increase the effective di-versity of the training distribution, acting as reg-ularizers that reduce overfitting when the model has more capacity or training compute than the raw dataset can fully utilize. The success of aug-mentations in vision suggests substantial untapped potential in the language domain, where training-time instance-level transformations have received far less systematic study. 
+
+C Training Details 
+
+Our model is a decoder-only causal language model following the Llama architecture (Touvron et al., 2023). The architecture uses pre-normalization with RMSNorm ( ϵ = 10 −6), SwiGLU feed-forward blocks (Shazeer, 2020), and rotary posi-tional embeddings (RoPE) (Su et al., 2024). We use tied input/output embeddings to keep the pa-rameter count manageable given the large Qwen2 vocabulary. The model hyperparameters are summarized in Table 5. They are inspired by and extrapolated from the DCLM scaling recipe, which specifies a consistent head dimension of dhead = 128 and an intermediate size following the SwiGLU formula 
+
+dffn = 83 dmodel rounded to the nearest multiple of 256. At 150M parameters our model falls below the smallest DCLM competition scale (412M), so our hyperparameters are linearly extrapolated down-ward: we reduce the number of layers to 20 and the model width to 512 while preserving the same 
+
+dhead = 128 ratio (giving 4 attention heads), and set the intermediate size to 1,536 ( ≈ 3 × 512 , con-sistent with the DCLM formula).          
+
+> Hyperparameter Value
+> Parameters ≈150M Layers ( nlayers )20 Attention heads ( nheads )4Model width ( dmodel )512 Head dimension ( dhead )128 Intermediate size ( dffn )1,536 Context length 2,048 Tokenizer Qwen2 (vocab 151,646)
+
+Table 5: Model architecture hyperparameters. The head dimension and intermediate size follow the DCLM scal-ing recipe (Li et al., 2024). 
+
+We use the AdamW optimizer (Loshchilov and Hutter, 2017) with the hyperparameters listed in Table 6. We use a peak learning rate of 6 × 10 −4, a weight decay of 0.033, and 100 warmup steps. Gra-dient norm clipping is applied at 1.0. The global batch size is 512 sequences of 2,048 tokens.                
+
+> Hyperparameter Value
+> Optimizer AdamW
+> β1,β20.9, 0.999
+> ϵ10 −8
+> Peak learning rate 6×10 −4
+> LR schedule (stable) Constant LR schedule (decay) 1−√·(Eq. 3) Warmup steps 100 (linear) Weight decay 0.033 Gradient clip norm 1.0 Batch size 512
+
+Table 6: Optimization hyperparameters. LR and weight decay follow the DCLM recipe (Li et al., 2024). 
+
+We use the Qwen2 tokenizer (vocabulary size 151,646) (Yang et al., 2025). The large vocab-ulary is one motivation for tied embeddings: at 512 hidden size, the embedding matrix alone ac-counts for 151 ,646 × 512 ≈ 77 M parameters, so tying input and output embeddings halves this contribution and keeps the total parameter count near 150M. Augmentation-specific special tokens are added to the vocabulary as needed: a di-rection pair ( <|l2r_pred|> /<|r2l_pred|> ), per-offset tokens ( <|next_i_pred|> for each i ≤ n), a mask token ( <|mask|> ), and three FIM con-trol tokens ( <|fim_prefix|> , <|fim_suffix|> ,
+
+<|fim_middle|> ). These tokens are protected from corruption by the token-noise augmentation. Training is implemented using the HuggingFace 
+
+Trainer (Wolf et al., 2020) on either a 4xA100 or 2xH100 GPU setup. Evaluation checkpoints are saved every 4 epochs during stable-phase training and at every epoch during decay-phase. 
+
+D Held-Out Validation Details 
+
+Our primary metric is held-out validation loss com-puted on a fixed validation dataset, acquired from a different shard of DCLM-RefinedWeb (Li et al., 2024) than the training split. Both splits use the same preprocessing pipeline: documents are to-kenized and packed into contiguous 2,048-token blocks with remainder tokens discarded, so individ-ual examples may span document boundaries. Val-idation is always evaluated under standard left-to-right next-token prediction ( i = 1 ) with all training-time augmentations disabled; direction and offset control tokens are prepended only when the model was trained with them. We did not apply additional near-duplicate filtering between the training and validation splits, considering there are zero URL overlap and only 45 exact-text duplicates ( ≈0.8% of validation documents, mostly boilerplate web pages with different URLs). Corpus-level dedupli-cation and quality filtering are inherited from the DCLM dataset pipeline. 
+
+E Decay-Phase Training Details 
+
+Checkpoint selection. For each of the eight con-figurations, we scan all evaluation checkpoints recorded during the stable training phase and iden-tify the checkpoint with the lowest held-out vali-dation loss. This checkpoint serves as the resume point for the WSD decay. Table 8 lists the resume epoch and the corresponding global training step for each configuration. 
+
+Decay schedule. Starting from the resume Task Category Description Source           
+
+> HellaSwag Commonsense NLI Choose the most plausible completion for a partial activity description (4-way MC). Zellers et al. (2019) PIQA Physical reasoning Choose the more physically plausible proce-dure for an everyday goal (2-way MC). Bisk et al. (2020) ARC-Challenge Science QA Grade-school science multiple-choice ques-tions, harder partition requiring reasoning beyond recall. Clark et al. (2018) WinoGrande Commonsense reasoning Fill-in-the-blank pronoun coreference requir-ing commonsense knowledge (2-way MC). Sakaguchi et al. (2021) COPA Causal reasoning Choose the most plausible cause or effect of a given premise (2-way MC). Roemmele et al. (2011)
+
+Table 7: Downstream benchmarks retained for evaluation via lm-evaluation-harness . All tasks are scored by accuracy; for HellaSwag, PIQA, ARC-Challenge, and WinoGrande we report length-normalised accuracy (acc_norm ), and for COPA we report standard accuracy ( acc ).                       
+
+> Run Resume step (ep.) Decay steps
+> Baseline 1,152 (16) ≈230 Rand. 15% 2,016 (28) ≈403 R2L 50% 2,304 (32) ≈461
+> i≤5exp. 4,320 (60) ≈864 Rand. 15%+R2L 7,488 (104) ≈1,498 Rand. 15%+ i≤5exp. 3,168 (44) ≈634 R2L+ i≤5exp. 3,168 (44) ≈634 Rand. 5%+R2L+ i≤5exp. 4,896 (68) ≈979
+
+Table 8: Resume checkpoint (global step and epoch in parentheses) and Ndecay (Eq. 3), set to approximately 20% of the resume step, for each of the eight decay runs. 
+
+checkpoint, we apply the 1−√· learning-rate sched-ule as recommended by Hägele et al. (2024). Let-ting n denote the current training step, N the last training step, and Ndecay the number of decay steps, the schedule multiplies the peak rate by 
+
+f (n, N, N decay ) = 1 −
+
+s
+
+n − (N − Ndecay )
+
+Ndecay 
+
+,
+
+(3) decaying from 1 at the start of the decay phase (n = N −Ndecay ) to 0 at the final step ( n = N ). We set Ndecay ≈ 20% of the stable-phase training steps; the exact values per run are listed in Table 8. All other hyperparameters (batch size, weight decay, AdamW β values, context length) are kept identical to the stable phase, and no additional warmup is applied at the resume point. The final converged loss reported in Table 3 is the minimum validation loss observed at any checkpoint during the decay run. 
+
+Resume checkpoints. Table 8 lists the resume checkpoint (global step and corresponding epoch) and the total number of decay steps for each con-figuration. 
+
+F Downstream Evaluation Details 
+
+We evaluate using lm-evaluation-harness (Gao et al., 2024) in zero-shot mode. All tasks use the model’s standard left-to-right next-token prediction setting; no task-specific fine-tuning or prompting is applied. Table 7 lists the five benchmarks re-tained for the final analysis, with their category, description, and source. 
+
+Exclusion rationale. At 150M parameters, sev-eral standard benchmarks saturate or collapse in ways that yield no discriminative signal. LAM-BADA requires resolving long-range dependencies that are beyond the reach of a small model, pro-ducing 0% accuracy universally. BoolQ, RTE, and CommonsenseQA all collapse to the majority-class prediction regardless of augmentation, indicating the model has not learned task-relevant represen-tations. ARC-Easy and OpenBookQA both show near-identical scores across all eight configurations (variance <0.5 pp), providing no basis for com-parison. SciQ sits near-random ( ≈5%), likely be-cause it requires passage retrieval that zero-shot evaluation cannot support. The five retained tasks (HellaSwag, PIQA, ARC-Challenge, WinoGrande, COPA) all show at least 2 pp of variation across configurations and a plausible ordering relative to validation loss, making them the most informative signal available at this scale. 
+
+G Future Work 
+
+The most immediate priority is scaling: repeat-ing the ablations at multiple model sizes and data-to-parameter ratios would clarify whether the ob-served rankings are universal or regime-specific, and whether the interference patterns (e.g., token noise disrupting offset prediction) persist at scale. A complementary direction is dataset sensitivity: our experiments use a single web-text corpus with-out a model-based quality filter; testing on datasets with different domain distributions (e.g., C4, OS-CAR) or with DCLM-style model-based filtering would establish how much the results depend on corpus composition. On the augmentation design side, a promising avenue is dynamic scheduling: rather than applying a fixed augmentation rate throughout training, one could ramp up augmenta-tion intensity when the early-epoch memorization transition is detected, and reduce or disable aug-mentations during the decay phase to avoid con-flicting gradient signals at convergence. Finally, it would be natural to combine training-time data augmentations with architecture-level regularizers such as dropout, which operates orthogonally at the activation level; understanding whether these two families of regularizers interact synergistically or redundantly would help practitioners build more effective multi-epoch training pipelines.
