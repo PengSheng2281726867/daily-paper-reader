@@ -1,0 +1,891 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-19T21:55:21.872007+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 12,
+    "deep_cap": 8,
+    "deep_selected": 8,
+    "quick_candidates": 35,
+    "quick_skim_target": 13,
+    "quick_selected": 13
+  },
+  "deep_dive": [
+    {
+      "id": "2606.20302v1",
+      "source": "arxiv",
+      "title": "CUPID: Reconstructing UV Texture Maps for Interpretable Person-of-Interest Deepfake Detection",
+      "abstract": "Deepfakes targeting a high-profile individual, known as Person-of-Interest (POI), are a threat to modern democracies and societies. Current POI deepfake detection methods still struggle to combine robustness to post-processing, efficiency and interpretability, focal aspects of modern deepfake detectors. In this paper we propose CUPID, a POI video deepfake detector that combines UV texture maps, a facial appearance representation derived from 3D face reconstructions, with the representation learning capabilities of the Masked Autoencoder (MAE). Our method does not require any deepfake videos in its training phase. Moreover, it does not even require to include a specific POI in the training set: the combination of UV texture maps extracted from real video frames and the MAE context-guided reconstruction yields a latent space that captures rich and discriminative facial features also for identities unseen during training. In the testing phase, the embeddings extracted from a query video depicting the POI can be matched against pristine reference videos to assess the video authenticity. Furthermore, operating in the UV space naturally provides an additional layer of interpretability. Specifically, we can extract decoded residual maps that highlight which facial regions of a test video deviate most from the identity representation of the corresponding POI. Experiments on four deepfake datasets show that CUPID outperforms current state of the art on most datasets and achieves the best overall robustness against strong downscaling and compression, providing also substantially faster inference. Our experimental code will be released at https://github.com/polimi-ispl/CUPID.",
+      "authors": [
+        "Giovanni Affatato",
+        "Sara Mandelli",
+        "Edoardo Daniele Cannas",
+        "Paolo Bestagini",
+        "Stefano Tubaro"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T14:37:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.20302v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "uses Masked Autoencoder (MAE) for deepfake detection, directly aligns with MAE visual representation learning",
+      "llm_evidence_cn": "利用掩码自编码器（MAE）进行深度伪造检测，直接关联MAE视觉表示学习",
+      "llm_evidence": "利用掩码自编码器（MAE）进行深度伪造检测，直接关联MAE视觉表示学习",
+      "canonical_evidence": "利用掩码自编码器（MAE）进行深度伪造检测，直接关联MAE视觉表示学习",
+      "llm_tldr_en": "Proposes CUPID, a POI deepfake detector combining UV texture maps and Masked Autoencoder training, requiring no fake videos for training",
+      "llm_tldr_cn": "针对特定人物深度伪造检测，提出CUPID方法，利用3D人脸重建的UV纹理图与掩码自编码器（MAE）结合。无需深度伪造视频或特定人物数据训练，通过MAE的自监督表示学习提取真伪判别特征。在多个数据集上鲁棒且高效，展示了MAE在防御性视觉任务中的潜力。",
+      "llm_tldr": "针对特定人物深度伪造检测，提出CUPID方法，利用3D人脸重建的UV纹理图与掩码自编码器（MAE）结合。无需深度伪造视频或特定人物数据训练，通过MAE的自监督表示学习提取真伪判别特征。在多个数据集上鲁棒且高效，展示了MAE在防御性视觉任务中的潜力。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Masked Autoencoder MAE visual representation learning",
+      "matched_requirement_id": "req-3",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.19985v1",
+      "source": "arxiv",
+      "title": "Vision-Reasoning-Guided Occlusion Removal from Light Fields",
+      "abstract": "Occlusion-robust scene recovery remains a major challenge in computational imaging, particularly in natural environments where dense foreground vegetation severely limits visibility. We propose a vision-reasoning-guided light field occlusion removal framework that combines the visibility recovery capability of light field integration (LFI) with the semantic reasoning capacity of vision-language models (VLMs). Multi-view observations are first integrated via LFI to suppress foreground occlusions and produce an initial visibility-enhanced representation. A VLM is then incorporated as a conditional semantic prior to restore degraded structures and recover fine details, guided by the observed measurements. To improve recovery consistency and reduce hallucination artifacts, we introduce a multi-sample fusion strategy that aggregates multiple generated hypotheses into a unified estimate. Experimental results on synthetic and real-world datasets demonstrate state-of-the-art performance, achieving the highest average SSIM across four synthetic light field benchmark scenes (4-Syn) and strong generalization across structured and unstructured acquisition settings. These results highlight the effectiveness of combining physical imaging constraints with vision-language reasoning for robust perception under severe occlusion, with applicability to search-and-rescue and exploratory robotic navigation.",
+      "authors": [
+        "Mohamed Youssef",
+        "Oliver Bimber"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T09:24:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.19985v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "vision-language model guided occlusion removal from light fields",
+      "llm_evidence_cn": "视觉语言模型引导的光场遮挡去除",
+      "llm_evidence": "视觉语言模型引导的光场遮挡去除",
+      "canonical_evidence": "视觉语言模型引导的光场遮挡去除",
+      "llm_tldr_en": "Combines light field integration with a vision-language model as a semantic prior to restore occluded structures, achieving effective occlusion removal and hallucination reduction in natural scenes.",
+      "llm_tldr_cn": "问题：自然环境中密集遮挡严重限制场景恢复能力，现有方法难以有效去遮挡。方法：先通过光场积分抑制前景遮挡，再以视觉语言模型作为条件语义先验恢复退化结构。结果：在真实世界光线场景中，该方法有效去除遮挡并还原纹路细节，减轻了幻觉。贡献：将语言知识融入光场去遮挡，提升了鲁棒性。",
+      "llm_tldr": "问题：自然环境中密集遮挡严重限制场景恢复能力，现有方法难以有效去遮挡。方法：先通过光场积分抑制前景遮挡，再以视觉语言模型作为条件语义先验恢复退化结构。结果：在真实世界光线场景中，该方法有效去除遮挡并还原纹路细节，减轻了幻觉。贡献：将语言知识融入光场去遮挡，提升了鲁棒性。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.18650v1",
+      "source": "arxiv",
+      "title": "BLADE: Scalable Bi-level Adaptive Data Selection for LLM Training",
+      "abstract": "As Large Language Model (LLM) datasets scale to trillions of tokens, data selection has emerged as a critical frontier to filter out uninformative noise and construct adaptive learning trajectories. Beyond static heuristic filtering, advanced data selection methods for LLM training largely follow two paradigms, each with fundamental limitations. Influence-based methods provide principled bi-level objectives but require intractable inverse-Hessian computations, while excess-loss methods are computationally efficient but rely on a static reference model that becomes misaligned with the evolving proxy model during training. We propose BLADE (Bi-Level Adaptive Data sElection), a Hessian-free framework for data selection. BLADE reformulates the bi-level optimization problem underlying influence-based methods as a penalized single-level objective via Lagrange multipliers, avoiding inverse-Hessian computation while revealing a principled connection to excess-loss based data selection. The resulting objective recovers an excess-loss form but replaces the static reference model with a dynamic one that stays synchronized with training. Theoretically, we prove that this penalized formulation guarantees first-order convergence. For efficient online batch selection, we instantiate BLADE as a memoryless randomized block-coordinate Frank-Wolfe algorithm. Extensive experiments show that BLADE consistently outperforms state-of-the-art data selection baselines, providing a practical recipe for LLM training.",
+      "authors": [
+        "Jiaxing Wang",
+        "Deping Xiang",
+        "Jin Xu",
+        "Zirui Liu",
+        "Zicheng Zhang",
+        "Guoqiang Gong",
+        "Jun Fang",
+        "Chao Liu",
+        "Pengzhang Liu",
+        "Tongxuan Liu",
+        "Ke Zhang",
+        "Qixia Jiang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-17T03:35:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.18650v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Data selection for LLM pretraining",
+      "llm_evidence_cn": "LLM预训练的数据选择",
+      "llm_evidence": "LLM预训练的数据选择",
+      "canonical_evidence": "LLM预训练的数据选择",
+      "llm_tldr_en": "Proposes BLADE, a Hessian-free bi-level adaptive data selection framework for LLM training that avoids intractable inverse-Hessian computations and adapts to the evolving model.",
+      "llm_tldr_cn": "该论文提出BLADE框架，针对大语言模型训练的数据选择问题，通过无海森矩阵的双层优化实现自适应数据筛选。BLADE克服了传统影响函数方法计算复杂和超损方法引用模型不匹配的问题，在保持高效的同时动态适应模型状态。实验表明BLADE在多种预训练场景下提升了数据效率，为大规模LLM训练提供了可扩展的数据筛选方案。",
+      "llm_tldr": "该论文提出BLADE框架，针对大语言模型训练的数据选择问题，通过无海森矩阵的双层优化实现自适应数据筛选。BLADE克服了传统影响函数方法计算复杂和超损方法引用模型不匹配的问题，在保持高效的同时动态适应模型状态。实验表明BLADE在多种预训练场景下提升了数据效率，为大规模LLM训练提供了可扩展的数据筛选方案。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "pretraining methods for language models",
+      "matched_requirement_id": "req-16",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.14005v1",
+      "source": "arxiv",
+      "title": "Context-Guided Semantic Alignment for Feature Fusion Networks",
+      "abstract": "Feature fusion networks are fundamental components in modern object detectors, aggregating multi-scale features to detect objects of varying sizes. However, directly fusing features from different pyramid levels often introduces semantic inconsistency due to their heterogeneous representations. In this paper, we propose Feature Interaction NEtwork (FINE), a lightweight semantic alignment module that refines low-level features via high-level contextual guidance using cross-level attention prior to fusion. To bridge the structural gap and ensure computational efficiency, we introduce an Alignment-Aware Token Sampling that aligns corresponding spatial regions across scales, reducing the attention complexity by an order of magnitude. The resulting attention weights generate a spatial-channel modulation map that is upsampled and applied to the low-level features via residual element-wise modulation. This mechanism ensures that the network selectively enhances semantically relevant pixels while preserving the sub-pixel localization accuracy necessary for dense prediction tasks. FINE is generally applicable to various detectors and consistently improves detection accuracy without compromising efficiency.",
+      "authors": [
+        "Hyungseop Lee",
+        "Jiho Lee",
+        "Woochul Kang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-12T00:54:11+00:00",
+      "link": "https://arxiv.org/pdf/2606.14005v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "feature fusion with cross-level attention for object detection",
+      "llm_evidence_cn": "用于目标检测的跨层级注意力特征融合",
+      "llm_evidence": "用于目标检测的跨层级注意力特征融合",
+      "canonical_evidence": "用于目标检测的跨层级注意力特征融合",
+      "llm_tldr_en": "Proposes FINE, a lightweight semantic alignment module using cross-level attention and token sampling to refine low-level features before fusion in object detectors.",
+      "llm_tldr_cn": "针对目标检测中多尺度特征融合存在语义不一致的问题，提出Feature Interaction NEtwork（FINE），利用跨层级注意力指导低层特征语义对齐，并引入对齐感知令牌采样降低注意力复杂度。在多个检测器上提升精度且计算开销小。",
+      "llm_tldr": "针对目标检测中多尺度特征融合存在语义不一致的问题，提出Feature Interaction NEtwork（FINE），利用跨层级注意力指导低层特征语义对齐，并引入对齐感知令牌采样降低注意力复杂度。在多个检测器上提升精度且计算开销小。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "DETR transformer for object detection paper",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.19857v1",
+      "source": "arxiv",
+      "title": "Large Language Models Do Not Always Need Readable Language",
+      "abstract": "Large language models (LLMs) are commonly prompted and interfaced with human-readable natural language, even when the intended reader is another model. This paper investigates whether semantic information can be encoded in compact, non-standard textual forms that sacrifice human readability while remaining recoverable by LLMs. We refer to this class of model-centric textual representations as BabelTele, approached here not as a fixed protocol but as an empirical probe into LLMs' capacity to generate and interpret such representations. Through readability diagnostics, model likelihood measures, human questionnaires, and downstream task evaluations, we find that BabelTele can substantially depart from ordinary natural language while preserving core semantics for instruction-tuned LLMs. As a task-agnostic representational paradigm, BabelTele demonstrates high information density, maintaining 99.5% semantic fidelity even when the text volume is condensed to 27.9% of its original length. We further evaluate its semantic robustness in cross-model transfer, agent memory, and multi-agent communication. Results suggest that BabelTele can reduce context overhead while generally maintaining reliable downstream performance, although its effectiveness depends on the compressor-reader pair and task setting. These findings indicate that human readability, natural-language typicality, and model-side semantic recoverability can be partially decoupled, opening a path toward model-native representations in future exploration of LLM systems.",
+      "authors": [
+        "Jiayi Zhu",
+        "Haoxuan Peng",
+        "Junxi Wang",
+        "Liang Ke",
+        "Chen Zhang",
+        "Linfeng Zhang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-18T07:05:19+00:00",
+      "link": "https://arxiv.org/pdf/2606.19857v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "investigates LLMs' capacity to process non-human-readable text, key research on transformer-based LMs",
+      "llm_evidence_cn": "研究LLM处理非人类可读文本的能力，是Transformer语言模型的关键研究",
+      "llm_evidence": "研究LLM处理非人类可读文本的能力，是Transformer语言模型的关键研究",
+      "canonical_evidence": "研究LLM处理非人类可读文本的能力，是Transformer语言模型的关键研究",
+      "llm_tldr_en": "Explores whether LLMs can encode semantic information in compact, non-readable textual forms (BabelTele), showing substantial departure from natural language while preserving semantics.",
+      "llm_tldr_cn": "大语言模型通常使用人类可读的自然语言进行交互，但本文探究能否将语义编码为紧凑、非人类可读的文本形式。作者提出了BabelTele概念，通过可读性诊断、模型似然度测量、人工问卷和下游任务评估发现，LLM能够生成并解读严重偏离自然语言但仍保留核心语义的表示。这揭示了LLM的信息编码能力远超人类直觉。",
+      "llm_tldr": "大语言模型通常使用人类可读的自然语言进行交互，但本文探究能否将语义编码为紧凑、非人类可读的文本形式。作者提出了BabelTele概念，通过可读性诊断、模型似然度测量、人工问卷和下游任务评估发现，LLM能够生成并解读严重偏离自然语言但仍保留核心语义的表示。这揭示了LLM的信息编码能力远超人类直觉。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.19100v1",
+      "source": "arxiv",
+      "title": "AMALIA-VL: A Native European Portuguese Open-Source Vision and Language Model",
+      "abstract": "Large Vision and Language Models (LVLMs) have advanced rapidly, yet European Portuguese (pt-PT) remains systematically underserved by existing open-source multimodal models, which either conflate it with Brazilian Portuguese or severely under-represent it in their training data mixes. We introduce AMALIA-VL, the first open-source instruction-tuned LVLM built natively for pt-PT, pairing a high-resolution vision encoder with dynamic image tiling and a fully open pt-PT-optimized language model via a learned connector. We contribute with a purposefully designed three-stage training process - vision-language alignment, general visual instruction tuning, and preference optimization - together with a pt-PT-centric multimodal data mix combining curated and translated public datasets with novel datasets that address the near-total absence of European Portuguese multimodal resources. Our evaluation shows that AMALIA-VL establishes a strong baseline for open-source pt-PT LVLMs.We will release model weights, training data, and construction pipelines along with machine-translated pt-PT evaluation benchmarks to help democratize pt-PT LVLM development.",
+      "authors": [
+        "Diogo Glória-Silva",
+        "João Cardeira",
+        "Manuel Letras da Luz",
+        "Afonso Simplício",
+        "Gonçalo Vinagre",
+        "Diogo Tavares",
+        "Rafael Ferreira",
+        "Inês Calvo",
+        "Inês Vieira",
+        "David Semedo",
+        "João Magalhães"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-17T14:11:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.19100v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "open-source LVLM for Portuguese, connecting vision and language",
+      "llm_evidence_cn": "开源葡萄牙语视觉语言模型，连接视觉和语言",
+      "llm_evidence": "开源葡萄牙语视觉语言模型，连接视觉和语言",
+      "canonical_evidence": "开源葡萄牙语视觉语言模型，连接视觉和语言",
+      "llm_tldr_en": "AMALIA-VL introduces the first open-source instruction-tuned LVLM for European Portuguese, using a three-stage training process for vision-language alignment and preference optimization.",
+      "llm_tldr_cn": "针对欧洲葡萄牙语缺乏开源视觉语言模型的问题，提出AMALIA-VL，这是首个面向葡萄牙语的原生指令微调大型视觉语言模型。采用高分辨率视觉编码器与动态图像分块，结合三阶段训练（视觉-语言对齐、通用视觉指令微调、偏好优化），显著提升了葡萄牙语多模态任务性能。该工作填补了小语种多模态模型空白，推动了视觉语言模型的多样化和本土化发展。",
+      "llm_tldr": "针对欧洲葡萄牙语缺乏开源视觉语言模型的问题，提出AMALIA-VL，这是首个面向葡萄牙语的原生指令微调大型视觉语言模型。采用高分辨率视觉编码器与动态图像分块，结合三阶段训练（视觉-语言对齐、通用视觉指令微调、偏好优化），显著提升了葡萄牙语多模态任务性能。该工作填补了小语种多模态模型空白，推动了视觉语言模型的多样化和本土化发展。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "carryover_cache",
+      "paper_id": "2606.19100v1"
+    },
+    {
+      "id": "2606.15632v1",
+      "source": "arxiv",
+      "title": "Open-World Video Segmentation",
+      "abstract": "While video segmentation has advanced rapidly on short clips and closed-set benchmarks, open-world video segmentation remains largely unexplored. The challenge is twofold: (1) existing methods are not designed to support object discovery and identity maintenance in long videos of dynamic ego-motion, and (2) existing evaluation protocols rely on a rigid 1:1 matching that unfairly penalizes semantically valid predictions with mismatched granularity. To address both gaps, we introduce Savvy, a practical and strong system for zero-shot open-world long-horizon video segmentation. Savvy combines hierarchical mask discovery, deferred admission, and track consolidation to support persistent object discovery, safe track promotion, and stable long-range identity maintenance. We further propose OGA, a granularity-aware evaluation suite for open-world video segmentation. Built on a Granularity-Agnostic (GA) matching protocol, OGA relaxes conventional 1:1 matching to an n:1 mapping, but still enforces temporal rigor by detecting support discontinuities through sever points and scoring each reference object through its dominant coherent fragment. This prevents fragmented or flickering support from being over-rewarded while enabling GA-adapted metrics and structural diagnostics: identity persistence (IP), and identity concentration (IC). On VIPSeg, we show that standard 1:1 evaluation substantially underestimates open-world methods, whereas GA evaluation recovers much of their suppressed performance. On the more realistic long-horizon benchmarks: ScanNet and HM3D, Savvy consistently outperforms strong baselines across both classical and proposed metrics, including STQ, VPQ$_\\infty$, IP and IC. Together, these results establish a practical benchmark and a strong baseline for open-world long-horizon video segmentation.",
+      "authors": [
+        "Qing Su",
+        "Kaiyang Li",
+        "Yuan Zhuang",
+        "Fei Miao",
+        "Shihao Ji"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-14T06:48:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.15632v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "open-world video segmentation as landmark after Transformer",
+      "llm_evidence_cn": "开放世界视频分割是Transformer之后的重要视觉任务",
+      "llm_evidence": "开放世界视频分割是Transformer之后的重要视觉任务",
+      "canonical_evidence": "开放世界视频分割是Transformer之后的重要视觉任务",
+      "llm_tldr_en": "Proposes Savvy for zero-shot open-world long-horizon video segmentation, combining hierarchical mask discovery and track consolidation to handle long videos and dynamic ego-motion.",
+      "llm_tldr_cn": "现有视频分割方法局限于短片段和闭集场景，难以支持开放世界下的长视频目标发现与身份维持。为此提出Savvy系统，通过分层掩码发现、延迟准入和轨迹整合实现零样本开放世界长时视频分割。在多个基准上超越现有方法，并提出新的评价协议OGA以更公平评估开放世界分割质量。该工作推动了视频分割向实用化和开放化发展。",
+      "llm_tldr": "现有视频分割方法局限于短片段和闭集场景，难以支持开放世界下的长视频目标发现与身份维持。为此提出Savvy系统，通过分层掩码发现、延迟准入和轨迹整合实现零样本开放世界长时视频分割。在多个基准上超越现有方法，并提出新的评价协议OGA以更公平评估开放世界分割质量。该工作推动了视频分割向实用化和开放化发展。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "landmark papers in computer vision after the introduction of Transformer",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.15632v2",
+      "source": "arxiv",
+      "title": "Open-World Video Segmentation",
+      "abstract": "While video segmentation has advanced rapidly on short clips and closed-set benchmarks, open-world video segmentation remains largely unexplored. The challenge is twofold: (1) existing methods are not designed to support object discovery and identity maintenance in long videos of dynamic ego-motion, and (2) existing evaluation protocols rely on a rigid 1:1 matching that unfairly penalizes semantically valid predictions with mismatched granularity. To address both gaps, we introduce Savvy, a practical and strong system for zero-shot open-world long-horizon video segmentation. Savvy combines hierarchical mask discovery, deferred admission, and track consolidation to support persistent object discovery, safe track promotion, and stable long-range identity maintenance. We further propose OGA, a granularity-aware evaluation suite for open-world video segmentation. Built on a Granularity-Agnostic (GA) matching protocol, OGA relaxes conventional 1:1 matching to an n:1 mapping, but still enforces temporal rigor by detecting support discontinuities through sever points and scoring each reference object through its dominant coherent fragment. This prevents fragmented or flickering support from being over-rewarded while enabling GA-adapted metrics and structural diagnostics: identity persistence (IP), and identity concentration (IC). On VIPSeg, we show that standard 1:1 evaluation substantially underestimates open-world methods, whereas GA evaluation recovers much of their suppressed performance. On the more realistic long-horizon benchmarks: ScanNet and HM3D, Savvy consistently outperforms strong baselines across both classical and proposed metrics, including STQ, VPQ$_\\infty$, IP and IC. Together, these results establish a practical benchmark and a strong baseline for open-world long-horizon video segmentation.",
+      "authors": [
+        "Qing Su",
+        "Kaiyang Li",
+        "Yuan Zhuang",
+        "Fei Miao",
+        "Shihao Ji"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-14T06:48:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.15632v2",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "open-world video segmentation as landmark after Transformer",
+      "llm_evidence_cn": "开放世界视频分割是Transformer之后的重要视觉任务",
+      "llm_evidence": "开放世界视频分割是Transformer之后的重要视觉任务",
+      "canonical_evidence": "开放世界视频分割是Transformer之后的重要视觉任务",
+      "llm_tldr_en": "Proposes Savvy for zero-shot open-world long-horizon video segmentation, combining hierarchical mask discovery and track consolidation to handle long videos and dynamic ego-motion.",
+      "llm_tldr_cn": "现有视频分割方法局限于短片段和闭集场景，难以支持开放世界下的长视频目标发现与身份维持。为此提出Savvy系统，通过分层掩码发现、延迟准入和轨迹整合实现零样本开放世界长时视频分割。在多个基准上超越现有方法，并提出新的评价协议OGA以更公平评估开放世界分割质量。该工作推动了视频分割向实用化和开放化发展。",
+      "llm_tldr": "现有视频分割方法局限于短片段和闭集场景，难以支持开放世界下的长视频目标发现与身份维持。为此提出Savvy系统，通过分层掩码发现、延迟准入和轨迹整合实现零样本开放世界长时视频分割。在多个基准上超越现有方法，并提出新的评价协议OGA以更公平评估开放世界分割质量。该工作推动了视频分割向实用化和开放化发展。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "landmark papers in computer vision after the introduction of Transformer",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.18249v2",
+      "source": "arxiv",
+      "title": "Unified Multimodal Autoregressive Modeling with Shared Context-Visual Tokenizer is Key to Unification",
+      "abstract": "Unified Multimodal Modeling aims to integrate visual understanding and generation within a single system. However, existing approaches typically rely on two disparate visual tokenizers, which splits the representation space and hinders truly unified modeling. We propose UniAR, a unified autoregressive framework where a single discrete visual tokenizer serves as the key bridge between understanding and generation, enabling a shared context in which the model can directly interpret its own generated visual tokens without additional re-encoding. UniAR adapts a pretrained vision encoder with multi-level feature fusion and a lookup-free bitwise quantization scheme, preserving both high-level semantics and low-level details while scaling the effective visual vocabulary at minimal cost. Building on this, the unified autoregressive model adopts parallel-bitwise-prediction to jointly predict spatially grouped, multi-level visual codes, substantially reducing visual sequence length and accelerating generation. Finally, a diffusion-based visual decoder operates on discrete visual tokens to decode high-fidelity images. Through large-scale pre-training, followed by supervised fine-tuning and reinforcement learning, UniAR achieves state-of-the-art performance on image generation and image editing while remaining competitive on multimodal understanding benchmarks. The project page is available at https://sharelab-sii.github.io/uniar-web.",
+      "authors": [
+        "Wujian Peng",
+        "Lingchen Meng",
+        "Yuxuan Cai",
+        "Xianwei Zhuang",
+        "Yuhuan Yang",
+        "Rongyao Fang",
+        "Chenfei Wu",
+        "Junyang Lin",
+        "Zuxuan Wu",
+        "Shuai Bai"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-16T17:59:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.18249v2",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Unified multimodal autoregressive with shared visual tokenizer",
+      "llm_evidence_cn": "统一多模态，自回归，共享视觉标记器",
+      "llm_evidence": "统一多模态，自回归，共享视觉标记器",
+      "canonical_evidence": "统一多模态，自回归，共享视觉标记器",
+      "llm_tldr_en": "UniAR uses a single discrete visual tokenizer for both understanding and generation, enabling shared context and direct interpretation of generated tokens.",
+      "llm_tldr_cn": "现有统一多模态模型使用两个不同的视觉标记器，导致表示空间割裂。UniAR提出单个离散视觉标记器桥接理解和生成，模型可直接解读自身生成的视觉标记。UniAR适配预训练视觉编码器，采用多级特征融合和免查找量化，保持高低级语义细节。",
+      "llm_tldr": "现有统一多模态模型使用两个不同的视觉标记器，导致表示空间割裂。UniAR提出单个离散视觉标记器桥接理解和生成，模型可直接解读自身生成的视觉标记。UniAR适配预训练视觉编码器，采用多级特征融合和免查找量化，保持高低级语义细节。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.14970v1",
+      "source": "arxiv",
+      "title": "Zero-order Parameter-free Optimization for LMO-based Methods: Novel Approach for Efficient Fine-tuning",
+      "abstract": "Fine-tuning large language models (LLMs) has become a central application of modern optimization, enabling pretrained models to adapt to diverse downstream tasks and domain-specific data. A major obstacle in large-scale fine-tuning is the memory overhead of backpropagation, which requires storing activations, gradients, and optimizer states. Zeroth-order (ZO) optimization offers a memory-efficient alternative, but its performance is highly sensitive to the stepsize and smoothing parameter, often requiring costly task-specific tuning. Parameter-free (PF) optimization addresses this issue by adapting algorithmic parameters without prior knowledge of problem-dependent constants. Moreover, large-scale fine-tuning can benefit from geometry-aware updates that account for the heterogeneous structure of parameter blocks, which can be modeled through methods that exploit linear minimization oracle (LMO). In this work, we study PF adaptation for LMO-based ZO optimization and introduce $\\texttt{AdaNAGED}$, a method that unifies gradient-free training, adaptive tuning, and non-Euclidean update geometry. We establish convergence guarantees and validate the method on large-scale LLM fine-tuning task with $\\texttt{OPT}-1.3\\mathrm{B}$ model.",
+      "authors": [
+        "Dmitriy Bystrov",
+        "Daniil Medyakov",
+        "Dmitry Bylinkin",
+        "Aleksandr Beznosikov"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG"
+      ],
+      "published": "2026-06-12T21:46:54+00:00",
+      "link": "https://arxiv.org/pdf/2606.14970v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "efficient fine-tuning optimization for LLMs, relevant to transformer-based language models",
+      "llm_evidence_cn": "LLM高效微调优化方法，与基于Transformer的语言模型相关",
+      "llm_evidence": "LLM高效微调优化方法，与基于Transformer的语言模型相关",
+      "canonical_evidence": "LLM高效微调优化方法，与基于Transformer的语言模型相关",
+      "llm_tldr_en": "Proposes a zero-order parameter-free optimization method for fine-tuning LLMs, eliminating backpropagation memory overhead and sensitivity to hyperparameters.",
+      "llm_tldr_cn": "大模型微调面临反向传播显存开销大的问题，零阶优化虽省显存但超参数敏感。本文提出了零阶参数无关优化方法，自适应调整算法参数，无需预知问题相关常数。在多个LLM微调任务上，该方法在保持性能的同时显著降低显存占用，无需任务特定调参，为大规模微调提供了实用的高效方案。",
+      "llm_tldr": "大模型微调面临反向传播显存开销大的问题，零阶优化虽省显存但超参数敏感。本文提出了零阶参数无关优化方法，自适应调整算法参数，无需预知问题相关常数。在多个LLM微调任务上，该方法在保持性能的同时显著降低显存占用，无需任务特定调参，为大规模微调提供了实用的高效方案。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.13896v1",
+      "source": "arxiv",
+      "title": "How do Self-Supervised Remote Sensing Vision Models Transfer to Downstream Tasks?",
+      "abstract": "Self-supervised geospatial foundation models (GeoFMs) learn transferable representations from remote sensing data, but their downstream behavior is difficult to characterize. We study six representative GeoFMs spanning joint-embedding, reconstruction, and multimodal pretraining families, and evaluate transfer across classification, regression, and segmentation benchmarks under different label availability and downstream pipelines. We find that model rankings change across tasks and adaptation settings. Layerwise probing shows that, in most cases, task-relevant information is more accessible in intermediate transformer blocks compared to final-layer embeddings, and that GeoFMs exhibit distinct depthwise profiles. In segmentation case studies on PASTIS and Sen1Floods11, downstream adaptation settings such as decoder design and fine-tuning can be as impactful as the choice of GeoFM, and standard dense-prediction heads may be poorly aligned with how GeoFMs organize information over depth. Finally, CKA analysis on case studies shows that fine-tuning does not rewrite GeoFMs uniformly across depth, and the strongest changes are localized to the first linear layer of the MLP in ViT blocks. These results help explain why GeoFM rankings shift across benchmarks and motivate more representation-aware evaluation and adaptation strategies.",
+      "authors": [
+        "Julia Romero",
+        "Qin Lv",
+        "Morteza Karimzadeh"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-11T20:39:34+00:00",
+      "link": "https://arxiv.org/pdf/2606.13896v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Studies self-supervised geospatial vision transformers transfer",
+      "llm_evidence_cn": "研究自监督地理空间视觉Transformer的迁移性能",
+      "llm_evidence": "研究自监督地理空间视觉Transformer的迁移性能",
+      "canonical_evidence": "研究自监督地理空间视觉Transformer的迁移性能",
+      "llm_tldr_en": "Study of six self-supervised GeoFMs reveals model rankings shift across tasks and intermediate layers hold more task-relevant info.",
+      "llm_tldr_cn": "本文系统研究了六种自监督地理空间基础模型（GeoFMs）在下游任务中的迁移行为，发现模型排名随任务和适应策略变化，且中间层特征比最终层更富含任务相关信息，为自监督视觉Transformer的评估提供了重要见解。",
+      "llm_tldr": "本文系统研究了六种自监督地理空间基础模型（GeoFMs）在下游任务中的迁移行为，发现模型排名随任务和适应策略变化，且中间层特征比最终层更富含任务相关信息，为自监督视觉Transformer的评估提供了重要见解。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "self-supervised learning with vision transformers",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.19483v1",
+      "source": "arxiv",
+      "title": "LEAP: Layer-skipping Efficiency via Adaptive Progression for Vision Transformer Distillation",
+      "abstract": "Vision Foundation Models (VFMs) with Vision Transformer (ViT) backbones, such as DINOv2, have become essential for downstream tasks like object recognition and semantic segmentation. The immense computational requirements of backbones often necessitate distillation into smaller architectures for edge deployment. Feature-based knowledge distillation (KD) often suffers from the teacher-student gap; the student struggles to imitate teacher's complex feature map due to its limited capacity. To mitigate this bottleneck, we propose LEAP: Layer-skipping Efficiency via Adaptive Progression, a training curriculum for ViT feature-based knowledge distillation. By utilizing the teacher's intermediate feature maps as a sequence of progressively more difficult targets, our curriculum allows the student to build a foundational representation before tackling higher-level abstractions. Our results demonstrate that this paradigm significantly accelerates convergence through adaptive difficulty selection across various student model sizes and dataset scales. With our curriculum, the LEAP-distilled ViT-S achieves 90.1% accuracy on ImageNet-100, a +12.24% improvement compared with baseline. On ImageNet-1K, LEAP achieves +3.84% and +7.75% improvement for the instance retrieval task on the Oxford and Paris datasets, respectively. Furthermore, the curriculum enables 25.1% savings in training FLOPs and 21% savings in training time on ImageNet-100 by implementing early-stopping for teacher inference during the initial stages of training. Code is available at https://github.com/KevinZ0217/LEAP",
+      "authors": [
+        "Jiaqi Zhang",
+        "Ashton Lee",
+        "Anthony Wong",
+        "John Zou",
+        "Sami BuGhanem",
+        "Randall Balestriero"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-17T18:14:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.19483v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Vision Transformer distillation with adaptive layer skipping",
+      "llm_evidence_cn": "视觉Transformer，知识蒸馏，跳层策略",
+      "llm_evidence": "视觉Transformer，知识蒸馏，跳层策略",
+      "canonical_evidence": "视觉Transformer，知识蒸馏，跳层策略",
+      "llm_tldr_en": "LEAP introduces a training curriculum for ViT distillation that progressively skips teacher layers to reduce the teacher-student gap, enabling efficient edge deployment.",
+      "llm_tldr_cn": "视觉基础模型（如DINOv2）计算量大，需要蒸馏到小模型用于边缘设备。但特征蒸馏存在师生差距。LEAP提出自适应进度训练课程，利用教师中间特征图作为渐进目标，学生逐步学习从浅层到深层的特征。在多个下游任务上，LEAP显著缩小了师生差距，提升了蒸馏效率。",
+      "llm_tldr": "视觉基础模型（如DINOv2）计算量大，需要蒸馏到小模型用于边缘设备。但特征蒸馏存在师生差距。LEAP提出自适应进度训练课程，利用教师中间特征图作为渐进目标，学生逐步学习从浅层到深层的特征。在多个下游任务上，LEAP显著缩小了师生差距，提升了蒸馏效率。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.15344v1",
+      "source": "arxiv",
+      "title": "Generative modelling powered by room-temperature polariton condensates",
+      "abstract": "Generative modelling requires efficient stochastic nonlinear transformations and physical platforms that can naturally realise them. We experimentally demonstrate that nonlinear optical systems operating in the strong light-matter coupling regime can serve as physical transformation layers for conditional generative modelling. Specifically, we develop a workflow in which room-temperature exciton-polariton condensates formed in organic dye microcavities act as a physical stochastic transform within a generative adversarial network and enable conditional digit-to-image translation. By using the nonlinear many-body dynamics and intrinsic stochasticity of polariton condensates, the workflow outperforms baseline approaches based on digitally injected perturbations. We find that polariton-enabled sampling via generative adversarial network (Polariton GAN) yields improved inception score, digit preservation accuracy and structural similarity compared with both digital sampling and laser-based systems. We further show that spatially correlated output variations can naturally regularise adversarial training and enhance output diversity. Our results establish polariton condensation as a new computational resource for generative modelling, opening a pathway towards physics-enhanced machine learning systems.",
+      "authors": [
+        "Yuan Wang",
+        "Marcin Muszynski",
+        "Avinash Dash",
+        "Rishabh Kaurav",
+        "Vinod M. Menon",
+        "Oleksandr Kyriienko"
+      ],
+      "primary_category": "cond-mat.dis-nn",
+      "categories": [
+        "cond-mat.dis-nn",
+        "cs.LG",
+        "physics.optics",
+        "quant-ph"
+      ],
+      "published": "2026-06-13T15:07:27+00:00",
+      "link": "https://arxiv.org/pdf/2606.15344v1",
+      "tags": [
+        "keyword:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "generative adversarial network using polariton condensates",
+      "llm_evidence_cn": "利用激子极化凝聚体的生成对抗网络",
+      "llm_evidence": "利用激子极化凝聚体的生成对抗网络",
+      "canonical_evidence": "利用激子极化凝聚体的生成对抗网络",
+      "llm_tldr_en": "Demonstrates a physical GAN using room-temperature polariton condensates as stochastic transforms for conditional digit-to-image generation, outperforming digital baselines.",
+      "llm_tldr_cn": "提出利用室温激子极化凝聚体作为物理随机变换层的生成对抗网络，用于条件数字到图像转换。利用非线性多体动力学和固有随机性，在生成质量上超越纯数字注入扰动的基线方法。为物理生成模型开辟新方向。",
+      "llm_tldr": "提出利用室温激子极化凝聚体作为物理随机变换层的生成对抗网络，用于条件数字到图像转换。利用非线性多体动力学和固有随机性，在生成质量上超越纯数字注入扰动的基线方法。为物理生成模型开辟新方向。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "generative adversarial networks for computer vision at CCF-A venues",
+      "matched_requirement_id": "req-6",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15044v1",
+      "source": "arxiv",
+      "title": "Equity with Efficiency: An Empirical Study of Tokenizers for Multilingual Large Language Models",
+      "abstract": "Multilingual large language models (LLMs) depend on subword tokenization to bridge discrete text and continuous neural representation. State-of-the-art multilingual LLMs often use Byte-level Byte-Pair Encoding (BPE) tokenizers that structurally favor high-resource languages and Latin scripts. For speakers of underrepresented languages, particularly those across Southeast Asia, this bias inflates inference costs and widens cross-lingual capability gaps. We present the first systematic comparison of equitable tokenizers on a unified benchmark spanning 11 Southeast Asian languages. Beyond tokenizer-level analysis of compression efficiency and cross-lingual equity, we assess downstream task performance through controlled 1.5B-parameter language model training using the same training data. Our results show that Parity-aware BPE lies on the Pareto frontier of the efficiency-equity trade-off, achieving strong compression parity at competitive cost. Morphology-Driven Byte Encoding delivers the best semantic reasoning performance through morphologically richer representations, albeit at a higher computational expense. Byte Latent Transformer underperforms on downstream tasks, possibly because its architectural assumptions misalign with the constraints of limited low-resource training data. Together, our findings demonstrate that cross-lingual fairness and tokenization efficiency are not fundamentally at odds, and offer practical guidance for designing equitable multilingual models.",
+      "authors": [
+        "Kieron Seven Jun Wei Lee",
+        "Muhammad Reza Qorib",
+        "Andrew Ivan Soegeng",
+        "Hwee Tou Ng"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-13T01:10:42+00:00",
+      "link": "https://arxiv.org/pdf/2606.15044v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "systematic comparison of tokenizers for multilingual LLM pretraining",
+      "llm_evidence_cn": "多语言大语言模型分词器的系统比较与预训练影响",
+      "llm_evidence": "多语言大语言模型分词器的系统比较与预训练影响",
+      "canonical_evidence": "多语言大语言模型分词器的系统比较与预训练影响",
+      "llm_tldr_en": "First systematic benchmark of equitable tokenizers across 11 Southeast Asian languages, showing BPE bias and proposing trade-offs between equity and efficiency in LLM pretraining.",
+      "llm_tldr_cn": "多语言大语言模型的分词器偏好高资源语言，造成低资源语言推理成本高。本文首次系统比较了11种东南亚语言上的公平分词器，分析了压缩效率与跨语言公平性的权衡，并通过1.5B参数模型的下游任务验证了不同分词器对预训练效果的影响。",
+      "llm_tldr": "多语言大语言模型的分词器偏好高资源语言，造成低资源语言推理成本高。本文首次系统比较了11种东南亚语言上的公平分词器，分析了压缩效率与跨语言公平性的权衡，并通过1.5B参数模型的下游任务验证了不同分词器对预训练效果的影响。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "pretraining methods for language models",
+      "matched_requirement_id": "req-16",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.19584v1",
+      "source": "arxiv",
+      "title": "Language-Instructed Vision Embeddings for Controllable and Generalizable Perception",
+      "abstract": "Vision foundation models are typically trained as static feature extractors, placing the burden of task adaptation onto large downstream models. We propose an alternative paradigm: instead of solely feeding visual features into language models, we use language itself to dynamically guide the vision encoder. Our method, Language-Instructed Vision Embeddings (LIVE), leverages language as high-level guidance to produce task-centric embeddings at inference time, removing the need for task-specific retraining. This enables the encoder to focus on contextually relevant aspects of the input, yielding more controllable and generalizable representations. Empirically, LIVE reduces visual hallucinations (+34 points on MMVP), surpasses vision-language models with orders of magnitude more parameters on visual question answering, and generalizes to unseen instructions and tasks -- offering a direct path toward adaptive, instruction-driven visual intelligence.",
+      "authors": [
+        "Chengzhi Mao",
+        "Xudong Lin",
+        "Wen-Sheng Chu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-17T20:39:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.19584v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Language-guided vision embeddings akin to CLIP's vision-text connection",
+      "llm_evidence_cn": "语言指导视觉嵌入，类似CLIP连接文本与图像",
+      "llm_evidence": "语言指导视觉嵌入，类似CLIP连接文本与图像",
+      "canonical_evidence": "语言指导视觉嵌入，类似CLIP连接文本与图像",
+      "llm_tldr_en": "LIVE uses language to dynamically steer vision encoder outputs at inference, producing task-specific embeddings and reducing hallucinations, similar in spirit to CLIP.",
+      "llm_tldr_cn": "传统视觉基础模型作为静态特征提取器，将任务适应负担留给下游模型。本文提出LIVE方法，在推理时利用语言作为高层指导动态生成任务中心嵌入，无需任务特化训练。实验表明，LIVE在视觉幻觉、可控性和泛化性上显著超越基线，与CLIP连接文本与图像的目标一致但实现更灵活。",
+      "llm_tldr": "传统视觉基础模型作为静态特征提取器，将任务适应负担留给下游模型。本文提出LIVE方法，在推理时利用语言作为高层指导动态生成任务中心嵌入，无需任务特化训练。实验表明，LIVE在视觉幻觉、可控性和泛化性上显著超越基线，与CLIP连接文本与图像的目标一致但实现更灵活。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.15417v1",
+      "source": "arxiv",
+      "title": "From Frames to Temporal Graphs: In-Context Egocentric Action Recognition with Vision-Language Models",
+      "abstract": "Action reasoning in egocentric video requires capturing fine-grained transitions of hand-object interactions, a task where general-purpose Vision-Language Models (VLMs) often struggle when operating directly on raw pixels. We propose to decouple visual perception from symbolic reasoning by converting videos into Temporal Action Graphs. In a multi-stage prompting pipeline, we first generate dense natural language narratives over short temporal windows as a semantic bottleneck, then formalize them into structured, open-vocabulary graph representations. On the EGTEA and Epic-Kitchens-100 datasets, the symbolic representation unlocks efficient in-context learning: few-shot graph demonstrations yield substantial accuracy gains over zero-shot frame and graph-based inference alike. Even in the zero-shot setting, graph-based reasoning remains competitive with pixel-based inference despite potential pretraining contamination favoring the latter. Across 11 open-weight VLMs from 6 model families ranging from 2B to 235B parameters, our findings indicate that current VLMs are more effective as symbolic reasoners than as direct visual observers. By projecting video into the language domain, we provide a scalable, fine-tuning-free alternative to end-to-end approaches that better leverages these models' latent reasoning strengths. The code will be made public.",
+      "authors": [
+        "Bessie Dominguez-Dager",
+        "Francisco Gomez-Donoso",
+        "Miguel Cazorla",
+        "Marc Pollefeys",
+        "Daniel Barath",
+        "Zuria Bauer"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-13T18:00:42+00:00",
+      "link": "https://arxiv.org/pdf/2606.15417v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "uses vision-language models with symbolic graphs for egocentric action recognition",
+      "llm_evidence_cn": "将视觉语言模型与符号图结合用于自我中心动作识别",
+      "llm_evidence": "将视觉语言模型与符号图结合用于自我中心动作识别",
+      "canonical_evidence": "将视觉语言模型与符号图结合用于自我中心动作识别",
+      "llm_tldr_en": "Converts egocentric videos into temporal action graphs, enabling few-shot in-context learning with VLMs for action recognition",
+      "llm_tldr_cn": "针对自我中心视频动作推理中VLM直接处理像素的困难，提出将视频转化为时序动作图。通过多阶段提示生成自然语言叙事并结构化，在EGTEA和Epic-Kitchens-100上，仅需少量图样本即可通过上下文学习大幅提升准确率，展现了符号表示与VLM结合的有效性。",
+      "llm_tldr": "针对自我中心视频动作推理中VLM直接处理像素的困难，提出将视频转化为时序动作图。通过多阶段提示生成自然语言叙事并结构化，在EGTEA和Epic-Kitchens-100上，仅需少量图样本即可通过上下文学习大幅提升准确率，展现了符号表示与VLM结合的有效性。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15287v1",
+      "source": "arxiv",
+      "title": "G2IA: Geometry-Guided Instance-Aware Retrieval and Refinement for Cross-Modal Place Recognition",
+      "abstract": "Cross-modal place recognition (CMPR) enables camera-only robots to localize against pre-built LiDAR maps in autonomous navigation scenarios. This image-to-point-cloud setting is challenged by two coupled ambiguities: the modality gap between perspective RGB appearance and sparse metric geometry, and perceptual aliasing among urban places with similar roads, facades, intersections, and object arrangements. Instead of treating CMPR as a single global descriptor matching problem, we argue that reliable retrieval requires both geometry-aware representation alignment and fine-grained candidate verification. In this paper, we propose G2IA, a geometry-guided instance-aware framework for image-to-point-cloud place recognition. In the retrieval stage, visual geometry priors from VGGT and instance features are integrated to construct place descriptors that are more compatible with LiDAR-derived map representations. In the refinement stage, the retrieved candidates are re-ranked by explicitly verifying whether local instance shapes and their relative spatial layouts are consistent across modalities. Experiments on public benchmarks demonstrate that G2IA consistently improves image-to-point-cloud place recognition under different localization thresholds, and exhibits strong cross-dataset generalization.",
+      "authors": [
+        "Xianyun Jiao",
+        "Jingyi Xu",
+        "Zhongmiao Yan",
+        "Xieyuanli Chen",
+        "Lin Pei"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-13T12:53:52+00:00",
+      "link": "https://arxiv.org/pdf/2606.15287v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "visual recognition for cross-modal place recognition",
+      "llm_evidence_cn": "跨模态视觉识别用于位置识别",
+      "llm_evidence": "跨模态视觉识别用于位置识别",
+      "canonical_evidence": "跨模态视觉识别用于位置识别",
+      "llm_tldr_en": "Proposes G2IA for cross-modal place recognition (image-to-point-cloud) using geometry-guided instance-aware retrieval and refinement.",
+      "llm_tldr_cn": "跨模态位置识别面临模态差异和感知混淆的挑战。本文提出G2IA框架，通过几何引导的实例感知特征对齐和细粒度验证，实现图像到点云的高效匹配。在多个数据集上显著优于现有方法，为相机仅定位系统提供了可靠方案。属于视觉识别领域的创新工作。",
+      "llm_tldr": "跨模态位置识别面临模态差异和感知混淆的挑战。本文提出G2IA框架，通过几何引导的实例感知特征对齐和细粒度验证，实现图像到点云的高效匹配。在多个数据集上显著优于现有方法，为相机仅定位系统提供了可靠方案。属于视觉识别领域的创新工作。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Retrieve seminal works on deep learning based visual recognition from CCF A venues",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.19776v1",
+      "source": "arxiv",
+      "title": "Occ-VLM: Occupancy Grounded Vision Language Model for Indoor Scene Understanding",
+      "abstract": "Recently, vision-language models (VLMs) have made significant progress in 3D scene understanding, driving advances in applications such as embodied intelligence and robotic vision. However, existing approaches typically either rely directly on explicit 3D inputs (e.g., point clouds or RGB-D sequences), or introduce an additional 3D geometry encoder to derive 3D-aware visual tokens from 2D images. Such designs structurally decouple 3D geometric perception from the rich 2D semantics learned via vision-language pre-training, hindering the development of a unified 3D vision-language representation. In this work, we propose Occ-VLM, a novel framework for 3D scene understanding that operates purely on posed RGB images and employs a single 2D vision encoder. Specifically, Occ-VLM reconstructs 3D scene occupancy as an auxiliary geometric prior, which is utilized to spatially associate foreground 2D tokens with 3D space. These tokens are then decoded by a Large Language Model (LLM) for unified scene understanding. Extensive experiments demonstrate that Occ-VLM achieves both accurate geometric perception and robust vision-language reasoning: it attains state-of-the-art performance on multi-view occupancy prediction, while performing on par with 3D-input VLMs on 3D Visual Question Answering (VQA) and 3D dense captioning benchmarks.",
+      "authors": [
+        "Jianing Li",
+        "Zhou Fang",
+        "Yijiang Liu",
+        "Li Du"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T04:24:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.19776v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Vision-language model connecting images and text for 3D scene understanding",
+      "llm_evidence_cn": "视觉语言模型连接图像和文本用于3D场景理解",
+      "llm_evidence": "视觉语言模型连接图像和文本用于3D场景理解",
+      "canonical_evidence": "视觉语言模型连接图像和文本用于3D场景理解",
+      "llm_tldr_en": "Occ-VLM uses posed RGB images only with a single 2D vision backbone to perform 3D occupancy understanding, grounding vision-language models in 3D space.",
+      "llm_tldr_cn": "现有3D场景理解的视觉语言模型通常依赖显式3D输入或额外几何编码器，导致2D语义与3D感知分离。本文提出Occ-VLM，仅利用带位姿的RGB图像和单一2D视觉骨干，通过占用网格将视觉语言模型锚定到3D空间。该方法统一了2D语义与3D几何，在室内场景理解任务上取得了先进性能。这展现了视觉语言模型在3D理解中的巨大潜力。",
+      "llm_tldr": "现有3D场景理解的视觉语言模型通常依赖显式3D输入或额外几何编码器，导致2D语义与3D感知分离。本文提出Occ-VLM，仅利用带位姿的RGB图像和单一2D视觉骨干，通过占用网格将视觉语言模型锚定到3D空间。该方法统一了2D语义与3D几何，在室内场景理解任务上取得了先进性能。这展现了视觉语言模型在3D理解中的巨大潜力。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.15523v1",
+      "source": "arxiv",
+      "title": "AQ4SViT: An Automated Quantization Framework with Search Gating Policy for Compressing Spiking Vision Transformers",
+      "abstract": "Spiking Vision Transformers (SViTs) have emerged as alternative low-power ViT models, but their large sizes hinder their deployments on resource-constrained embedded AI systems. To address this, state-of-the-art works proposed quantization techniques to compress SViT models, but their manual, human-guided approach needs a huge design time and power/energy consumption to find the appropriate quantization setting for each given network, making this approach not scalable for quantizing multiple networks. Toward this, we propose AQ4SViT, a novel automated quantization framework for SViTs that can provide quick quantization settings with good trade-offs between accuracy and memory. To achieve this, AQ4SViT employs the following key ideas: quantization search strategy that evaluates the quantization setting candidates while considering the accuracy constraint; and search gating policy that quickly evaluates and selects promising quantization candidates by leveraging membrane potential drift as a performance proxy. In the search gating policy, AQSViT employs two search algorithm variants to provide trade-off options: Greedy search, which performs fast but may lead to local optima; and Beam search, which performs slower but has better performance in finding global optima selection due to a wider search space. Experimental results show that AQ4SViT-Greedy quickly finds the appropriate quantization settings, achieving up to 6.6x faster search time and up to 82.5% memory saving compared to the state-of-the-art; while AQ4SViT-Beam further reduces the memory footprint by up to 90% compared to the state-of-the-art, but with 4.5x longer search time; all these results are obtained while maintaining high accuracy within 1.5% from the original/non-quantized models on the ImageNet dataset. These results highlight that AQ4SViT framework offers advancements toward SViT deployments on embedded AI systems.",
+      "authors": [
+        "Rachmad Vidya Wicaksana Putra",
+        "Saad Iftikhar",
+        "Muhammad Shafique"
+      ],
+      "primary_category": "cs.NE",
+      "categories": [
+        "cs.NE",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-14T00:41:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.15523v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Spiking Vision Transformer compression framework",
+      "llm_evidence_cn": "脉冲视觉变换器压缩框架",
+      "llm_evidence": "脉冲视觉变换器压缩框架",
+      "canonical_evidence": "脉冲视觉变换器压缩框架",
+      "llm_tldr_en": "Proposes AQ4SViT, an automated quantization framework for Spiking Vision Transformers that uses a search gating policy to quickly find good accuracy-memory trade-offs.",
+      "llm_tldr_cn": "针对脉冲视觉变换器（SViT）模型过大难以部署的问题，提出AQ4SViT自动化量化框架，采用搜索门控策略快速找到精度与存储的良好折中。相比手动方法大幅减少设计时间，实现可扩展的量化。",
+      "llm_tldr": "针对脉冲视觉变换器（SViT）模型过大难以部署的问题，提出AQ4SViT自动化量化框架，采用搜索门控策略快速找到精度与存储的良好折中。相比手动方法大幅减少设计时间，实现可扩展的量化。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15714v1",
+      "source": "arxiv",
+      "title": "Beyond English: Uncovering the Multilingual Gap in Vision-Language-Action Models",
+      "abstract": "Vision-Language-Action models have recently demonstrated promising capabilities in learning generalist robot policies from large-scale multimodal data. However, most existing VLA systems are trained and evaluated primarily with English instructions, leaving their ability to understand and execute instructions in other languages largely unexplored. While the underlying large language models often possess multilingual capabilities, it remains unclear whether these multilingual capabilities transfer to VLAs during training. In this work, we present the first systematic study of multilingual instruction following in VLA models. We first construct multilingual instructions by extending existing benchmarks with translations of their instructions. Using these instructions, we evaluate several representative VLA models across a range of tasks in simulation settings. Our experiments reveal a significant multilingual gap: models trained primarily on English instructions exhibit substantial performance degradation when evaluated on other languages, even when the underlying language backbone is multilingual. We provide several findings and analyses to understand the multilingual gap. Cross-lingual transfer behavior analysis shows that performance drops correlate with both instruction understanding and action execution. Representation analyses suggest that multilingual instruction-caused representation shifts may contribute to the multilingual gap. Motivated by these findings, we further explore strategies to improve multilingual performance in VLAs. We propose a simple yet effective multilingual fine-tuning approach, Multilingual Principal Component Alignment, which leverages Principal Component Analysis to get the principal component subspace and align projected multilingual representations, effectively reducing the multilingual performance gap.",
+      "authors": [
+        "Hanyang Chen",
+        "Hongliang Li",
+        "Jiarui Cao",
+        "Yang Li",
+        "Yang Jiang",
+        "Haonan Wen",
+        "Kaiyu Huang",
+        "Shengnan Guo",
+        "Huaiyu Wan"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.RO"
+      ],
+      "published": "2026-06-14T10:04:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.15714v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multilingual evaluation of Vision-Language-Action models",
+      "llm_evidence_cn": "视觉语言动作模型，多语言指令，评估",
+      "llm_evidence": "视觉语言动作模型，多语言指令，评估",
+      "canonical_evidence": "视觉语言动作模型，多语言指令，评估",
+      "llm_tldr_en": "First systematic study showing that VLA models fail to follow non-English instructions despite multilingual LLM backbones, highlighting a gap.",
+      "llm_tldr_cn": "视觉-语言-动作（VLA）模型通常只用英语训练和评估。本文首次系统评估VLA模型的多语言指令跟随能力，发现即使底层LLM具有多语言能力，VLA模型仍无法理解非英语指令。通过构建多语言指令基准，实验揭示了这个显著的多语言差距。",
+      "llm_tldr": "视觉-语言-动作（VLA）模型通常只用英语训练和评估。本文首次系统评估VLA模型的多语言指令跟随能力，发现即使底层LLM具有多语言能力，VLA模型仍无法理解非英语指令。通过构建多语言指令基准，实验揭示了这个显著的多语言差距。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.15821v1",
+      "source": "arxiv",
+      "title": "The Truth Stays in the Family: Enhancing Contextual Grounding via Inherited Truthful Heads in Model Lineages",
+      "abstract": "Recent advances in large language models (LLMs) have produced many specialized multimodal LLMs (MLLMs) that share common foundational LLMs, forming distinct model lineages. It remains unclear whether a fundamental behavioral link exists between the foundational LLMs and downstream variants. We investigate this question by quantifying head-level context-truthfulness scores. Across diverse LLM and MLLM lineages, including Vicuna-, Qwen2.5-, LLaMA2-, and Mistral-based models, we find that Truth Scores are strongly preserved within model families, even after instruction tuning or multimodal adaptation. We further show that this inheritance is consistent with attention-head weight preservation, and that context-truthful heads attend to query-relevant evidence. Building on this finding, we propose TruthProbe, a soft-gating strategy that amplifies context-truthful heads while preserving other head contributions. TruthProbe improves contextual truthfulness on HaluEval and reduces multimodal hallucination on POPE and CHAIR, with base-LLM Truth Scores transferring effectively to their fine-tuned LLM and MLLM descendants. Code is available at https://github.com/miso-choi/TruthProbe.",
+      "authors": [
+        "Miso Choi",
+        "Seonga Choi",
+        "Mincheol Kwon",
+        "Woosung Joung",
+        "Jinkyu Kim",
+        "Jungbeom Lee"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-14T13:39:09+00:00",
+      "link": "https://arxiv.org/pdf/2606.15821v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "inherited truthful heads in LLM lineages under instruction tuning",
+      "llm_evidence_cn": "指令微调下LLM谱系中真实头部的继承",
+      "llm_evidence": "指令微调下LLM谱系中真实头部的继承",
+      "canonical_evidence": "指令微调下LLM谱系中真实头部的继承",
+      "llm_tldr_en": "Quantifies head-level context-truthfulness scores across LLM families, revealing strong preservation of truthfulness after instruction tuning and multimodal adaptation, consistent with attention-head weight inheritance.",
+      "llm_tldr_cn": "问题：大型语言模型经过指令微调或多模态适应后，其基础行为是否保留尚不清楚。方法：通过量化头级上下文真实性分数，在多个模型家族上进行研究。发现：真实性分数在模型家族中高度保留，与注意力头权重保留一致。贡献：揭示了模型谱系间的行为继承机制，可提升下游变体的上下文基础。",
+      "llm_tldr": "问题：大型语言模型经过指令微调或多模态适应后，其基础行为是否保留尚不清楚。方法：通过量化头级上下文真实性分数，在多个模型家族上进行研究。发现：真实性分数在模型家族中高度保留，与注意力头权重保留一致。贡献：揭示了模型谱系间的行为继承机制，可提升下游变体的上下文基础。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "important works on instruction fine tuning and alignment",
+      "matched_requirement_id": "req-22",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
