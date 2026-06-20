@@ -1,0 +1,374 @@
+Title: Does Traversal Order Matter? A Systematic Study of Tree Traversal Methods in Transformer Grammars
+
+URL Source: https://arxiv.org/pdf/2606.16836v1
+
+Published Time: Tue, 16 Jun 2026 02:26:24 GMT
+
+Number of Pages: 8
+
+Markdown Content:
+# Does Traversal Order Matter? A Systematic Study of Tree Traversal Methods in Transformer Grammars 
+
+Zongru Liu *, Pengyu Ji *, Pengcheng Wang, Kewei Tu †
+
+School of Information Science and Technology, ShanghaiTech University 
+
+{liuzr2023,jipy2023,wangpch2024,tukw}@shanghaitech.edu.cn 
+
+Abstract 
+
+Transformer Grammars (TGs) enhance lan-guage modeling by incorporating syntactic tree structures. Despite the potentially significant impact on model performance of how syntac-tic trees are linearized in TGs, existing stud-ies rely solely on Depth-First Traversal (DFT) for linearization. In this paper, we expand the traversal design space by exploring Breadth-First Traversal (BFT) and a novel hybrid traver-sal strategy, Production-Rule Traversal (PRT), which combines the structural lookahead of BFT with the early lexical generation of DFT. We integrate these traversal methods with vary-ing tree configurations and masking strategies, and empirically evaluate their performance on language modeling, syntactic generaliza-tion and summarization. We reveal the in-herent trade-offs between nested composition and global lookahead, providing actionable rec-ommendations for designing task-aware Trans-former Grammars. 
+
+1 Introduction 
+
+The transformer architecture (Vaswani et al., 2017) has shown strong performance but lacks the induc-tive bias of syntactic structure, which is critical for effective generalization (Everaert et al., 2015). Syntactic language models (SLMs) (Qian et al., 2021; Sartran et al., 2022; Zhao et al., 2024; Hu et al., 2024; Ji et al., 2025) address this by intro-ducing syntactic structural inductive biases, mod-eling linearized parse trees alongside surface sen-tences. Crucially, the chosen traversal method dic-tates the syntactic context, fundamentally shaping the model’s syntactic bias. However, the traver-sal method used by existing SLMs to linearize trees into sequences remains underexplored beyond Depth-First Traversal (DFT) (Zhao et al., 2025). We systematically explore this traversal space within Transformer Grammars (TGs). Specifically,   
+
+> *Equal contribution.
+> †Corresponding author
+
+we investigate DFT and Breadth-First Traversal (BFT). Both approaches exhibit contrasting limita-tions tied to tree structure. DFT favors early lexi-cal generation but lacks structural lookahead—the ability to access global syntactic information be-fore generating lexical tokens—forcing premature lexical predictions in flat n-ary trees. Conversely, BFT favors early syntactic generation but delays terminal generation, forcing structural predictions without concrete words in deep binary trees. To bal-ance these extremes, we propose Production-Rule Traversal (PRT), fusing BFT’s structural lookahead with DFT’s early lexical generation. We evaluate these three traversal methods across varying tree configurations and masking strategies. The experimental results reveal that the optimal traversal strategy is task-dependent. Specifically, downstream generation tasks benefit significantly from the structural lookahead of PRT, which pro-vides a broader context for next-token prediction. In contrast, performance on syntactic generaliza-tion indicates that syntax-focused tasks favor the strictly nested composition of DFT. 
+
+2 Related Work 
+
+Compositional SLMs. Transformer Grammars (Sartran et al., 2022; Hu et al., 2024) inject struc-tural biases by explicitly modeling and composing trees alongside text. Zhao et al. (2025) recently uni-fied this paradigm under the Compositional SLM framework. While their study explores top-down and bottom-up linearizations, both remain confined to DFT. DFT lacks structural lookahead, leaving the balance between global syntactic information and early lexical generation unexplored in SLMs. 
+
+Traversal Strategies. Traversal strategies pro-foundly impact structured prediction, from exploit-ing hierarchical parallelism in non-autoregressive generation (Ji et al., 2025) to balancing lookahead and compositionality in discriminative parsing (Liu 1
+
+> arXiv:2606.16836v1 [cs.CL] 15 Jun 2026
+
+and Zhang, 2017). We extend these insights to generative SLMs, systematically analyzing how traversal orders affect downstream performance. 
+
+3 Background 
+
+A Transformer Grammar (TG) jointly models a sur-face sentence x and its constituency tree y. For standard autoregressive processing, the tree is lin-earized to sequences of structural and lexical ac-tions a = ( a0, . . . , a L−1) of length L, factorizing the joint probability as p(x, y ) = Q 
+
+> i
+
+p(ai | a<i ).
+
+3.1 Parse Tree Binarization 
+
+While natural constituency trees are inherently non-binary, prior syntactic language models often adopt binarized structures for practical efficiency. Follow-ing the established paradigm of Zhao et al. (2025), tree binarization is typically evaluated under two configurations: (i) Non-binary (N) trees, which eliminate unary chains directly connected to ter-minals, so structures “(NP cat NP)” are simplified to “cat”, and (ii) Binary (B) trees, constructed via standard left-binarization. 
+
+3.2 Linearization 
+
+Previous works predominantly rely on top-down Depth-First Traversal (DFT) to linearize syntactic trees (Dyer et al., 2016). Under this paradigm, the action space consists of three types: (i) opening a non-terminal, (ii) generating a terminal token, and (iii) closing a non-terminal. DFT recursively completes all actions for a subtree before executing any actions for its siblings. 
+
+3.3 Composition and Masking 
+
+A prevalent technique for composition in TGs is the internal composition mechanism (Sartran et al., 2022). In this framework, a closing non-terminal “X)” triggers a COMPOSE operation: the model’s attention is restricted to the non-terminal’s imme-diate subconstituents, encoding them into a single representation of the subtree. To resume generation, a duplicate “X)” immediately follows, attending to the broader context to allow the model to continue predicting subsequent tokens. Following composition, models adopt one of two masking strategies for subsequent steps: (i) 
+
+Masked (M): Blocks attention to the internal nodes of composed subconstituents (Sartran et al., 2022). (ii) Not masked (NM): Retains full attention to all prior tokens (Hu et al., 2024). 
+
+> Figure 1: A comparison of tree traversal strategies to linearize an example sentence. We use brown for the closing non-terminal to trigger the COMPOSE opera-tion.
+
+3.4 Inference 
+
+To mitigate the probability imbalance between high-entropy terminals and low-entropy non-terminals, decoding processes often rely on word-synchronous beam search (Stern et al., 2017). Addi-tionally, structural constraint hyperparameters (e.g., maximum non-terminal count and maximum con-secutive opening parentheses) identified by Zhao et al. (2025) are typically applied to prevent the model from over-generating structural actions. 
+
+4 Design Space of Traversal Strategies 
+
+Having described the foundational mechanics of Transformer Grammars, we now outline the design space for evaluating traversal strategies. To assess the impact of explicit syntactic features, we evalu-ate both labeled trees (L) , which retain the original non-terminals (Sartran et al., 2022), and unlabeled trees (UL) , which use anonymized labels (Zhao et al., 2025). 
+
+4.1 Linearization 
+
+The chosen traversal order dictates the sequence of linearization actions, strictly determining the syntactic context at any given generation step. To expand the design space beyond the standard depth-first baseline, we introduce two alternative lin-earization strategies guided by different traversals (exemplified in Figure 1 and formalized in Ap-pendix A): 
+
+BFT: Under BFT, the linearization operates level by level. Specifically, upon visiting a non-terminal node, the opening actions or terminal generations for all its immediate children are executed sequen-tially, immediately followed by the closing action for the current node. 
+
+PRT: Under PRT, linearization begins by push-ing the root node onto a stack. At each step, a 2Figure 2: Illustration of the PRT compose method, which is shared with BFT. We use brown for the atten-tion ranges of internal compositions, dark blue for ordi-nary attended positions, light blue for already-composed positions that are only accessible in NM. 
+
+node is popped, and the opening actions or terminal generations for all its immediate children are exe-cuted sequentially. Subsequently, the non-terminal children are pushed in reverse order, immediately followed by the closing action for the current node. 
+
+4.2 Composition 
+
+In BFT and PRT, operations for closing non-terminals are strictly dictated by the completion status of their corresponding subtrees. If a subtree remains incomplete (i.e., it contains unclosed non-terminals), the closing non-terminal is not dupli-cated; instead, it is used for next-token prediction, delaying composition. Conversely, once nested sub-trees are fully completed, this delay is resolved by introducing a sequence of duplicated closing non-terminals corresponding to each completed subtree. These execute COMPOSE operations from bottom to top, followed by the current non-terminal re-suming next-token prediction, shown in Figure 2. 
+
+4.3 Inference 
+
+Lacking a static parse tree during inference, our de-coding algorithm adapts word-synchronous beam search to track subtree completion. It monitors the output sequence, detects when nested structures complete, and dynamically appends the required duplicated closing non-terminals to activate the composition mechanism described in Section 4.2.                                         
+
+> Model Variant B-L B-UL N-L N-UL
+> DFT-M 34.24 23.32 24.22 23.45 DFT-NM 30.17 20.57 22.06 21.74
+> DFT-tree 30.32 21.40 22.40 22.20 BFT-M 36.88 24.45 24.57 24.27 BFT-NM 32.00 22.11 22.82 22.76 BFT-tree 33.18 23.00 23.90 23.01 PRT-M 35.22 22.83 24.12 23.59 PRT-NM 30.79 20.38 21.83 21.87 PRT-tree 30.96 21.47 22.93 22.38
+
+Table 1: Perplexity ( ↓) results of our models, where all values represent upper bounds.                               
+
+> Model Variant N-L N-UL B-UL
+> DFT-M 71.38 71.25 72.77
+> DFT-NM 71.19 69.19 70.82 DFT-tree 70.38 69.37 69.69 BFT-M 69.86 70.84 71.21 BFT-NM 69.82 69.64 69.23 BFT-tree 68.79 67.59 69.12 PRT-M 70.90 71.12 71.86 PRT-NM 70.09 70.11 70.48 PRT-tree 69.24 69.16 70.24
+
+Table 2: BLiMP ( ↑) results of our models 
+
+5 Experiments 
+
+We evaluate BFT and PRT against all DFT variants, our baselines. All models are trained from scratch on the BLLIP-LG dataset of Charniak et al. (2000) with training splits from Hu et al. (2020), parsed via an off-the-shelf standard CRF constituency parser (Zhang et al., 2020), implemented in Su-par 1. We adopt a modernized GPT-2 Small archi-tecture ( ∼109M parameters) for all variants, defer-ring comprehensive configurations to Appendix B. Across all traversal methods, the standard model trained on the linearized tree sequence is denoted as X-tree (e.g., DFT-tree). Additionally, a traditional token-level language model baseline is provided in Appendix C. Crucially, all traversal strategies operate on the exact same underlying constituency trees, differing solely in their traversal orders. We first evaluate all variants on standard language mod-eling, filtering out underperforming configurations before assessing the remainder on syntactic gener-alization and downstream summarization. 
+
+5.1 Document-Level Language Modeling 
+
+We evaluate all models on the testing split of BLLIP-LG from Hu et al. (2020). Computing the exact string probability p(x) = P 
+
+> y
+
+p(x, y ) is intractable. Following Sartran et al. 
+
+> 1https://github.com/yzhangcs/parser
+
+3N-L N-UL B-UL Model Variant R1 R2 RL R-AVG R1 R2 RL R-AVG R1 R2 RL R-AVG                                                                                                             
+
+> DFT-tree 30.77 10.04 24.10 21.64 30.26 10.10 24.02 21.46 29.31 9.52 23.16 20.66 DFT-M 26.61 7.85 21.22 18.56 27.38 8.36 21.88 19.21 25.26 7.09 19.99 17.44 DFT-NM 30.58 10.35 24.40 21.78 30.23 10.09 24.08 21.46 29.69 9.80 23.51 21.00 BFT-tree 30.47 10.06 24.07 21.53 30.63 9.97 23.96 21.52 29.88 9.42 23.15 20.02 BFT-M 27.46 7.98 21.56 19.00 27.28 7.92 21.44 18.88 26.18 7.15 20.31 17.88 BFT-NM 31.04 10.34 24.44 21.94 30.08 10.32 24.33 21.91 30.31 9.62 23.37 21.10 PRT-tree 31.31 10.47 24.64 22.14 30.45 10.02 23.95 21.47 30.03 9.56 23.35 20.98 PRT-M 27.50 8.18 21.75 19.14 27.34 7.97 21.50 18.94 26.01 7.42 20.39 17.94 PRT-NM 31.29 10.47 24.71 22.16 31.33 10.54 24.65 22.17 30.65 10.33 23.96 21.65
+
+Table 3: ROUGE scores on the XSum dataset. Best results in each column are bolded. 
+
+(2022), we approximate sentence-level p(x) by summing over a proposal set of 300 unlabeled con-stituency trees sampled without replacement via a CRF parser, establishing a strict lower bound for p(x) and a valid upper bound for perplexity. For document-level modeling, marginalizing trees across historical sentences is computationally pro-hibitive. Thus, we approximate the context for the i-th sentence by greedily selecting the single highest-probability tree for each preceding sen-tence to serve as a fixed structural prefix, following Sartran et al. (2022). As shown in Table 1, unmasked models have lower perplexity, with PRT-NM excelling in N-L and B-UL. The B-L configuration fails because forcing the model to predict labels for numerous nodes introduced by binarization consumes an ex-cessive amount of representational capacity, which is consistent with empirical findings in Sartran et al. (2022). Therefore, we exclude B-L from down-stream evaluations. 
+
+5.2 Syntactic Generalization 
+
+To measure syntactic generalization, we evaluate our models on BLiMP (Warstadt et al., 2020). Accuracy is measured by whether a model as-signs a higher marginal probability p(x) to the grammatical sentence within each minimal pair, ap-proximated using the identical 300-tree sampling method described in Section 5.1. For syntactic generalization, masked models yield the highest accuracy, with the baseline DFT-M achieving the best overall performance in all tree structures. The results are presented in Table 2. 
+
+5.3 Summarization 
+
+We evaluate text summarization on the XSum dataset (Narayan et al., 2018). We truncate parsed source documents to 1,800 tokens, followed by a parsed “Summary above arti-cle in one sentence.” prompt. Models are finetuned on XSum for 10 epochs (batch 40). We report ROUGE (Lin and Hovy, 2003) using beam search (size 6) with linearized silver parse trees as input. As shown in Table 3, PRT generally outperforms the BFT and DFT baselines. Across all traversals, unmasked configurations (-NM, -tree) consistently dominate masked ones (-M), culminating in our proposed PRT-NM achieving the highest overall ROUGE scores. 
+
+5.4 Overall Observations 
+
+Based on our experiments, we highlight key find-ings for syntactic language modeling: 
+
+(i) PRT effectively balances structured syntax with sequential generation. For document-level lan-guage modeling and summarization tasks, PRT-NM consistently outperforms traditional DFT baselines. 
+
+(ii) While BFT’s structural lookahead improves summarization, its excessive delay of terminal to-kens hurts language modeling and syntactic gener-alization. This confirms that layer-wise expansion severely disrupts the left-to-right context, highlight-ing why PRT’s moderate approach is necessary. 
+
+(iii) While B-UL minimizes perplexity via dense non-terminals, its increased sequence length de-grades long-distance attention and summarization. Compact N-L structures are optimal, balancing length with semantic guidance. Conversely, B-L fails due to the excessive classification burden of predicting labels for numerous binarized nodes. 
+
+6 Conclusion 
+
+In summary, we extend the Transformer Grammar framework by applying BFT and proposing PRT to enable structural lookahead in generative syntactic modeling. Through a systematic empirical evalua-tion across diverse tree configurations and attention masking mechanisms, we reveal a fundamental bi-furcation in structural inductive biases: generation-focused tasks benefit significantly from the global lookahead of PRT, whereas syntax-focused tasks favor the strictly nested composition of DFT. 47 Limitations 
+
+While our study provides foundational insights, its primary limitations include the restriction to small-scale architectures ( ∼109M parameters), the reliance on external syntactic parsers, and an ex-clusive focus on internal composition mechanisms without evaluating external alternatives. 
+
+References 
+
+Eugene Charniak, Don Blaheta, Niyu Ge, Keith Hall, John Hale, and Mark Johnson. 2000. Bllip 1987-89 wsj corpus release 1. Linguistic Data Consortium, 36. Chris Dyer, Adhiguna Kuncoro, Miguel Ballesteros, and Noah A. Smith. 2016. Recurrent neural network grammars. In Proceedings of the 2016 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies , pages 199–209, San Diego, California. Association for Computational Linguistics. Martin B.H. Everaert, Marinus A.C. Huybregts, Noam Chomsky, Robert C. Berwick, and Johan J. Bolhuis. 2015. Structures, not strings: Linguistics as part of the cognitive sciences. Trends in Cognitive Sciences ,19(12):729–743. Jennifer Hu, Jon Gauthier, Peng Qian, Ethan Wilcox, and Roger Levy. 2020. A systematic assessment of syntactic generalization in neural language mod-els. In Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics , pages 1725–1744, Online. Association for Computational Linguistics. Xiang Hu, Pengyu Ji, Qingyang Zhu, Wei Wu, and Kewei Tu. 2024. Generative pretrained structured transformers: Unsupervised syntactic language mod-els at scale. In Proceedings of the 62nd Annual Meeting of the Association for Computational Lin-guistics (Volume 1: Long Papers) , pages 2640–2657, Bangkok, Thailand. Association for Computational Linguistics. Pengyu Ji, Yufei Liu, Xiang Hu, and Kewei Tu. 2025. Tree-structured non-autoregressive decoding for sequence-to-sequence text generation. In Find-ings of the Association for Computational Linguistics: EMNLP 2025 , pages 6168–6174, Suzhou, China. As-sociation for Computational Linguistics. Chin-Yew Lin and Eduard Hovy. 2003. Automatic evaluation of summaries using n-gram co-occurrence statistics. In Proceedings of the 2003 Human Lan-guage Technology Conference of the North American Chapter of the Association for Computational Lin-guistics , pages 150–157. Jiangming Liu and Yue Zhang. 2017. In-order transition-based constituent parsing. Transactions of the Association for Computational Linguistics , 5:413– 424. Shashi Narayan, Shay B. Cohen, and Mirella Lapata. 2018. Don’t give me the details, just the summary! topic-aware convolutional neural networks for ex-treme summarization. In Proceedings of the 2018 Conference on Empirical Methods in Natural Lan-guage Processing , pages 1797–1807, Brussels, Bel-gium. Association for Computational Linguistics. Peng Qian, Tahira Naseem, Roger Levy, and Ramón Fernandez Astudillo. 2021. Structural guidance for transformer language models. In Proceedings of the 59th Annual Meeting of the Association for Compu-tational Linguistics and the 11th International Joint Conference on Natural Language Processing (Vol-ume 1: Long Papers) , pages 3735–3745, Online. As-sociation for Computational Linguistics. Laurent Sartran, Samuel Barrett, Adhiguna Kuncoro, Miloš Stanojevi´ c, Phil Blunsom, and Chris Dyer. 2022. Transformer grammars: Augmenting trans-former language models with syntactic inductive bi-ases at scale. Transactions of the Association for Computational Linguistics , 10:1423–1439. Noam Shazeer. 2020. Glu variants improve transformer. 
+
+Preprint , arXiv:2002.05202. Mitchell Stern, Daniel Fried, and Dan Klein. 2017. Ef-fective inference for generative neural parsing. In 
+
+Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing , pages 1695–1700, Copenhagen, Denmark. Association for Computational Linguistics. Jianlin Su, Murtadha Ahmed, Yu Lu, Shengfeng Pan, Wen Bo, and Yunfeng Liu. 2024. Roformer: En-hanced transformer with rotary position embedding. 
+
+Neurocomputing , 568:127063. Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia Polosukhin. 2017. Attention is all you need. Advances in neural information processing systems , 30. Alex Warstadt, Alicia Parrish, Haokun Liu, Anhad Mo-hananey, Wei Peng, Sheng-Fu Wang, and Samuel R. Bowman. 2020. BLiMP: The benchmark of linguis-tic minimal pairs for English. Transactions of the Association for Computational Linguistics , 8:377– 392. Biao Zhang and Rico Sennrich. 2019. Root mean square layer normalization. Preprint , arXiv:1910.07467. Yu Zhang, Houquan Zhou, and Zhenghua Li. 2020. Fast and accurate neural crf constituency parsing. In Pro-ceedings of the Twenty-Ninth International Joint Con-ference on Artificial Intelligence, IJCAI-20 , pages 4046–4053. International Joint Conferences on Arti-ficial Intelligence Organization. Main track. 
+
+5Yida Zhao, Chao Lou, and Kewei Tu. 2024. De-pendency transformer grammars: Integrating depen-dency structures into transformer language models. In Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 1543–1556, Bangkok, Thailand. Association for Computational Linguistics. Yida Zhao, Hao Xve, Xiang Hu, and Kewei Tu. 2025. A systematic study of compositional syntactic trans-former language models. In Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers) , pages 7070– 7083, Vienna, Austria. Association for Computa-tional Linguistics. 
+
+A Traversal Algorithm of BFT and PRT 
+
+To facilitate reproducibility and provide a rigorous formalization of our proposed traversal strategies, we detail the exact procedures for Breadth-First Traversal (BFT) and Production-Rule Traversal (PRT) in Algorithm 1 and Algorithm 2, respectively. Both algorithms take a standard constituency tree as input and deterministically produce a linearized sequence of structural and lexical tokens. Crucially, the structural divergence between the two methods is dictated by their underlying data structures. BFT utilizes a standard First-In-First-Out (FIFO) queue to ensure strict level-by-level expansion. In contrast, PRT employs a Last-In-First-Out (LIFO) stack. 
+
+Algorithm 1 Breadth-First Traversal (BFT) 
+
+Input: T root of the constituency tree 
+
+Output: R sequence of traversal tokens  
+
+> 1:
+
+Q ← [] ▷ Empty queue  
+
+> 2:
+
+Q.enqueue (T ) 
+
+> 3:
+
+R ← [OPEN (T )] ▷ e.g., (X  
+
+> 4:
+
+while Q̸ = ∅ do  
+
+> 5:
+
+N ← Q.dequeue ()  
+
+> 6:
+
+for each child C in N .children do  
+
+> 7:
+
+if type (C) = NonTerminal then  
+
+> 8:
+
+Q.enqueue (C) 
+
+> 9:
+
+R.append (OPEN (C))  
+
+> 10:
+
+else  
+
+> 11:
+
+R.append (C) ▷ Terminal token  
+
+> 12:
+
+end if  
+
+> 13:
+
+end for  
+
+> 14:
+
+R.append (CLOSE (N )) ▷ e.g., X)  
+
+> 15:
+
+end while  
+
+> 16:
+
+return R
+
+Algorithm 2 Production-Rule Traversal (PRT) 
+
+Input: T root of the constituency tree 
+
+Output: R sequence of traversal tokens  
+
+> 1:
+
+S ← [] ▷ Empty stack  
+
+> 2:
+
+S.push (T ) 
+
+> 3:
+
+R ← [OPEN (T )]  
+
+> 4:
+
+while S̸ = ∅ do  
+
+> 5:
+
+N ← S.pop ()  
+
+> 6:
+
+for each child C in N .children (left-to-right) do  
+
+> 7:
+
+if type (C) = NonTerminal then  
+
+> 8:
+
+R.append (OPEN (C))  
+
+> 9:
+
+else  
+
+> 10:
+
+R.append (C) 
+
+> 11:
+
+end if  
+
+> 12:
+
+end for  
+
+> 13:
+
+for each child C in N .children (right-to-left) do  
+
+> 14:
+
+if type (C) = NonTerminal then  
+
+> 15:
+
+S.push (C) ▷ Push for depth-first expansion  
+
+> 16:
+
+end if  
+
+> 17:
+
+end for  
+
+> 18:
+
+R.append (CLOSE (N ))  
+
+> 19:
+
+end while  
+
+> 20:
+
+return R
+
+B Training and Architectural Details 
+
+Our Transformer Grammar models are imple-mented based on the modernized GPT-2 Small ar-chitecture. We adopt several modernized architec-tural choices standard in recent large language mod-els, including SwiGLU activations (Shazeer, 2020), Rotary Position Embeddings (Su et al., 2024), and RMSNorm (Zhang and Sennrich, 2019) for pre-normalization. Furthermore, we tie the weights of the input embedding and the final output projec-tion layer. To accelerate autoregressive generation during inference, we also implement a Key-Value (KV) cache mechanism. The models are trained on a single NVIDIA A6000 GPU with mixed precision ( bfloat16 ). We optimize the network using AdamW with a cosine learning rate decay schedule and a linear warmup phase. Detailed hyperparameters for both the archi-tecture and the optimization process are compre-hensively listed in Table 4. 6Hyperparameter Value                                    
+
+> Model Architecture
+> Number of layers 12
+> Hidden size (d model )768
+> Attention heads 12
+> FFN intermediate size 1536
+> Max sequence length 2048
+> Vocabulary size 50 ,322
+> Activation function SwiGLU Normalization RMSNorm Position embeddings RoPE Bias (Linear & Norm) True Weight tying True Total Parameters ∼109M
+> Training & Optimization
+> Optimizer AdamW Adam β(0 .9,0.95)
+> Adam ϵ1×10 −8
+> Peak learning rate 6×10 −4
+> Minimum learning rate 1×10 −5
+> Learning rate schedule Cosine Warmup steps 300
+> Weight decay 0.2
+> Gradient clipping norm 1.0
+> Global batch size 256
+> Microbatch size per device 16
+> Training epochs 15
+> Precision bfloat16
+
+Table 4: Architectural and optimization hyperparame-ters used for our TG models. 
+
+C Traditional Token Baseline Results 
+
+To contextualize the performance of the Trans-former Grammars, we additionally train a standard text-only language model baseline (Token) operat-ing purely on the unparsed text. This model shares identical architectural hyperparameters and train-ing configurations as the main models evaluated in the text. To facilitate a direct and comprehensive compar-ison, we present the full experimental results for all traversal methods and tree configurations along-side this traditional Token baseline. Specifically, Table 5 details the document-level language mod-eling performance measured by perplexity, while Table 6 reports the zero-shot syntactic generaliza-tion accuracy on the BLiMP benchmark. Finally, Table 7 provides the abstractive summarization ROUGE scores on the XSum dataset, where the Token baseline is replicated across all tree configu-ration columns for straightforward vertical compar-ison. Across all evaluations, the structural models clearly demonstrate superior performance over the purely sequential text baseline. 
+
+Model Variant B-L B-UL N-L N-UL 
+
+Token 21.90 DFT-M 34.24 23.32 24.22 23.45 DFT-NM 30.17 20.57 22.06 21.74 
+
+DFT-tree 30.32 21.40 22.40 22.20 BFT-M 36.88 24.45 24.57 24.27 BFT-NM 32.00 22.11 22.82 22.76 BFT-tree 33.18 23.00 23.90 23.01 PRT-M 35.22 22.83 24.12 23.59 PRT-NM 30.79 20.38 21.83 21.87 PRT-tree 30.96 21.47 22.93 22.38 
+
+Table 5: Comprehensive perplexity ( ↓) results. The text-only Token baseline is provided as a universal reference. 
+
+Model Variant N-L N-UL B-UL 
+
+Token 69.43 DFT-M 71.38 71.25 72.77 
+
+DFT-NM 71.19 69.19 70.82 DFT-tree 70.38 69.37 69.69 BFT-M 69.86 70.84 71.21 BFT-NM 69.82 69.64 69.23 BFT-tree 68.79 67.59 69.12 PRT-M 70.90 71.12 71.86 PRT-NM 70.09 70.11 70.48 PRT-tree 69.24 69.16 70.24 
+
+Table 6: Comprehensive BLiMP accuracy ( ↑) results. All structural configurations are compared against the traditional Token baseline. 
+
+7N-L N-UL B-UL Model Variant R1 R2 RL R-AVG R1 R2 RL R-AVG R1 R2 RL R-AVG 
+
+Token 26.03 7.91 20.84 18.26 26.03 7.91 20.84 18.26 26.03 7.91 20.84 18.26 DFT-tree 30.77 10.04 24.10 21.64 30.26 10.10 24.02 21.46 29.31 9.52 23.16 20.66 DFT-M 26.61 7.85 21.22 18.56 27.38 8.36 21.88 19.21 25.26 7.09 19.99 17.44 DFT-NM 30.58 10.35 24.40 21.78 30.23 10.09 24.08 21.46 29.69 9.80 23.51 21.00 BFT-tree 30.47 10.06 24.07 21.53 30.63 9.97 23.96 21.52 29.88 9.42 23.15 20.02 BFT-M 27.46 7.98 21.56 19.00 27.28 7.92 21.44 18.88 26.18 7.15 20.31 17.88 BFT-NM 31.04 10.34 24.44 21.94 30.08 10.32 24.33 21.91 30.31 9.62 23.37 21.10 PRT-tree 31.31 10.47 24.64 22.14 30.45 10.02 23.95 21.47 30.03 9.56 23.35 20.98 PRT-M 27.50 8.18 21.75 19.14 27.34 7.97 21.50 18.94 26.01 7.42 20.39 17.94 PRT-NM 31.29 10.47 24.71 22.16 31.33 10.54 24.65 22.17 30.65 10.33 23.96 21.65 
+
+Table 7: Comprehensive ROUGE scores on the XSum dataset. The scores for the text-only Token baseline are duplicated across all tree configuration columns to facilitate direct vertical comparison. 
+
+8

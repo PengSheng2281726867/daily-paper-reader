@@ -1,0 +1,740 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-20T21:04:54.575959+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 4,
+    "deep_cap": 8,
+    "deep_selected": 4,
+    "quick_candidates": 25,
+    "quick_skim_target": 13,
+    "quick_selected": 13
+  },
+  "deep_dive": [
+    {
+      "id": "2606.15416v1",
+      "source": "arxiv",
+      "title": "Encode Errors: Representational Retrieval of In-Context Demonstrations for Multilingual Grammatical Error Correction",
+      "abstract": "Grammatical Error Correction (GEC) involves detecting and correcting the wrong usage of grammar. While large language models (LLMs) with in-context learning (ICL) capabilities have shown significant progress on various natural language processing (NLP) tasks, their few-shot performance on GEC remains suboptimal. This is mainly due to the challenge of retrieving suitable in-context demonstrations that capture error patterns instead of semantic similarity. In this paper, we demonstrate that LLMs can inherently capture information related to grammatical errors through their internal states. From these states, we extract the Grammatical Error Representation (GER), an informative and semantically neutral encoding of grammatical errors. Our novel GER-based retrieval method significantly boosts performance in ICL settings on multilingual GEC datasets, improving the precision of correction. For high-resource languages, our results on 8B-sized open-source models match those of closed-source models such as Deepseek2.5 and GPT-4o-mini. For low-resource languages, our $F_{0.5}$ scores surpass the baseline by up to a factor of 1.20. This method provides a more precise and resource-efficient solution for multilingual GEC, offering a promising direction for interpretable GEC research.",
+      "authors": [
+        "Guangyue Peng",
+        "Wei Li",
+        "Wen Luo",
+        "Houfeng Wang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-13T18:00:26+00:00",
+      "link": "https://arxiv.org/pdf/2606.15416v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "retrieval of in-context demonstrations for GEC with LLMs",
+      "llm_evidence_cn": "利用LLM检索上下文示例进行语法纠错",
+      "llm_evidence": "利用LLM检索上下文示例进行语法纠错",
+      "canonical_evidence": "利用LLM检索上下文示例进行语法纠错",
+      "llm_tldr_en": "Extracts Grammatical Error Representation from LLM internal states for retrieving in-context demonstrations in few-shot grammatical error correction.",
+      "llm_tldr_cn": "大型语言模型在语法纠错任务上的少样本性能不佳，主要因为检索到的示例不能匹配错误模式。本文发现LLM内部状态编码了语法错误信息，据此提出语法错误表示（GER）来检索语义中性但错误相关的示例。实验表明GER检索显著提升少样本GEC性能，无需额外训练。",
+      "llm_tldr": "大型语言模型在语法纠错任务上的少样本性能不佳，主要因为检索到的示例不能匹配错误模式。本文发现LLM内部状态编码了语法错误信息，据此提出语法错误表示（GER）来检索语义中性但错误相关的示例。实验表明GER检索显著提升少样本GEC性能，无需额外训练。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "few-shot learning with large language models",
+      "matched_requirement_id": "req-19",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.17678v1",
+      "source": "arxiv",
+      "title": "See First, Answer Later: Visual Evidence Pre-Alignment via Sufficiency-Driven RL",
+      "abstract": "Multimodal large language models (MLLMs) integrate strong text reasoning with visual inputs, yet their responses can be inconsistent with the underlying images, indicating ineffective utilization of visual evidence during inference. The prevailing training paradigm relies on large-scale caption-based pretraining for general alignment, followed by supervised fine-tuning and reinforcement learning to enable instruction following and complex reasoning. However, such pretraining provides only weak visual grounding: short, coarse captions bias models toward salient objects while neglecting fine-grained visual evidence. In this paper, we introduce Visual Evidence Pre-Alignment (VEPA), an intermediate stage between pretraining and post-training that explores a novel sufficiency-driven objective with Group Relative Policy Optimization (GRPO) to optimize question-conditioned visual evidence descriptions. Extensive experiments across diverse benchmarks show that our VEPA consistently enhances performance on visually demanding evaluations and complements standard supervised post-training. Further analyses show that the income stems from strengthened, transferable visual grounding, rather than from additional task-specific training.",
+      "authors": [
+        "Yilian Liu",
+        "Sicong Leng",
+        "Guoshun Nan",
+        "Junyi Zhu",
+        "Jiayu Huang",
+        "Minghao Sun",
+        "Xuancheng Zhu",
+        "Yisong Chen",
+        "Zexian Wei",
+        "Xiaofeng Tao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-16T08:45:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.17678v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "proposes visual evidence pre-alignment for MLLMs, connecting vision and language",
+      "llm_evidence_cn": "提出视觉证据预对齐，连接视觉和语言",
+      "llm_evidence": "提出视觉证据预对齐，连接视觉和语言",
+      "canonical_evidence": "提出视觉证据预对齐，连接视觉和语言",
+      "llm_tldr_en": "Proposes Visual Evidence Pre-Alignment (VEPA) to improve visual grounding in MLLMs via reinforcement learning, reducing inconsistencies between text and images.",
+      "llm_tldr_cn": "针对多模态大模型视觉利用不充分的问题，本文提出视觉证据预对齐（VEPA）方法，在预训练与后训练之间插入中间阶段，通过充分性驱动的强化学习增强细粒度视觉证据的利用，从而提升模型对图像的忠实度，缓解幻觉现象。",
+      "llm_tldr": "针对多模态大模型视觉利用不充分的问题，本文提出视觉证据预对齐（VEPA）方法，在预训练与后训练之间插入中间阶段，通过充分性驱动的强化学习增强细粒度视觉证据的利用，从而提升模型对图像的忠实度，缓解幻觉现象。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.18307v1",
+      "source": "arxiv",
+      "title": "DRIFT: Refining Instruction Data via On-Policy Data Attribution",
+      "abstract": "Optimizing the training data distribution for Supervised Fine-Tuning (SFT) dictates the capability of Large Language Models (LLMs). While existing data curation methods excel at accelerating training under constrained budgets, they are less suited to elevating the capability upper bound. The challenge here is no longer to identify a smaller subset that preserves performance, but to refine the data distribution toward instances most capable of improving the final model. To address this problem, we explore instance-level data attribution using Influence Functions (IF). We identify that standard IF formulations struggle in this setting due to two structural limitations: a proximity gap caused by off-policy validation targets, and a severe bias towards gradient norm. We propose DRIFT (Data Refinement via On-Policy Influence Functions for Supervised Fine-Tuning). Instead of relying on external reference data, DRIFT utilizes the model's on-policy rollouts as validation targets, which empirically minimizes the parameter proximity gap and better aligns with the local neighborhood assumption of IF. It further applies signed weighting based on trajectory correctness and debiases influence scores against the gradient hacking issue, allowing a small set of validation queries to act as reliable anchors for attributing the full dataset. Experiments on 7B-parameter instruction and reasoning models show that DRIFT consistently raises the performance ceiling on both, outperforming existing data curation baselines.",
+      "authors": [
+        "Zefan Wang",
+        "Lincheng Li",
+        "Tianyu Yu",
+        "Yuan Yao"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-16T07:21:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.18307v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "refines instruction data for SFT using on-policy data attribution",
+      "llm_evidence_cn": "通过在线策略数据归因优化监督微调的指令数据",
+      "llm_evidence": "通过在线策略数据归因优化监督微调的指令数据",
+      "canonical_evidence": "通过在线策略数据归因优化监督微调的指令数据",
+      "llm_tldr_en": "Proposes DRIFT, which uses influence functions for on-policy data attribution to refine SFT data distribution, improving LLM capability beyond subset selection.",
+      "llm_tldr_cn": "该论文针对监督微调中数据分布优化问题，提出DRIFT框架。它利用影响函数进行在线策略数据归因，识别并去除有害数据点，同时增补高影响力样本，从而提升LLM的能力上限，而非仅节省预算。实验表明该方法在多个基准上超越了标准数据筛选方法。",
+      "llm_tldr": "该论文针对监督微调中数据分布优化问题，提出DRIFT框架。它利用影响函数进行在线策略数据归因，识别并去除有害数据点，同时增补高影响力样本，从而提升LLM的能力上限，而非仅节省预算。实验表明该方法在多个基准上超越了标准数据筛选方法。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "instruction tuning for large language models",
+      "matched_requirement_id": "req-17",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.18885v1",
+      "source": "arxiv",
+      "title": "LARE: Low-Attention Region Encoding for Text-Image Retrieval",
+      "abstract": "Image retrieval in crowded scenes is particularly challenging due to the salience bias of conventional visual encoders, which tend to focus on dominant objects while neglecting low-attention regions that are often crucial for fine-grained retrieval. We propose LARE (Low-Attention Region Encoding), a framework that explicitly models these overlooked regions. LARE adopts a dual-encoding strategy that encodes low-attention regions of an image and the full image in parallel, leading to more diverse and informative image embeddings. To evaluate image retrieval performance in challenging crowded scenes, we introduce Dense-Set, a challenging subset derived from COCO and Flickr30K. In this subset, images are re-captioned to provide richer descriptions of low-attention or previously overlooked regions. This dataset highlights the limitations of existing retrieval models and enables a more rigorous evaluation under densely crowded scene conditions. Experimental results demonstrate that the proposed framework improves retrieval performance by preserving subtle, non-dominant visual cues within the shared latent space.",
+      "authors": [
+        "Abdulmalik Alquwayfili",
+        "Faisal Almeshal",
+        "Jumanah Almajnouni",
+        "Leena Alotaibi",
+        "Faisal Alhajari",
+        "Mohammed Alkhrashi",
+        "Alreem Almuhrij",
+        "Abdullah Aldwyish",
+        "Raied Aljadaany",
+        "Huda Alamri",
+        "Muhammad Kamran J. Khan"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.IR"
+      ],
+      "published": "2026-06-17T10:00:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.18885v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Text-image retrieval with dual encoding of low-attention regions",
+      "llm_evidence_cn": "对低关注区域进行双编码的文本-图像检索",
+      "llm_evidence": "对低关注区域进行双编码的文本-图像检索",
+      "canonical_evidence": "对低关注区域进行双编码的文本-图像检索",
+      "llm_tldr_en": "Introduces LARE, a dual-encoding framework for text-image retrieval that explicitly models low-attention regions, boosting retrieval accuracy in crowded scenes.",
+      "llm_tldr_cn": "文本-图像检索在拥挤场景中常因视觉编码器忽略低关注区域而表现不佳。本文提出LARE框架，采用双编码策略并行编码低关注区域和全图，得到更丰富多样的图像嵌入。同时构建了Dense-Set基准子集。实验表明LARE在拥挤场景下检索性能显著提升，尤其对细粒度描述匹配准确。",
+      "llm_tldr": "文本-图像检索在拥挤场景中常因视觉编码器忽略低关注区域而表现不佳。本文提出LARE框架，采用双编码策略并行编码低关注区域和全图，得到更丰富多样的图像嵌入。同时构建了Dense-Set基准子集。实验表明LARE在拥挤场景下检索性能显著提升，尤其对细粒度描述匹配准确。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.15412v1",
+      "source": "arxiv",
+      "title": "Few-Shot Biomedical Relation Extraction with Large Language Models: A Viable Alternative to Supervised Learning?",
+      "abstract": "Biomedical relation extraction (BioRE) is a key step in transforming biomedical literature into structured knowledge. However, most existing approaches rely on supervised models trained on costly annotated datasets, limiting their scalability and adaptability across relation types and domains. We investigate few-shot BioRE using prompt-based learning with large language models (LLMs) and compare two task formulations: pairwise classification, which predicts relations for individual entity pairs, and joint generation, which extracts multiple relations in a single model call. Experiments on the BioREDirect dataset reveal a clear precision-recall trade-off. Pairwise classification achieves higher recall, whereas joint generation is more precise and computationally efficient. The best-performing model achieves a micro-F1 score of 0.44, substantially outperforming previous few-shot results (0.34) while remaining below the supervised baseline (0.56). Much of this gap is attributable to a single ambiguously defined relation type. When evaluated using macro-F1, which better captures performance across relation types in an imbalanced setting, prompt-based approaches outperform the supervised baseline (0.45 vs. 0.38), particularly on rare relation types. These findings highlight the potential of LLMs for BioRE in low-resource settings and underscore the importance of well-defined relation schemas.",
+      "authors": [
+        "Jakob Mraz",
+        "Tomaž Curk",
+        "Blaž Zupan"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-13T17:37:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.15412v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot biomedical relation extraction with LLMs",
+      "llm_evidence_cn": "使用大语言模型进行少样本生物医学关系抽取",
+      "llm_evidence": "使用大语言模型进行少样本生物医学关系抽取",
+      "canonical_evidence": "使用大语言模型进行少样本生物医学关系抽取",
+      "llm_tldr_en": "Investigates few-shot BioRE using prompt-based LLMs, comparing pairwise classification and joint generation; reveals precision-recall trade-off.",
+      "llm_tldr_cn": "该论文研究使用大语言模型进行少样本生物医学关系抽取的可行性，比较了两种任务形式：逐对分类和联合生成。实验表明两者存在明显的精度-召回率权衡，其中逐对分类召回率更高。该工作展示了LLM在标注数据稀缺领域替代监督学习的潜力。",
+      "llm_tldr": "该论文研究使用大语言模型进行少样本生物医学关系抽取的可行性，比较了两种任务形式：逐对分类和联合生成。实验表明两者存在明显的精度-召回率权衡，其中逐对分类召回率更高。该工作展示了LLM在标注数据稀缺领域替代监督学习的潜力。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "few-shot learning with large language models",
+      "matched_requirement_id": "req-19",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15741v1",
+      "source": "arxiv",
+      "title": "A Self Consistency Based Reranking for Narrative Question Answering",
+      "abstract": "Narrative question answering (NQA) is a challenging task in natural language processing that requires models to understand long textual contexts, capture relationships across events, and generate coherent responses. Despite recent advances in pretrained language models, most existing approaches rely on a single decoding output during inference, making them sensitive to generation variability and often resulting in incomplete or inconsistent answers .To address this limitation, we propose a self-ensemble Self-Consistency-Based reranking framework for narrative question answering. The proposed method generates multiple candidate answers for each story-question pair and selects the final answer based on semantic agreement among the generated responses. This allows the model to explore diverse answer formulations while improving robustness through consensus-based selection without requiring modifications to the underlying architecture .The framework combines pretrained and fine-tuned language generation with multi-answer inference and similarity-based reranking. We evaluate the proposed approach on the NarrativeQA dataset using multiple models, including FLAN-T5 (Base and Small) and Pegasus-Large, under both baseline and fine-tuned settings .Experimental results demonstrate that the proposed method consistently improves performance across all models. In particular, FLAN-T5-Base achieves the best overall performance, improving from 82.32% to 86.66% (+4.34%) when combined with self-ensemble inference. Additionally, the largest improvement is observed with Pegasus-Large, which increases from 72.50% to 87.07% (+14.57%), highlighting the effectiveness of the proposed strategy.",
+      "authors": [
+        "Molham Mohamed",
+        "Ali Hamdi"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-14T10:52:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.15741v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Self-consistency reranking for narrative QA, leveraging pretrained language models",
+      "llm_evidence_cn": "利用预训练语言模型的自一致性重排用于叙事问答",
+      "llm_evidence": "利用预训练语言模型的自一致性重排用于叙事问答",
+      "canonical_evidence": "利用预训练语言模型的自一致性重排用于叙事问答",
+      "llm_tldr_en": "Proposes a self-consistency-based reranking framework for narrative question answering.",
+      "llm_tldr_cn": "现有叙事问答方法在推理时仅依赖单次解码输出，导致答案不一致。本文提出基于自一致性的重排序框架，为每个问题生成多个候选答案，根据语义一致性选择最终答案，有效提升答案质量。该方法在多个数据集上取得改进，展示了多候选聚合的潜力。",
+      "llm_tldr": "现有叙事问答方法在推理时仅依赖单次解码输出，导致答案不一致。本文提出基于自一致性的重排序框架，为每个问题生成多个候选答案，根据语义一致性选择最终答案，有效提升答案质量。该方法在多个数据集上取得改进，展示了多候选聚合的潜力。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.16067v1",
+      "source": "arxiv",
+      "title": "Stepwise Token Selection for Efficient Multimodal Large Language Models",
+      "abstract": "In multimodal large language models (MLLMs), inference cost is largely dominated by the visual token prefix rather than the language backbone, making token reduction a key factor for improving efficiency. Existing approaches typically assign independent importance scores to visual tokens and retain a fixed number of top-ranked tokens, implicitly assuming token independence and a uniform compression ratio across inputs. In this work, we reformulate visual token pruning as a sequential decision-making process. Specifically, we introduce a pointer-style selection mechanism that iteratively chooses informative tokens, conditioning each decision on previously selected ones, and dynamically determines when to stop via a learned termination action. This enables joint optimization of both the selected subset and its size. To enable end-to-end training under standard language modeling objectives, we design a differentiable relaxation based on a variance-preserving noise interpolation scheme, allowing gradients to propagate through the discrete selection process. Extensive experiments on LLaVA-v1.5-7B and Qwen2.5-VL-7B demonstrate that our approach consistently outperforms fixed-ratio baselines across different compression levels. Under aggressive pruning that removes 88.9% of visual tokens, our method preserves 94.6% of the original accuracy while achieving a 1.88x speed-up in prefill latency.",
+      "authors": [
+        "Landi He",
+        "Shawn Young",
+        "Lijian Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-14T23:50:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.16067v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "stepwise visual token selection for MLLMs, efficient multimodal LLMs",
+      "llm_evidence_cn": "逐步视觉token选择用于多模态LLM，提升效率",
+      "llm_evidence": "逐步视觉token选择用于多模态LLM，提升效率",
+      "canonical_evidence": "逐步视觉token选择用于多模态LLM，提升效率",
+      "llm_tldr_en": "Reformulates visual token pruning as sequential decision-making with a pointer-style selection mechanism that dynamically decides when to stop, improving efficiency in MLLMs.",
+      "llm_tldr_cn": "将多模态大语言模型中的视觉token剪枝重新定义为序贯决策过程，提出指针式选择机制，每次选择依赖先前已选token，并通过学习到的终止动作动态确定剪枝停止点。实验表明该方法在多个视觉语言任务上以更少token达到可比甚至更好的性能。",
+      "llm_tldr": "将多模态大语言模型中的视觉token剪枝重新定义为序贯决策过程，提出指针式选择机制，每次选择依赖先前已选token，并通过学习到的终止动作动态确定剪枝停止点。实验表明该方法在多个视觉语言任务上以更少token达到可比甚至更好的性能。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15768v1",
+      "source": "arxiv",
+      "title": "LaWAM: Latent World Action Models for Efficient Dynamics-Aware Robot Policies",
+      "abstract": "Vision-Language-Action models (VLAs) leverage large-scale vision-language pretraining for semantic robot control, but often lack explicit foresight into how robot actions change the scene. World-Action Models (WAMs) address this limitation by conditioning policies on predicted futures, yet existing approaches typically rely on computationally expensive video generation with substantial pixel-level redundancy. We present LaWAM, a Latent World Action Model that exposes predictive dynamics to robot policies through compact latent visual subgoals instead of reconstructed future video. At the core of LaWAM is a latent-action-conditioned Latent World Model (LaWM). We obtain LaWM by training a latent action model in the latent space of a pretrained vision foundation model and repurposing its forward decoder to predict future observation features for scene evolution. LaWAM then conditions action generation on these predicted latent visual subgoals to enable dynamics-aware robot control. LaWAM achieves state-of-the-art or competitive success rates (SRs) across LIBERO (98.6% SR), RoboTwin (91.22% SR), and real-world manipulation tasks while retaining low-latency inference. LaWAM runs in 187 ms per action-chunk prediction and achieves up to 24x lower wall-clock latency than pixel-space WAMs.",
+      "authors": [
+        "Jialei Chen",
+        "Kai Wang",
+        "Kang Chen",
+        "Shuaihang Chen",
+        "Feng Gao",
+        "Wenhao Tang",
+        "Zhiyuan Li",
+        "Weilin Liu",
+        "Zhuyu Yao",
+        "Boxun Li",
+        "Yuanbo Xu",
+        "Chao Yu"
+      ],
+      "primary_category": "cs.RO",
+      "categories": [
+        "cs.RO",
+        "cs.AI"
+      ],
+      "published": "2026-06-14T12:06:58+00:00",
+      "link": "https://arxiv.org/pdf/2606.15768v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses pretrained vision-language models in latent world action model for robot policies",
+      "llm_evidence_cn": "使用预训练视觉语言模型构建潜在世界行动模型用于机器人策略",
+      "llm_evidence": "使用预训练视觉语言模型构建潜在世界行动模型用于机器人策略",
+      "canonical_evidence": "使用预训练视觉语言模型构建潜在世界行动模型用于机器人策略",
+      "llm_tldr_en": "Proposes LaWAM, a latent world action model that leverages pretrained vision-language models to predict dynamics in latent space, enabling efficient robot control without video generation.",
+      "llm_tldr_cn": "该论文提出潜在世界行动模型LaWAM，利用预训练视觉语言模型的潜在空间，学习动作条件下的潜在世界模型。通过紧凑的潜在视觉子目标替代未来视频重建，使机器人策略具备动力学感知能力，同时避免视频生成的高计算开销。实验证明该方法在效率上显著优于基于视频的World-Action模型。",
+      "llm_tldr": "该论文提出潜在世界行动模型LaWAM，利用预训练视觉语言模型的潜在空间，学习动作条件下的潜在世界模型。通过紧凑的潜在视觉子目标替代未来视频重建，使机器人策略具备动力学感知能力，同时避免视频生成的高计算开销。实验证明该方法在效率上显著优于基于视频的World-Action模型。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "large vision model recent advances",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.16082v1",
+      "source": "arxiv",
+      "title": "Tool-IQA: Augmenting Image Quality Assessment with Simple Tools",
+      "abstract": "Vision-Language Models (VLMs) have been increasingly adopted for Image Quality Assessment (IQA). However, current methods typically employ a static one-shot scoring paradigm, despite the fact that humans assess image quality through dynamic visual inspection, e.g., selectively adjusting views to verify details and subtle artifacts. Specifically, relying solely on a single-pass observation introduces two primary limitations: first, perceiving the image only at a global scale restricts the assessment of finer local details; second, the original intensity distribution of the image may overwhelm the visibility, leading to insufficient inspection of image quality. To address these issues, we propose Tool-IQA, shifting the assessment mechanism from passive scoring to a tool-augmented workflow. In particular, we equip VLMs with simple yet effective view tools: a Magnifier to inspect local details, and a Gamma Corrector to uncover visibility and hidden artifacts. The assessment follows a structured pipeline that consists of an initial observation with rubric notes, a tool-augmented in-depth inspection, and a final quantification for calibrated quality score. Furthermore, to ensure efficient and purposeful tool callings, we introduce a batch-aware training strategy to reward tool interactions that can yield positive contributions rather than simply encouraging usage. Experiments on a variety of IQA benchmarks demonstrate that, with effective tool calling and calibrated assessment, our proposed Tool-IQA significantly outperforms existing state-of-the-art models, e.g., it achieves a PLCC of 0.854 on the challenging CLIVE dataset.",
+      "authors": [
+        "Guanyi Qin",
+        "Junjie Zhang",
+        "Chunming He",
+        "Yibing Fu",
+        "Jie Liang",
+        "Tianhe Wu",
+        "Lei Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-15T00:47:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.16082v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Image quality assessment using vision-language models",
+      "llm_evidence_cn": "使用视觉语言模型进行图像质量评估",
+      "llm_evidence": "使用视觉语言模型进行图像质量评估",
+      "canonical_evidence": "使用视觉语言模型进行图像质量评估",
+      "llm_tldr_en": "Presents Tool-IQA, a VLM-based IQA method that uses simple tools to simulate dynamic visual inspection, improving assessment of local details.",
+      "llm_tldr_cn": "当前基于VLM的图像质量评估采用静态一次性评分，忽略人类动态检查细节的习惯。本文提出Tool-IQA，将被动评分转变为主动工具辅助检查机制，例如放大查看局部区域、调整对比度等。通过引入这些简单工具，模型能更细致地评估图像质量，尤其对伪影和局部失真敏感。实验表明Tool-IQA在多个IQA基准上取得领先性能。",
+      "llm_tldr": "当前基于VLM的图像质量评估采用静态一次性评分，忽略人类动态检查细节的习惯。本文提出Tool-IQA，将被动评分转变为主动工具辅助检查机制，例如放大查看局部区域、调整对比度等。通过引入这些简单工具，模型能更细致地评估图像质量，尤其对伪影和局部失真敏感。实验表明Tool-IQA在多个IQA基准上取得领先性能。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15778v1",
+      "source": "arxiv",
+      "title": "DYNA : Dynamic Episodic Memory Networks for Augmenting Large Language Models with Temporal Knowledge Graphs in Continuous Learning",
+      "abstract": "Large Language Models (LLMs) struggle to incorporate new knowledge without forgetting or costly retraining. We propose DYNA, a lightweight framework that augments a frozen LLM with a temporal knowledge graph where events are nodes and temporal relations are directed, timestamped edges. The graph serves as an external, updatable memory. At query time, DYNA retrieves relevant nodes via random walks and centrality measures, then augments the LLM's response. Evaluated on three temporal recall tasks, DYNA reduces catastrophic forgetting by ~7% compared to fine-tuning and improves temporal ordering by ~5% over standard RAG. Higher graph clustering coefficients correlate with better retrieval, showing that graph structure matters. Contributions: (1) episodic memory as temporal KG, (2) retraining-free LLM augmentation, (3) graph properties as predictors of retrieval performance.",
+      "authors": [
+        "Ali Sarabadani",
+        "Mahtab Tajvidiyan"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG",
+        "cs.SI"
+      ],
+      "published": "2026-06-14T12:27:26+00:00",
+      "link": "https://arxiv.org/pdf/2606.15778v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Augmenting LLMs with temporal knowledge graphs for continuous learning",
+      "llm_evidence_cn": "用时序知识图谱增强大语言模型以实现持续学习",
+      "llm_evidence": "用时序知识图谱增强大语言模型以实现持续学习",
+      "canonical_evidence": "用时序知识图谱增强大语言模型以实现持续学习",
+      "llm_tldr_en": "DYNA augments frozen LLMs with a temporal knowledge graph as external memory, reducing catastrophic forgetting in temporal recall tasks.",
+      "llm_tldr_cn": "针对大语言模型在学习新知识时容易遗忘的问题，DYNA引入时序知识图谱作为外部可更新记忆，通过随机游走和中心性度量检索相关节点来增强LLM回答。在时序回忆任务上，该方法相比微调减少了约7%的灾难性遗忘，相比标准RAG改善了时序排序。",
+      "llm_tldr": "针对大语言模型在学习新知识时容易遗忘的问题，DYNA引入时序知识图谱作为外部可更新记忆，通过随机游走和中心性度量检索相关节点来增强LLM回答。在时序回忆任务上，该方法相比微调减少了约7%的灾难性遗忘，相比标准RAG改善了时序排序。",
+      "llm_tags": [
+        "query:llm-papers:composite"
+      ],
+      "matched_query_tag": "query:llm-papers:composite",
+      "matched_query_text": "Papers central to 大模型重要论文检索, especially work that connects or combines: large language model survey; pretraining methods for language models; instruction tuning for large language models; RLHF training for language models; few-shot learning with large language models; seminal papers on large language model development; key research on transformer based language models; important works on instruction fine tuning and alignment.",
+      "matched_requirement_id": "req-composite-llm-papers",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.16093v1",
+      "source": "arxiv",
+      "title": "Long-Context Modeling via GSS-Transformer Hybrid Architecture with Learnable Mixing",
+      "abstract": "Modeling long-range dependencies remains a central challenge in natural language processing. Transformer architectures achieve strong performance via self-attention but scale quadratically ($O(N^2)$) with sequence length, while State Space Models (SSMs) scale linearly ($O(N)$) but suffer from a selective recall bottleneck, struggling to retrieve precise information from compressed states. This creates a fundamental tradeoff between efficiency and perplexity. To tackle these challenges, we propose the \\textit{Parallel Hybrid Architecture (PHA)}, which runs Gated State Spaces (GSS), Grouped Query Attention (GQA), and Feed-Forward Networks (FFNs) as independent parallel branches fused by a learnable mixing mechanism. Instead of forcing SSMs to approximate attention or serializing the two paradigms, PHA allows each branch to specialize: GSS captures global context, while attention performs selective retrieval, with FFN providing complementary processing. On WikiText-103, PHA achieves 16.51 PPL at 125M parameters, outperforming Hedgehog (16.70) and H3-125M (23.70). Scaling to 180M parameters yields 16.42 PPL, which gives comparable results with the pure attention baseline while delivering 24\\% higher throughput and up to 40\\% lower memory usage at long contexts. On OpenWebText, our 125M model achieves 19.72 PPL, outperforming standard Transformers (20.60) and GSS hybrid baselines (19.80). These results demonstrate that separating sequence modeling paradigms into parallel specialists enables Transformer-level perplexity with substantially improved efficiency for long-context language modeling.",
+      "authors": [
+        "Kuzey Torlak",
+        "Hüseyin Arda Arslan",
+        "Anıl Dervişoğlu",
+        "Beyza Nur Deniz",
+        "Onur Boyar"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-15T01:17:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.16093v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "hybrid architecture combining GSS and Transformer for long-context language modeling",
+      "llm_evidence_cn": "结合门控状态空间与Transformer的混合架构用于长上下文语言建模",
+      "llm_evidence": "结合门控状态空间与Transformer的混合架构用于长上下文语言建模",
+      "canonical_evidence": "结合门控状态空间与Transformer的混合架构用于长上下文语言建模",
+      "llm_tldr_en": "PHA parallelizes GSS, GQA, and FFN with learnable mixing, addressing the efficiency-perplexity tradeoff in long-context language modeling.",
+      "llm_tldr_cn": "Transformer在长序列上平方复杂度，状态空间模型线性但选择性回忆瓶颈。本文提出并行混合架构PHA，将门控状态空间（GSS）、分组查询注意力（GQA）和前馈网络并行运行，通过可学习融合机制结合，在保持效率的同时提升困惑度。该方法缓解了效率和困惑度之间的根本矛盾。",
+      "llm_tldr": "Transformer在长序列上平方复杂度，状态空间模型线性但选择性回忆瓶颈。本文提出并行混合架构PHA，将门控状态空间（GSS）、分组查询注意力（GQA）和前馈网络并行运行，通过可学习融合机制结合，在保持效率的同时提升困惑度。该方法缓解了效率和困惑度之间的根本矛盾。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15937v2",
+      "source": "arxiv",
+      "title": "GOOSE-M2F: Adapting Mask2Former for High-Fidelity, Long-Tailed Fine-Grained Semantic Segmentation in Unstructured Outdoor Terrain",
+      "abstract": "We present GOOSE-M2F, a task-specific adaptation of Mask2Former for the GOOSE 2D Fine-Grained Semantic Segmentation (FGSS) Challenge at ICRA 2026. The GOOSE benchmark spans 64 fine-grained classes across unstructured outdoor terrain with a severely long-tailed distribution, where rare classes occupy fewer than 50 pixels per image. We extend the Swin-Large Mask2Former baseline with three targeted contributions: (1) 200 object queries to eliminate representational saturation; (2) a Feature Refinement Module (FRM) combining ASPP-lite and CBAM dual-attention; and (3) an Auxiliary Supervision Head that delivers direct per-pixel gradients for rare classes. A multi-stage training strategy pairs Distribution-Balanced loss, Rare-Class Copy-Paste augmentation, dynamic IoU-aware re-weighting, and EMA. At inference, a dense sliding-window engine with 2D Gaussian kernel blending and 4-scale TTA adds +10.57%. GOOSE-M2F achieves 70.08% Official Composite mIoU (63.55% fine, 76.61% coarse), placing 3rd on the GOOSE 2D FGSS leaderboard. Code and trained models are publicly available at GitHub: https://github.com/Aditya-Lingam-9000/GOOSE-M2F and Hugging Face: https://huggingface.co/XYZ9843/GOOSE-M2F.",
+      "authors": [
+        "Jyothiraditya Lingam",
+        "Nikhileswara Rao Sulake",
+        "Sai Manikanta Eswar Machara"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-14T17:41:03+00:00",
+      "link": "https://arxiv.org/pdf/2606.15937v2",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "adaptation of Mask2Former transformer for vision segmentation",
+      "llm_evidence_cn": "基于Mask2Former变换器的视觉分割适配",
+      "llm_evidence": "基于Mask2Former变换器的视觉分割适配",
+      "canonical_evidence": "基于Mask2Former变换器的视觉分割适配",
+      "llm_tldr_en": "GOOSE-M2F adapts Mask2Former with 200 object queries, FRM, and auxiliary supervision to achieve high-fidelity fine-grained segmentation on long-tailed outdoor terrain, tackling representational saturation and rare class learning.",
+      "llm_tldr_cn": "该论文针对非结构化户外地形上的细粒度语义分割中长尾分布和稀有类别学习困难的问题，提出了GOOSE-M2F方法。它扩展了Swin-Large Mask2Former基线，通过增加200个目标查询消除表征饱和，设计特征精炼模块（FRM）结合ASPP-lite和CBAM双注意力，并引入辅助监督头提供直接的逐像素梯度。多阶段训练策略进一步提升了罕见类别的分割精度。该工作展示了变换器架构在挑战性分割任务中的适应能力。",
+      "llm_tldr": "该论文针对非结构化户外地形上的细粒度语义分割中长尾分布和稀有类别学习困难的问题，提出了GOOSE-M2F方法。它扩展了Swin-Large Mask2Former基线，通过增加200个目标查询消除表征饱和，设计特征精炼模块（FRM）结合ASPP-lite和CBAM双注意力，并引入辅助监督头提供直接的逐像素梯度。多阶段训练策略进一步提升了罕见类别的分割精度。该工作展示了变换器架构在挑战性分割任务中的适应能力。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "landmark papers in computer vision after the introduction of Transformer",
+      "matched_requirement_id": "req-7",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.16569v1",
+      "source": "arxiv",
+      "title": "PROSE: Training-Free Egocentric Scene Registration with Vision-Language Models",
+      "abstract": "Registering two captures of the same indoor space taken at different times underpins persistent spatial memory for robots and AR systems, yet the realistic version of this task is egocentric and its most scalable form is RGB-only. Head-mounted cameras yield blurry, fast-moving, partially overlapping views from which dense geometry is hard to recover. Classical registration leans on exactly the clean point clouds this setting lacks, while learned scene-graph methods require a pre-built or annotated graph and a trained matcher that we find brittle under egocentric data. We take a different route, using a pretrained vision-language model as the source of both scene understanding and cross-scan matching. Our method, PROSE (Prompted Scene rEgistration), lifts each RGB sequence into an object-level 3D scene graph using off-the-shelf foundation models for geometry, segmentation, and language, then prompts the same VLM to match object instances across the two RGB sequences. To make this matching tractable and reliable, we leverage object heights as a prior and verify each proposed match with a paired same/different query, then solve for the rigid transform by hypothesizing a candidate per matched object and selecting the one with the strongest geometric consensus. PROSE adds no learned parameters and requires no depth sensor, training, or annotated graph. On the egocentric Aria Digital Twin and Aria Everyday Activities benchmarks, it outperforms both geometric and learned scene-graph baselines in registration accuracy, on ground-truth and RGB-reconstructed point clouds alike, and the scene graph it produces transfers directly to downstream tasks.",
+      "authors": [
+        "Zhiang Chen",
+        "Nahyuk Lee",
+        "Boyang Sun",
+        "Taein Kwon",
+        "Marc Pollefeys",
+        "Zuria Bauer",
+        "Sunghwan Hong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-15T11:11:14+00:00",
+      "link": "https://arxiv.org/pdf/2606.16569v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "uses pretrained vision-language model for scene registration",
+      "llm_evidence_cn": "使用预训练视觉语言模型进行场景配准",
+      "llm_evidence": "使用预训练视觉语言模型进行场景配准",
+      "canonical_evidence": "使用预训练视觉语言模型进行场景配准",
+      "llm_tldr_en": "PROSE leverages a pretrained vision-language model for egocentric RGB-only scene registration, using natural language prompts for cross-scan matching without dense geometry or trained matchers.",
+      "llm_tldr_cn": "该论文针对第一人称视角下室内场景配准中缺乏干净点云且已有方法脆弱的问题，提出PROSE方法。它利用预训练的视觉-语言模型作为场景理解和跨扫描匹配的来源，通过自然语言提示实现无需训练的配准。该方法无需密集几何重建或预构建场景图，在多个真实第一人称数据集上展示了有效性和鲁棒性，拓展了视觉语言模型在机器人感知中的应用边界。",
+      "llm_tldr": "该论文针对第一人称视角下室内场景配准中缺乏干净点云且已有方法脆弱的问题，提出PROSE方法。它利用预训练的视觉-语言模型作为场景理解和跨扫描匹配的来源，通过自然语言提示实现无需训练的配准。该方法无需密集几何重建或预构建场景图，在多个真实第一人称数据集上展示了有效性和鲁棒性，拓展了视觉语言模型在机器人感知中的应用边界。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.16448v1",
+      "source": "arxiv",
+      "title": "Hierarchical Fine-Grained Aerial Object Detection",
+      "abstract": "Fine-grained aerial object detection, driven by the intrinsic granularity of real-world object categories, is crucial for advanced scene understanding in remote sensing. Existing methods largely inherit the paradigm of coarse-grained object detection, relying solely on single-label supervision and thus struggling to distinguish model-level categories with subtle structural differences. However, for each specific model (e.g., Boeing 787), structured prior knowledge such as attributes and hierarchies offers discriminative semantics across multiple granularities. Motivated by this, we present ExpertDet, a scheme that incorporates expert-informed cues to enhance fine-grained aerial object detection. Specifically, we design Vision-aware Masked Attribute Modeling (VMAM), which aligns attribute semantics with visual structures by reconstructing randomly masked attributes from visual cues, enabling the detector to capture subtle structural distinctions. We further propose Hierarchical Visual Instance Promotion (HierVIP), which builds a visual prototype tree based on hierarchical relations and imposes taxonomy-aware constraints to preserve cross-level semantic continuity while enhancing category discrimination. Moreover, we curate a new fine-grained object detection benchmark for Precise recognition of model-specific Ships and Planes from aerial imagery, PSP, covering 106 ship classes and 30 airplane models, respectively, featuring the most extensive collection of model-specific categories among existing aerial object detection datasets to date. We benchmark state-of-the-art object detection algorithms on the PSP benchmark. Extensive evaluation demonstrates that ExpertDet consistently outperforms other fine-grained competitors across hierarchy levels. The dataset, benchmark, and code are available at https://nnnnerd.github.io/PSP-Benchmark/.",
+      "authors": [
+        "Yan Zhang",
+        "Fang Xu",
+        "Wen Yang",
+        "Gui-Song Xia"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-15T09:20:16+00:00",
+      "link": "https://arxiv.org/pdf/2606.16448v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Hierarchical fine-grained aerial object detection with expert-informed cues",
+      "llm_evidence_cn": "层次化细粒度航空目标检测，引入专家先验知识",
+      "llm_evidence": "层次化细粒度航空目标检测，引入专家先验知识",
+      "canonical_evidence": "层次化细粒度航空目标检测，引入专家先验知识",
+      "llm_tldr_en": "Proposes ExpertDet for fine-grained aerial object detection using Vision-aware Masked Attribute Modeling.",
+      "llm_tldr_cn": "现有航空目标检测方法依赖单标签监督，难以区分结构细微差异的型号。本文提出ExpertDet，利用视觉感知掩码属性建模（VMAM）融入结构化先验知识，从多粒度层次增强检测能力。在细粒度航空数据集上取得显著提升，为高精度遥感场景理解提供新方案。",
+      "llm_tldr": "现有航空目标检测方法依赖单标签监督，难以区分结构细微差异的型号。本文提出ExpertDet，利用视觉感知掩码属性建模（VMAM）融入结构化先验知识，从多粒度层次增强检测能力。在细粒度航空数据集上取得显著提升，为高精度遥感场景理解提供新方案。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Find influential papers on object detection from CCF A computer vision conferences",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.16825v1",
+      "source": "arxiv",
+      "title": "Tying the Loop -- Tied Expert Layers in Mixture-of-Experts Language Models",
+      "abstract": "Mixture-of-Experts (MoE) architectures efficiently scale Large Language Models (LLMs) by activating only a small fraction of their experts per token, yet the full parameter count - dominated by the expert parameters - must be held in training and inference memory. To address this, we introduce Expert Tying, an architectural modification that shares expert parameters across consecutive transformer layers while preserving independent, layer-wise routing and attention.   We evaluate this approach across common, state-of-the-art architectures, including OLMoE, Qwen3, and DeepSeek-style MoEs. Our pretraining experiments demonstrate that tying experts can reduce memory footprint by almost 2x at virtually no degradation in perplexity or downstream quality. By exploiting the parameter redundancy inherent in MoE pathways, our method provides a highly favorable compute-to-memory trade-off, advancing efficient training and scaling of next-generation LLMs.",
+      "authors": [
+        "Martin Jaggi"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-15T15:08:09+00:00",
+      "link": "https://arxiv.org/pdf/2606.16825v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Expert tying in MoE LLMs reduces memory",
+      "llm_evidence_cn": "MoE大语言模型中的专家绑定减少内存",
+      "llm_evidence": "MoE大语言模型中的专家绑定减少内存",
+      "canonical_evidence": "MoE大语言模型中的专家绑定减少内存",
+      "llm_tldr_en": "Expert Tying shares expert parameters across transformer layers in MoE LLMs, reducing memory by 2x with minimal performance loss.",
+      "llm_tldr_cn": "针对MoE大语言模型专家参数占用大量内存的问题，Expert Tying在保持独立路由和注意力的前提下跨层共享专家参数。预训练实验表明该方法在几乎不损失困惑度和下游任务质量的情况下将内存占用减半。",
+      "llm_tldr": "针对MoE大语言模型专家参数占用大量内存的问题，Expert Tying在保持独立路由和注意力的前提下跨层共享专家参数。预训练实验表明该方法在几乎不损失困惑度和下游任务质量的情况下将内存占用减半。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.16836v1",
+      "source": "arxiv",
+      "title": "Does Traversal Order Matter? A Systematic Study of Tree Traversal Methods in Transformer Grammars",
+      "abstract": "Transformer Grammars (TGs) enhance language modeling by incorporating syntactic tree structures. Despite the potentially significant impact on model performance of how syntactic trees are linearized in TGs, existing studies rely solely on Depth-First Traversal (DFT) for linearization. In this paper, we expand the traversal design space by exploring Breadth-First Traversal (BFT) and a novel hybrid traversal strategy, Production-Rule Traversal (PRT), which combines the structural lookahead of BFT with the early lexical generation of DFT. We integrate these traversal methods with varying tree configurations and masking strategies, and empirically evaluate their performance on language modeling, syntactic generalization and summarization. We reveal the inherent trade-offs between nested composition and global lookahead, providing actionable recommendations for designing task-aware Transformer Grammars.",
+      "authors": [
+        "Zongru Liu",
+        "Pengyu Ji",
+        "Pengcheng Wang",
+        "Kewei Tu"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-15T15:15:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.16836v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "study of traversal order in transformer grammars for language modeling",
+      "llm_evidence_cn": "变换器语法中遍历顺序的研究，用于语言建模",
+      "llm_evidence": "变换器语法中遍历顺序的研究，用于语言建模",
+      "canonical_evidence": "变换器语法中遍历顺序的研究，用于语言建模",
+      "llm_tldr_en": "This paper systematically explores Breadth-First, Depth-First, and a novel hybrid traversal (PRT) in Transformer Grammars, finding that traversal order significantly impacts language modeling and syntactic generalization.",
+      "llm_tldr_cn": "该论文针对变换器语法（TG）中句法树线性化方式对语言模型性能的影响展开系统研究。现有工作仅使用深度优先遍历，本文扩展设计空间，探索广度优先遍历和一种新型混合策略——产生式规则遍历（PRT），后者结合了广度优先的结构预测和深度优先的早期词汇生成。实验表明，遍历顺序显著影响语言建模和句法泛化性能，为变换器语法提供了新的设计指导。",
+      "llm_tldr": "该论文针对变换器语法（TG）中句法树线性化方式对语言模型性能的影响展开系统研究。现有工作仅使用深度优先遍历，本文扩展设计空间，探索广度优先遍历和一种新型混合策略——产生式规则遍历（PRT），后者结合了广度优先的结构预测和深度优先的早期词汇生成。实验表明，遍历顺序显著影响语言建模和句法泛化性能，为变换器语法提供了新的设计指导。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.18023v1",
+      "source": "arxiv",
+      "title": "LoopCoder-v2: Only Loop Once for Efficient Test-Time Computation Scaling",
+      "abstract": "Looped Transformers scale latent computation by repeatedly applying shared blocks, but sequential looping increases latency and KV-cache memory with the loop count. Parallel loop Transformers (PLT) alleviate this cost through cross-loop position offsets (CLP) and shared-KV gated sliding-window attention, making loop count a practical design choice. We therefore study PLT loop-count selection through a gain--cost view: an extra loop may refine representations, but CLP also introduces a positional mismatch at each loop boundary. We instantiate this study by training LoopCoder-v2, a family of 7B PLT coders with different loop counts, from scratch on 18T tokens, followed by matched instruction tuning and evaluation. Empirically, the two-loop variant delivers broad gains over the non-looped baseline across code generation, code reasoning, agentic software engineering, and tool-use benchmarks, improving SWE-bench Verified from 43.0 to 64.4 points and Multi-SWE from 14.0 to 31.0 points. In contrast, variants with three or more loops regress, revealing a strongly non-monotonic loop-count effect. Our diagnostics show that loop 2 provides the main productive refinement, while later loops yield diminishing, oscillatory updates and reduced representational diversity. Because the CLP-induced mismatch remains roughly fixed as refinement gains shrink, the offset cost increasingly dominates. This gain--cost trade-off explains PLT's saturation at two loops and provides diagnostics for loop-count selection.",
+      "authors": [
+        "Jian Yang",
+        "Shawn Guo",
+        "Wei Zhang",
+        "Tianyu Zheng",
+        "Yaxin Du",
+        "Haau-Sing Li",
+        "Jiajun Wu",
+        "Yue Song",
+        "Yan Xing",
+        "Qingsong Cai",
+        "Zelong Huang",
+        "Chuan Hao",
+        "Ran Tao",
+        "Xianglong Liu",
+        "Wayne Xin Zhao",
+        "Mingjie Tang",
+        "Weifeng Lv",
+        "Ming Zhou",
+        "Bryan Dai"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-16T15:03:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.18023v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Looped Transformer for test-time computation scaling in code generation",
+      "llm_evidence_cn": "用于代码生成测试时计算扩展的循环Transformer",
+      "llm_evidence": "用于代码生成测试时计算扩展的循环Transformer",
+      "canonical_evidence": "用于代码生成测试时计算扩展的循环Transformer",
+      "llm_tldr_en": "Trains LoopCoder-v2, a family of 7B PLT coders, studying loop-count selection via gain-cost view, showing two loops yields best efficiency.",
+      "llm_tldr_cn": "循环Transformer通过共享块重复增加潜层计算，但顺序循环增加延迟。本文提出并行循环Transformer（PLT），使用跨循环位置偏移和共享KV门控滑动窗口注意力降低开销。训练了不同循环数的7B参数LoopCoder-v2模型，经指令微调评估，两循环变体在代码生成任务上实现最佳效率-性能平衡。",
+      "llm_tldr": "循环Transformer通过共享块重复增加潜层计算，但顺序循环增加延迟。本文提出并行循环Transformer（PLT），使用跨循环位置偏移和共享KV门控滑动窗口注意力降低开销。训练了不同循环数的7B参数LoopCoder-v2模型，经指令微调评估，两循环变体在代码生成任务上实现最佳效率-性能平衡。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
