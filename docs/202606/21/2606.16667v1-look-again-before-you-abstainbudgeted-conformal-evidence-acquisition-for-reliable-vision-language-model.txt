@@ -1,0 +1,820 @@
+Title: Look Again Before You Abstain:Budgeted Conformal Evidence Acquisition for Reliable Vision-Language Model
+
+URL Source: https://arxiv.org/pdf/2606.16667v1
+
+Published Time: Tue, 16 Jun 2026 02:14:20 GMT
+
+Number of Pages: 13
+
+Markdown Content:
+# Look Again Before You Abstain: Budgeted Conformal Evidence Acquisition for Reliable Vision-Language Models 
+
+## Jian Xu 1,2 , Delu Zeng 3, John Paisley 4, Qibin Zhao 2
+
+> 1
+
+RIKEN iTHEMS 
+
+> 2
+
+RIKEN AIP 
+
+> 3
+
+South China University of Technology 
+
+> 4
+
+Columbia University jian.xu@riken.jp 
+
+Abstract 
+
+Large vision-language models (LVLMs) hallucinate: they as-sert visual details that the image does not support. A prin-cipled remedy is selective prediction with a distribution-free guarantee—verify each claim and abstain when the claim is not grounded, so that the hallucination rate among asserted claims is provably bounded. We show, however, that this guar-antee is bought at a brutal price: to keep the hallucination rate below 5% on a balanced object-existence benchmark, a state-of-the-art conformal filter must abstain on more than 80% of claims. We argue that abstention is wasteful when more visual evidence is cheaply available, and introduce Budgeted Con-formal Evidence Acquisition (BCEA) , which replaces the bi-nary answer/abstain decision with a three-way choice: answer, abstain, or acquire additional visual evidence by re-examining the image (zooming, cropping, or applying a claim-specific in-tervention) under a bounded compute budget. We make two observations. First, acquisition that is plugged naively into a calibrated filter breaks the statistical guarantee—realized risk overshoots the target by up to 17 points—because the acqui-sition step destroys the exchangeability that conformal cali-bration relies on. Second, folding the entire acquisition policy into the score function and re-calibrating on post-acquisition scores restores the finite-sample guarantee while still recov-ering coverage. BCEA further uses structured, claim-type-specific interventions; e.g., a single horizontal-flip interven-tion lifts spatial-relation verification from chance ( 0.57 AU-ROC) to 0.77 , where the global ungrounding score used by prior work is useless. Across the POPE benchmark and COCO-constructed existence and spatial-relation claims, on four open VLMs (LLaVA-1.5, Qwen2.5-VL, LLaVA-NeXT, InternVL2), BCEA controls the hallucination rate at the target level and consistently improves coverage over a guaranteed-abstention baseline. 
+
+## 1 Introduction 
+
+Large vision-language models (LVLMs) produce fluent, helpful descriptions of images, but they also hallucinate :they assert objects, attributes, and relations that are not present in the visual input (Leng et al. 2024; Huang et al. 2024; Guan et al. 2024). For deployment in settings that de-mand reliability—medical, scientific, assistive—fluency is not enough; what is needed is a guarantee that, whatever the model says, the rate of unsupported claims stays below a user-specified level. Conformal prediction offers exactly this kind of guarantee, and a recent line of work brings it to LVLMs. The strongest instance, ConfLVLM (Li et al. 2025), treats each generated detail as a hypothesis, scores it with a cheap uncertainty heuristic, and filters out claims whose score falls below a conformally calibrated threshold; the result is a finite-sample, distribution-free bound on the factual error rate of what re-mains. This is principled and attractive. But it inherits the central weakness of selective prediction: to be safe, it ab-stains . In our experiments, guaranteeing a hallucination rate below 5% forces such a filter to abstain on more than 80% of all claims (Figure 1). A reliable model that refuses four out of five questions is of limited use. We start from a simple observation: abstention is wasteful when more evidence is cheaply available. When a person is unsure whether a small object is present, they look closer; they do not give up. LVLMs admit the analogous move— re-encoding a zoomed crop, or re-scoring the claim under a targeted visual intervention—at the cost of a few extra forward passes. The question is whether this “look again” step can be added without forfeiting the statistical guarantee 
+
+that motivated selective prediction in the first place. Two existing literatures each solve half of this problem. Conformal LVLM filters (Li et al. 2025; Tayebati et al. 2025) provide the guarantee but never acquire evidence—they only drop claims. Evidence-acquisition methods such as ReCoV-ERR (Srinivasan et al. 2024) do gather more evidence to rescue abstained questions, but they rely on heuristic risk-tolerance thresholds and provide no distribution-free guaran-tee; moreover they acquire textual evidence (LLM-generated follow-up questions) rather than re-examining the pixels. No method does both—acquire visual evidence and retain the guarantee—and, as we show, naively combining the two is not safe. We introduce Budgeted Conformal Evidence Acquisi-tion (BCEA) . BCEA replaces the binary answer/abstain decision with a three-way action—answer, abstain, or ac-quire —and makes three contributions. 
+
+(1) Acquisition that is naive breaks the guarantee. Cal-ibrating a conformal threshold on a claim’s base score and then, at test time, replacing that score with a higher post-acquisition score is the obvious thing to do, and it is wrong. Acquisition changes the score distribution, breaking the ex-     
+
+> arXiv:2606.16667v1 [cs.CV] 15 Jun 2026 0.0 0.1 0.2 0.3 0.4 0.5
+> hallucination rate among asserted claims (risk)
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> coverage (fraction asserted)
+> Risk--coverage frontier (existence claims)
+> global score (abstain only)
+> BCEA (acquire + recalibrate)
+
+Figure 1: Guaranteed abstention is conservative. Risk– coverage frontier on 1,440 balanced object-existence claims (LLaVA-1.5-7B). To certify a hallucination rate below 5% , a global-score conformal filter must abstain on 82% of claims. BCEA recovers coverage by acquiring visual evidence while preserving the guarantee. changeability between calibration and test on which con-formal validity rests. Empirically, naive acquisition raises coverage but pushes realized risk up to 13 points past the target (Table 1). We make this failure precise. 
+
+(2) Re-calibration on post-acquisition scores restores it. 
+
+The fix is to treat the entire acquisition policy as part of the score function and calibrate on the post-acquisition scores, so that calibration and test claims pass through an identi-cal pipeline and exchangeability is recovered. We prove this restores the finite-sample guarantee (Theorem 1), and show empirically that BCEA then controls risk at the target level while still improving coverage over guaranteed abstention. 
+
+(3) Structured interventions beat global ungrounding. 
+
+The grounding score used by prior conformal filters— roughly, how much the claim’s likelihood drops when the image is removed—works for object existence but fails for relational claims: removing the image lowers “ A is left of B”and “ A is right of B” equally. We show that cheap, claim-type-specific interventions recover the lost signal; a single horizontal-flip intervention lifts spatial-relation verification from 0.57 to 0.77 AUROC. Finally, we give a tight characterization of when acquisi-tion helps: guaranteed coverage at a fixed risk is a single point on the score’s ROC curve, so acquisition raises coverage at every risk level if and only if it improves the ROC (The-orem 2)—a measurable criterion that explains why model-guided crops beat a uniform grid and why per-claim budget allocation, by contrast, does not help. We validate all of this on object-existence and spatial-relation claims from COCO and the POPE benchmark, across three open VLMs, with head-to-head baselines. 
+
+## 2 Related Work 
+
+Hallucination in LVLMs. Object hallucination is mea-sured by benchmarks such as POPE (Li et al. 2023), AM-BER, and, for free-form generation, THRONE (Kaul et al. 2024); HallusionBench (Guan et al. 2024) separates lan-guage hallucination from visual illusion, and TUBench (He et al. 2024) probes unanswerable questions. Mitigation meth-ods are largely heuristic: contrastive decoding (VCD (Leng et al. 2024), HALC), over-trust penalties (OPERA (Huang et al. 2024)), and preference optimization (RLHF-V, V-DPO). None provide a statistical guarantee on the residual halluci-nation rate. 
+
+Conformal and selective prediction for generation. Con-formal factuality (Mohri and Hashimoto 2024) and confor-mal abstention for LLMs (Yadkori et al. 2024) bound the error rate of text generation by filtering or backing off claims. For LVLMs, ConfLVLM (Li et al. 2025) provides finite-sample factuality guarantees by hypothesis-testing each claim with global uncertainty heuristics, and CAP (Tayebati et al. 2025) learns adaptive conformal abstention thresholds for LLM-s/VLMs. All of these only drop claims. We add an acquisi-tion action and show the resulting validity subtlety and its fix. 
+
+Evidence acquisition and active perception. ReCoV-ERR (Srinivasan et al. 2024) reduces over-abstention by col-lecting LLM-generated follow-up QA as evidence, under a heuristic risk tolerance and without distribution-free guar-antees. Zoom/crop methods such as ViCrop (Zhang et al. 2023) and CropVLM improve fine-grained accuracy but tar-get accuracy, not guaranteed risk; our CLIP-guided acqui-sition adopts the same zoom idea as a verification tool and adds the guarantee. 
+
+Conformal validity under adaptivity. That applying a fixed, label-independent transformation to both calibration and test points preserves exchangeability is known: test-time augmentation can be folded into a conformal predictor with-out losing coverage (Shanmugam et al. 2025), and conformal risk control has been combined with instance-level stopping under a compute budget for LLM reasoning (Wang et al. 2026) and with joint calibration–test thresholds for selective risk (Xu, Guo, and Wei 2025). Our theory is an instance of this principle; our contribution is to (i) identify that visual 
+
+evidence acquisition silently violates the guarantee when this principle is ignored—the natural and tempting deployment— and (ii) bring acquisition into the pixels via structured, claim-type interventions. To our knowledge BCEA is the first to couple guaranteed VLM hallucination filtering with visual evidence acquisition. 
+
+## 3 Preliminaries 
+
+Claim-level selective prediction. A response is decom-posed into atomic claims c1, . . . , c m (Li et al. 2025). Each claim c about image x has an unknown binary label y ∈{0, 1} (1 = supported by the image). A scoring function 
+
+s(x, c ) ∈ R ranks claims by how grounded they appear (higher = more grounded). A selective rule asserts c iff s(x, c ) ≥ τ and otherwise abstains. We measure coverage = Pr[ s ≥ τ ], risk = Pr[ y = 0 | s ≥ τ ], (1) i.e. the fraction of claims asserted and the hallucination rate among asserted claims. 
+
+Split-conformal selective risk control. Given a calibra-tion set of i.i.d. (or exchangeable) labeled claims and a target level α, we choose the smallest threshold τ (maximizing cov-erage) such that an upper confidence bound on the calibration risk is at most α. For accepted calibration claims with k er-rors out of n, we use the exact Clopper-Pearson upper bound 
+
+Rδ (k, n ) = Beta −11−δ (k + 1 , n − k) and scan τ from most to least conservative, stopping at the first τ with Rδ ≤ α (a fixed-sequence procedure (Angelopoulos et al. 2025)). On exchangeable test claims this controls the selective risk at level α with probability 1 − δ.
+
+## 4 Method: BCEA 
+
+BCEA turns a binary answer/abstain filter into a guaranteed, evidence-seeking one (Figure 2). We first define the scores, then the acquisition action, the validity argument, and a char-acterization of when acquisition helps. 
+
+4.1 Evidence-Sufficiency Scores 
+
+Global ungrounding. Following the intuition behind prior conformal filters, a claim is grounded if its likelihood depends on the image. With ℓ(v) = 1
+
+> |c|
+
+P 
+
+> t
+
+log pθ (ct |
+
+v, prompt ) the mean token log-likelihood of claim c under visual input v, the global score is 
+
+sglob (x, c ) = ℓ(x) − ℓ(∅), (2) where ∅ is a blank (all-black) image. A hallucinated claim barely changes when the image is removed ( sglob ≈ 0); a grounded claim drops sharply. 
+
+Region and intervention scores. sglob throws the whole image away and cannot tell where the evidence is, nor dis-tinguish claims that depend on visual structure . We replace the blank reference with a targeted intervention T chosen by claim type, sT (x, c ) = ℓ(x) − ℓ(T (x)) : region masking (T blacks out the queried object’s support) for existence/at-tribute claims, and a horizontal flip ( T (x) = flip (x)) for left/right relational claims, under which a correct directional claim becomes false (so sT > 0) while an incorrect one becomes true (so sT < 0). Figure 3 illustrates both score families on real images with measured likelihoods. 
+
+4.2 The Acquisition Action 
+
+When s(x, c ) is too low to assert but not clearly un-grounded, BCEA acquires : it forms a set of B zoomed views 
+
+{x(1) , . . . , x (B)} of x (a coarse grid of overlapping crops, requiring no ground-truth localization) and forms the post-acquisition score 
+
+sacq (x, c ) = max  ℓ(x), max  
+
+> b≤B
+
+ℓ(x(b)) − ℓ(∅). (3) For a true object, some crop magnifies it and raises its like-lihood; for a hallucinated object, no crop provides support. The maximization is the source of both the benefit and the danger analyzed next. 
+
+4.3 Why Naive Acquisition Is Invalid—and How to Fix It 
+
+Let τα be calibrated on the base scores sglob . The tempting deployment is to assert iff sacq (x, c ) ≥ τα: acquire evidence, keep the old threshold. This is invalid. Conformal validity requires the test score and the calibration scores to be ex-changeable draws from one distribution; but the threshold was calibrated on the distribution of sglob , whereas the de-ployed decision uses sacq , and sacq ≥ sglob by construction (Eq. 3). The acceptance region is systematically enlarged for 
+
+all claims, including hallucinated ones, so the realized risk exceeds α.
+
+Proposition 1 (Naive acquisition is anti-conservative) . Since 
+
+sacq ≥ sglob pointwise, asserting on {sacq ≥ τα} with τα
+
+calibrated on sglob accepts a superset of {sglob ≥ τα}. The level-α guarantee certified for the latter does not transfer to this larger set, whose selective risk need not be bounded by α; whenever the extra accepted claims contain label-0
+
+claims at a rate above α, the realized risk exceeds α.
+
+The same monotonicity explains why budget helps and why it must be paid for by re-calibration. 
+
+Proposition 2 (Monotone acquisition) . Let s(B) 
+
+> A
+
+(x, c ) = max( ℓ(x), max b≤B ℓ(x(b))) − ℓ(∅). Then s(B) 
+
+> A
+
+is non-decreasing in B pointwise, so at any fixed threshold τ
+
+the accepted set is nested in B. Hence both the cover-age Pr[ s(B) 
+
+> A
+
+≥ τ ] and the false-acceptance probability 
+
+Pr[ y=0 , s (B) 
+
+> A
+
+≥ τ ] are non-decreasing in B.
+
+More budget lets more true claims clear a fixed bar—but also more false ones, so the risk creeps up unless τ is re-raised. Re-calibrating τ on s(B) 
+
+> A
+
+at each budget restores risk control, and empirically still nets a coverage gain (Figure 6). The fix, then, is to make calibration and test traverse an iden-tical pipeline. Treat the acquisition policy A (which views to form and how to aggregate them, Eq. 3) as part of the score, and calibrate the threshold on the post-acquisition scores of the calibration claims. 
+
+Theorem 1 (Acquisition-adaptive validity) . Fix an acquisi-tion policy A that maps each (x, c ) to a post-acquisition score 
+
+sA(x, c ) using only (x, c ) and the model (not the calibration labels). If the calibration and test claims are exchangeable, then choosing τ by the Clopper-Pearson fixed-sequence pro-cedure on {sA(xi, c i)}i∈cal and asserting on {sA ≥ τ }
+
+controls the selective risk at level α with probability 1 − δ
+
+on the test claims. Proof sketch. Applying the fixed map A to every claim preserves exchangeability of the pairs (sA(xi, c i), y i). The result is then standard split-conformal selective risk control with score sA in place of s. □
+
+Theorem 1 instantiates a known principle—folding a fixed, label-independent transformation into the conformal pipeline image x          
+
+> + claim c
+> evidence score
+> s=ℓ(x)−ℓ(T(x)) assert?
+> Answer
+> Abstain
+> Acquire
+> crops {x(b)}b≤B,interventions T
+> sA= max
+> bℓ(x(b))−ℓ(∅)Clopper–Pearson threshold τon sA
+> labeled calibration claims
+> high
+> low
+> borderline
+> deploy
+
+Figure 2: BCEA replaces answer/abstain with a three-way decision. A claim is scored by evidence sufficiency; borderline claims trigger acquisition (zoom crops / claim-type interventions), producing a post-acquisition score sA. The conformal threshold 
+
+τ is calibrated on sA itself , so that asserted claims carry a distribution-free hallucination-rate guarantee ≤ α (Theorem 1). Calibrating τ on the pre-acquisition score instead silently breaks the guarantee (Proposition 1). keeps coverage (Shanmugam et al. 2025; Wang et al. 2026). We state it because the failure mode it rules out (Proposi-tion 1) is, for visual acquisition, both easy to commit and empirically severe, as we show next. Theorem 1 requires only that A not peek at calibration labels. Crucially, this permits acquisition that is sequential and adaptive within a claim .
+
+Proposition 3 (Sequential within-claim acquisition) . Let A
+
+form views one at a time and decide whether to acquire another or stop, where each decision (the next view and the stopping time κ ≤ B) is a function of the current claim’s observations alone. Then sA is a fixed measurable function of (x, c ), and the conclusion of Theorem 1 holds verbatim. 
+
+That is, “look, judge, look again, stop when confident” is admissible without any correction, because the stopping rule never consults calibration labels; the entire random budget expenditure is absorbed into a single deployed score. When the policy class itself is tuned on calibration data (e.g. se-lecting B or a stopping threshold to maximize coverage), validity is preserved by a held-out split or a Learn-then-Test correction over the finite policy grid (Angelopoulos et al. 2025). The practical prescription is simply: calibrate on the scores you will actually deploy. 
+
+A second, orthogonal source of optional stopping is the 
+
+calibration stream itself: one may keep collecting labeled claims and stop when coverage looks good. The fixed-sample Clopper–Pearson bound is then invalid (it assumes n is fixed in advance). Replacing it with a betting confidence sequence restores validity at every sample size simultaneously. 
+
+Proposition 4 (Anytime-valid risk control) . Fix a thresh-old τ and let E1, E 2, · · · ∈ { 0, 1} be the error indicators of accepted calibration claims (i.i.d. Bernoulli( R(τ )) by Lemma 1). For predictable bets λt ∈ [0 , 1/r ), Mt(r) = Q
+
+> i≤t
+
+ 1 + λi(r − Ei) is a non-negative supermartingale under R(τ )= r, so Ct = {r : max r′≥r Mt(r′) < 1/δ } is a (1 −δ) upper confidence sequence for R(τ ) (Jiang and Yu 2024; Ramdas et al. 2023). Selecting the smallest τ whose confidence-sequence upper bound is ≤ α controls the se-lective risk at level α uniformly over all t, hence under any data-dependent stopping of the calibration stream. 
+
+Unlike Theorem 1, this is not an off-the-shelf instance: it Algorithm 1: BCEA: calibration and deployment 
+
+Input: calibration claims {(xi, c i, y i)}ni=1 , level α, budget 
+
+B, intervention T , confidence δ 
+
+> 1:
+
+function Score (x, c ): 
+
+> 2:
+
+ℓ0 ← ℓ(∅, c ); s ← ℓ(x, c ) − ℓ0 // grounding  
+
+> 3:
+
+for b = 1 . . . B : s ← max  s, ℓ (x(b), c ) − ℓ0
+
+ // acquire views  
+
+> 4:
+
+return s 
+
+> 5:
+
+// Calibration  
+
+> 6:
+
+si ← Score (xi, c i) for all i 
+
+> 7:
+
+τ ← smallest t with Rδ
+
+ #{yi=0 , s i≥t}, #{si≥t} ≤
+
+α 
+
+> 8:
+
+// Deployment on a new claim (x, c ) 
+
+> 9:
+
+return assert if Score (x, c ) ≥ τ else abstain 
+
+upgrades the guarantee from a fixed-n statement to one ro-bust to optional stopping of both the within-claim acquisition and the calibration stream, the regime a deployed reliability monitor actually lives in. Algorithm 1 states BCEA in full. The single most im-portant line is 7: the threshold is calibrated on Score , which already includes acquisition, so the deployed decision (line 9) and the calibration see the same map—the condition of The-orem 1. 
+
+4.4 When Does Acquisition Help? 
+
+Theorem 1 guarantees safety but says nothing about whether acquisition improves anything. We now characterize the cov-erage gain exactly. Let π = Pr[ Y =1] , and for a score S let 
+
+TPR S (τ ) = Pr[ S ≥ τ | Y =1] and FPR S (τ ) = Pr[ S ≥
+
+τ | Y =0] trace the ROC curve ROC S .
+
+Proposition 5 (Coverage at fixed risk is an ROC point) .
+
+The maximum coverage of a selective rule on S subject to selective risk ≤ α is attained at the ROC point on the ray 
+
+FPR /TPR = ρ(α) := πα  
+
+> (1 −π)(1 −α)
+
+, and equals CS (α) = 
+
+ π +(1 −π)ρ(α) TPR ⋆S (α), where TPR ⋆S (α) is the largest TPR on ROC S along that ray. 
+
+Theorem 2 (Acquisition helps iff it improves the ROC) . For scores S (pre-acquisition) and S′ = sA (post-acquisition), full image 
+
+= 1.89 
+
+blank (no image) 
+
+= 3.49 ( -1.59) 
+
+object region masked 
+
+= 3.34 ( -1.44) 
+
+original 
+
+= 2.91 
+
+flip 
+
+= 3.05 
+
+original 
+
+= 3.06 
+
+flip 
+
+= 2.92 
+
+(a) Grounding a true claim: "Two cats are lying on the couch." 
+
+(b) Verifying a left/right relation by horizontal flip 
+
+TRUE claim: 
+
+"sports ball is LEFT of person" 
+
+FALSE claim: 
+
+"sports ball is RIGHT of person"           
+
+> flip claim false, drops: sflip = +0.14 > 0 flip claim true, rises: sflip =0.14 < 0
+
+Figure 3: Evidence sufficiency on real images (LLaVA-1.5, mean claim log-likelihood ℓ). (a) A true existence claim loses likelihood when the image is removed ( ∆−1.6) or the object region is masked ( ∆−1.4)—its confidence is grounded in those pixels. (b) A left/right relation is verified by a horizontal flip: the correct “left of” claim drops under flipping ( sflip =+0 .14 )while the swapped “right of” claim rises ( sflip =−0.14 ). The global blank-image score, which leaves both relations equally likely, cannot provide this signal. 
+
+CS′ (α) ≥ CS (α) for every α ∈ (0 , 1) if and only if ROC S′
+
+dominates ROC S pointwise. A sufficient condition is that 
+
+S′ be more informative about Y than S in the Blackwell sense (its class-conditional likelihood ratio is a monotone refinement of that of S). 
+
+This converts the vague “does acquisition help” into a mea-surable, falsifiable criterion, and predicts the experiments: uniform-grid acquisition lifts the ROC modestly (AUROC 
+
+0.82 → 0.86 ) and CLIP-guided more ( → 0.88 , Table 4); Theorem 2 then forces the coverage ordering at every fixed risk—no acq. < grid < guided—which is exactly what we observe. It also sharpens Proposition 1 into a quantity rather than a tautology: naive deployment keeps τα but pays the larger FPR sA (τα) ≥ FPR sglob (τα), so its realized risk is exactly (1 −π) FPR sA (τα) 
+
+> C
+
+, which exceeds α by a computable margin. 
+
+Why we do not claim budget allocation. A natural ex-tension is to spend a fixed total budget unevenly across claims; under diminishing returns the optimum is greedy water-filling on marginal gains (a standard exchange argu-ment, App.). Empirically this gives no improvement over uni-form allocation on existence claims ( ≤ 0.4 coverage points, within CI; App.). The reason is structural: with a single global threshold, an extra look raises the scores of true and false boundary claims alike, and at allocation time their la-bels are unknown—so any label-agnostic allocation is, to first order, coverage-neutral. By Theorem 2, allocation can help only by making the aggregate score more informative, which requires heterogeneous and predictable per-claim in-formativeness; absent that, uniform is optimal. We therefore do not claim allocation as a contribution—a negative result we think is clarifying. 
+
+## 5 Experiments 
+
+Setup. We use LLaVA-1.5-7B (Liu et al. 2024) (main) and Qwen2.5-VL-7B (Bai et al. 2025) (generality), and construct claims from COCO val2017 ground-truth instance annota-tions (no extra labeling). Existence claims pair each image with present objects (true) and sampled absent objects (false); 
+
+spatial claims pair the two largest, horizontally separated ob-jects as “ A is to the left/right of B”, with the swapped direction as the false claim. Each claim score is one forward pass; ac-quisition adds B=5 grid-crop passes. Conformal calibration uses a 50 /50 split averaged over 300 random splits, δ=0 .1;we report test coverage and the 90 th-percentile realized risk. 
+
+5.1 Guaranteed Abstention Is Conservative 
+
+Figure 1 shows the risk–coverage frontier on 1,440 balanced existence claims. To certify a hallucination rate ≤ 5% , the global-score filter can assert only 18% of claims; even at a lenient ≤ 20% it asserts 40% . This is the cost of a guaran-tee without acquisition, and the motivation for BCEA. The evidence-sufficiency score sglob already separates grounded from hallucinated claims (AUROC 0.838 ) far better than raw claim likelihood ( 0.808 ), confirming that image-dependence is the right signal; acquisition raises it to 0.879 .
+
+5.2 Evidence Is Localized 
+
+Before using acquisition we verify that the grounding signal is spatially localized. On 800 true existence claims, mask-ing the object’s ground-truth region lowers the claim log-likelihood by 0.109 on average, whereas masking an equal-area irrelevant region raises it slightly ( −0.050 ); the paired difference is +0 .159 with a 67% win rate ( p ≪ 10 −10 ). Figure 4 makes this visual: sliding an occlusion patch and recording the drop in claim likelihood produces a heatmap that concentrates on the object. The model’s confidence in a true claim depends specifically on the pixels that support it—the premise behind region- and intervention-based scor-ing. 
+
+5.3 Acquisition: Naive Breaks, BCEA Restores 
+
+Table 1 is the central result ( 1,440 existence claims, CLIP-guided acquisition; coverage and 90 th-percentile realized risk over 300 calibration/test splits). Our Clopper–Pearson fixed-sequence procedure controls the selective risk with probability 1−δ=0 .9 (Theorem 1), so the matched quan-tity is the 90 th-percentile realized risk, which should sit at the target α. Four methods share the same acquired evidence and differ only in thresholding. No-Acq is guaranteed ab-stention (no acquisition). Naive acquires but reuses the ab-stention threshold: coverage jumps, but the 90 th-percentile risk overshoots the target massively —up to 0.41 at α=0 .20 ,a two-fold violation—a direct measurement of Proposition 1. 
+
+ReCoVERR-style (Srinivasan et al. 2024) acquires and sets the threshold by the empirical calibration risk (no finite-sample correction, as in heuristic risk-tolerance selective prediction): it reaches higher coverage than BCEA but is                                            
+
+> No-Acq Naive ReCoVERR BCEA
+> αcov / risk cov / risk cov / risk cov / risk
+> 0.05 .19 /.06 .40 /.19 .32 /.08 .22 /.06 0.10 .28 /.11 .57 /.30 .40 /.13 .37 /.10 0.20 .39 /.21 .74 /.41 .50 /.24 .47 /.21
+
+Table 1: Acquisition on existence claims (LLaVA-1.5; cover-age / 90 th-percentile realized risk over 300 splits). Bold risk exceeds the target α by more than Monte-Carlo error (guaran-tee violated). The two conformal methods ( No-Acq , BCEA )track α; Naive (reuse threshold) and ReCoVERR-style 
+
+(empirical threshold, no finite-sample correction) overshoot it, while BCEA still beats abstention in coverage. anti-conservative, overshooting the target by ∼ 0.03 –0.04 at every level ( 0.08 /0.13 /0.24 vs. 0.05 /0.10 /0.20 ). BCEA ac-quires and re-calibrates with the Clopper–Pearson bound: its 
+
+90 th-percentile risk tracks the target to within Monte-Carlo error ( 0.06 /0.10 /0.21 , as does No-Acq ), while it lifts cov-erage well above abstention (e.g. 0.29 → 0.37 at α=0 .10 ). The contribution is thus precise: a distribution-free guaran-tee costs a few coverage points relative to an unguaranteed acquirer—which silently violates the target—and adds cov-erage over abstaining. Figure 5 makes the gain concrete at the level of individ-ual questions: claims a guaranteed filter must abstain on are recovered, with evidence, after one targeted look. Table 2 summarizes the decision flow, including a spatial case where the baseline global score is uninformative but a flip interven-tion supplies the signal. 
+
+5.4 Coverage Scales with the Budget 
+
+Figure 6 sweeps the acquisition budget B (extra views per claim), re-calibrating at each B so the guarantee al-ways holds. Guaranteed coverage rises monotonically with budget—from 0.29 at B=0 to 0.35 at B=5 for α=0 .10 —while the realized risk stays pinned at the target ( ≈ 0.11 ). More looking buys more coverage at no cost to the guar-antee, the empirical counterpart of Proposition 2 and Theo-rem 2 (each extra view weakly improves the ROC). Where to spend a fixed total budget across claims, by contrast, does not matter here: greedy and uniform allocation are statistically indistinguishable (both ≈ 0.34 , within CI), for the structural reason given above. 
+
+5.5 Structured Interventions for Relational Claims 
+
+Table 3 tests scores on 996 balanced spatial-relation claims. The global ungrounding score is near chance ( 0.574 AU-ROC): both objects are present, so blanking the image pe-nalizes the correct and swapped relations equally. A single horizontal-flip intervention—under which a correct “left of” claim becomes false—lifts verification to 0.765 (Figure 7), with the predicted sign pattern (mean sflip : +0 .034 for true vs. −0.066 for false relations). Claim-type-specific interven-tions recover a signal that global ungrounding cannot see, and feed the same acquisition-and-recalibration machinery. claim: "there is a giraffe"        
+
+> =1.11 (green = true location)
+> claim: "there is a laptop"
+> =2.75 (green = true location)
+> claim: "there is a toilet"
+> =1.52 (green = true location)
+> occlusion sensitivity
+> occlusion sensitivity occlusion sensitivity
+> 0.00
+> 0.02
+> 0.04
+> 0.06
+> 0.08
+> 0.10
+> 0.12
+> 0.14
+> 0.16
+> 0.00
+> 0.01
+> 0.02
+> 0.03
+> 0.04
+> 0.05
+> 0.000
+> 0.005
+> 0.010
+> 0.015
+> 0.020
+> 0.025
+> 0.030
+
+Where is the evidence? Drop in claim log-likelihood when each region is occluded 
+
+> image heatmap
+
+Figure 4: Occlusion sensitivity for existence claims (LLaVA-1.5). Top: image with the object’s ground-truth box (green). Bottom: 
+
+we slide a black patch over an 8×8 grid and record the drop in the claim’s mean log-likelihood (colorbar); brighter = occluding there hurts the claim more, i.e. the evidence is there. The high-sensitivity region concentrates on the queried object (green box), justifying region- and crop-based acquisition. A valid intervention must satisfy two conditions: it must 
+
+flip the claim’s truth value and keep the image in-distribution .This is not automatic. The analogous vertical flip for above/-below relations fails (AUROC 0.50 ): turning an image upside-down is out-of-distribution, so the model’s likeli-hoods become uninformative rather than truth-reversing. De-signing interventions is thus a modeling step—horizontal flip works for left/right precisely because a mirrored scene remains plausible—and a principled intervention library per claim type is an important direction the framework opens. 
+
+5.6 Model-Guided Acquisition 
+
+A uniform crop grid is blind to where the object is. We in-stead let CLIP propose crops: among a multi-scale grid of candidate windows we keep the five whose CLIP embed-ding is most similar to “a photo of a ⟨object ⟩” (Figure 8), using no ground-truth location. Table 4 compares no ac-quisition, the uniform grid, and CLIP-guided crops on the same claims. Guided acquisition raises detection AUROC (0.824 → 0.862 → 0.882 ) and guaranteed coverage at every level (e.g. 0.28 → 0.33 → 0.37 at α=0 .10 ). The mechanism is exactly the one the grid missed: guided crops nearly double 
+
+the acquisition gain on small objects ( 0.25 → 0.43 , Fig-ure 9), which a fixed grid tends to crop away, while leaving large-object gains unchanged. Allocating a fixed total bud-get greedily by marginal gain rather than uniformly makes no measurable difference here ( ≤ 0.2 coverage points), con-sistent with the roughly homogeneous per-claim gains on existence claims; we expect allocation to matter when claim difficulty is heterogeneous. 
+
+5.7 Scaling to the POPE Benchmark 
+
+To test BCEA beyond our COCO-constructed claims, we run it on the standard POPE hallucination benchmark (Li et al. 2023)—its random , popular , and adversarial splits, which sample absent objects with increasing difficulty— across four open VLMs: LLaVA-1.5-7B, Qwen2.5-VL-7B, LLaVA-NeXT-7B, and InternVL2-8B ( ∼11 .5k claims to-tal). Table 5 reports detection AUROC before/after acquisi-tion and guaranteed coverage at α=0 .10 . The pattern is uni-form across all twelve settings: acquisition improves AUROC for every model and split (most strikingly LLaVA-NeXT on 
+
+random , 0.56 → 0.72 ), and BCEA’s guaranteed coverage ex-ceeds abstention everywhere—often two-to-fourfold—while "there is a kite"           
+
+> image + claim (GT box) BCEA: CLIP-guided crop
+> 0.0 0.5 1.0 1.5
+> evidence-sufficiency score
+> No-Acq 0.08
+> ABSTAIN
+> BCEA 1.30
+> ASSERT
+> decision (true claim)
+> "there is a horse"
+> 0.0 0.5 1.0 1.5
+> evidence-sufficiency score
+> No-Acq 0.12
+> ABSTAIN
+> BCEA 1.29
+> ASSERT
+> "there is a sink"
+> 0.0 0.5 1.0 1.5
+> evidence-sufficiency score
+> No-Acq 0.09
+> ABSTAIN
+> BCEA 1.13
+> ASSERT
+
+Rescued claims: acquisition lifts truly-supported claims over the threshold Figure 5: Rescued claims (LLaVA-1.5, α=0 .10 ). Three truly-supported claims (GT box in green) whose full-image evidence score falls below the conformal threshold τ , so guaranteed abstention must decline them (red, “No-Acq”). A single CLIP-guided crop zooms onto the object, raising the post-acquisition score above the recalibrated threshold, so BCEA correctly asserts (green). These are exactly the questions a guaranteed filter would otherwise leave unanswered. its 90 th-percentile risk tracks the target. Coverage falls from 
+
+random to adversarial exactly as the benchmark’s diffi-culty rises, and acquisition helps most where the base score is weakest. 
+
+5.8 Generality Across Models 
+
+We repeat the core experiments on Qwen2.5-VL-7B (Bai et al. 2025) (Table 6). The findings transfer. On existence claims, acquisition lifts the grounding AUROC from 0.70 to 
+
+0.77 , and BCEA improves guaranteed coverage over absten-tion at every level—most strikingly at α=0 .05 , where ab-stention can assert almost nothing ( 1% ) while BCEA asserts 
+
+15% at the same certified risk. On spatial relations, the global ungrounding score is again at chance ( 0.50 AUROC), con-firming that the failure of global scores on relational claims is not specific to one model. Acquisition-and-recalibration is thus a model-agnostic recipe; the absolute grounding quality and the strength of a given intervention vary by backbone. 
+
+## 6 Discussion and Limitations 
+
+Our study uses four backbones (LLaVA-1.5, LLaVA-NeXT, Qwen2.5-VL, InternVL2) and two working claim families (existence, left/right); building a principled per-claim-type intervention library is the natural next step. The method also has a clear scope boundary: evidence sufficiency can only certify what the backbone can perceive. Counting, relative size, above/below, color attributes, and color–object bind-ing are all near chance for these backbones ( sglob AUROC 
+
+0.50 –0.58 ), and no intervention we tried (instance masking, vertical flip, grayscaling) recovers a usable signal, so cover-age collapses to zero on those families. The binding result is telling: our score cannot certify whether “the red cup ” is correctly bound precisely because the backbone itself does not reliably make that distinction. This is the faithful be-havior: where a 7–8B VLM genuinely cannot perceive a property, our scores report ungrounded rather than fabri-cate confidence, and the guaranteed filter abstains. BCEA adds signal only where the backbone has signal to local-Claim base score base decision acquired view BCEA score BCEA decision “there is a kite” 0.08 (< τ ) Abstain CLIP crop zooms onto kite 1.30 Assert 
+
+“there is a sink” 0.09 (< τ ) Abstain CLIP crop zooms onto sink 1.13 Assert 
+
+“there is a horse” 0.12 (< τ ) Abstain CLIP crop zooms onto horse 1.29 Assert 
+
+“ball is left of person” (rel.) ≈ chance Abstain horizontal flip flips the truth sflip =+0 .14 Assert 
+
+Table 2: Qualitative comparison on truly-supported claims (LLaVA-1.5, τ =0 .49 at α=0 .10 ). The guaranteed baseline abstains because the full-image evidence score is below threshold (or, for relations, uninformative); BCEA acquires a targeted view that lifts the score above threshold and asserts—each row a question answered with evidence rather than declined. 0 1 2 3 4 5  
+
+> acquisition budget B(extra views per claim)
+> 0.20
+> 0.25
+> 0.30
+> 0.35
+> 0.40
+> 0.45
+> guaranteed coverage
+> coverage grows with budget
+> = 0.05
+> = 0.10
+> = 0.20
+
+Figure 6: Guaranteed coverage grows with acquisition budget 
+
+B at every risk level, with realized risk held at α by re-calibration. 
+
+Score AUROC (correct vs. swapped) Raw claim likelihood 0.567 
+
+sglob (global ungrounding) 0.574 
+
+sflip (flip intervention, ours) 0.765 
+
+Table 3: Spatial left/right relations. The global score used by prior conformal filters is near chance; a cheap structured intervention recovers the signal. ize (existence, left/right) and a truth-flipping, in-distribution intervention exists. Coverage gains were moderate under a uniform grid but improve markedly once crops are model-guided (Table 4); larger budgets and richer interventions are a further lever. We deliberately do not claim per-claim budget allocation: it is coverage-neutral here for the structural reason in the theory section, a clarifying negative. The framework is otherwise general: any black-box LVLM, any claim-type intervention, any exchangeable calibration set. 
+
+From probed claims to free-form generation. A gen-uine gap separates our motivation from our evaluation. The motivation is hallucination in free-form description, but we evaluate probed, atomic claims—existence and spatial claims built from COCO ground truth, and POPE’s yes/no queries. This buys clean labels and controlled difficulty, but is a step removed from a model rambling in open generation, where claims are self-generated and entangled (the regime Con-fLVLM and THRONE target via claim decomposition). Be-raw  
+
+> likelihood
+> global
+> ungrounding
+> flip
+> intervention
+> 0.5
+> 0.6
+> 0.7
+> 0.8
+> AUROC (correct vs. swapped relation)
+> 0.57 0.57
+> 0.77
+> global fails, flip recovers it
+> chance
+
+Figure 7: Spatial left/right relations ( 996 balanced claims). The global ungrounding score is near chance because both objects are present; a single horizontal-flip intervention re-covers the relational signal. 
+
+no acq. uniform grid CLIP-guided AUROC 0.824 0.862 0.882 
+
+coverage @ α=0 .05 0.19 0.18 0.22 
+
+coverage @ α=0 .10 0.28 0.33 0.37 
+
+coverage @ α=0 .20 0.39 0.43 0.47 
+
+Table 4: Model-guided vs. uniform acquisition (LLaVA, ex-istence claims, risk controlled at α). Targeting crops with CLIP improves both detection and guaranteed coverage. cause BCEA’s score and guarantee are defined per claim and are agnostic to how the claim was produced, the framework should compose with a claim parser applied to free-form out-put; but whether acquisition helps as much on self-generated claims, and how parser noise interacts with the conformal cal-ibration, are open questions we have not tested. We present BCEA as a mechanism validated under controlled probing, not yet as an end-to-end free-form pipeline. 
+
+## 7 Conclusion 
+
+Guaranteed selective prediction makes LVLMs reliable but over-cautious. BCEA shows that the model can look again 
+
+instead of giving up—acquiring cheap visual evidence to res-cue claims—provided the acquisition policy is folded into the score and the conformal threshold is re-calibrated on what is actually deployed. Naive acquisition silently breaks the guar-antee; re-calibration restores it and still improves coverage. query: "frisbee" (GT box) uniform grid crops CLIP-guided crops (ours) Figure 8: Uniform grid crops (orange) spread blindly; CLIP-guided crops (red) concentrate on the queried small object (green ground-truth box), which the grid usually misses. No ground-truth location is used at inference—CLIP selects crops by similarity to “a photo of a ⟨object ⟩”. small  
+
+> (<2%)
+> medium
+> (2-8%)
+> large
+> (>8%)
+> 0.0
+> 0.1
+> 0.2
+> 0.3
+> 0.4
+> 0.5
+> 0.6
+> acquisition gain  sacq  sglob
+> 0.25
+> 0.43
+> 0.25
+> 0.46
+> 0.28
+> 0.46
+> uniform grid CLIP-guided (ours)
+
+Figure 9: Acquisition gain sacq −sglob by object size. Uniform grid crops give size-independent gains; CLIP-guided crops nearly double the gain and, crucially, rescue small objects the grid crops away. Together with structured, claim-type-specific interventions that see what global ungrounding cannot, this turns a binary answer/abstain filter into a budgeted, guaranteed, evidence-seeking one. 
+
+## References 
+
+Angelopoulos, A. N.; Bates, S.; Candès, E. J.; Jordan, M. I.; and Lei, L. 2025. Learn then test: Calibrating predictive algorithms to achieve risk control. The Annals of Applied Statistics , 19(2): 1641–1662. Bai, S.; Cai, Y.; Chen, R.; Chen, K.; Chen, X.; Cheng, Z.; Deng, L.; Ding, W.; Gao, C.; Ge, C.; et al. 2025. Qwen3-vl technical report. arXiv preprint arXiv:2511.21631 .Guan, T.; Liu, F.; Wu, X.; Xian, R.; Li, Z.; Liu, X.; Wang, X.; Chen, L.; Huang, F.; Yacoob, Y.; et al. 2024. Hallusionbench: an advanced diagnostic suite for entangled language hallu-cination and visual illusion in large vision-language models. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition , 14375–14385. He, X.; Zhang, Q.; Jin, A.; Yuan, Y.; Yiu, S.-M.; et al. 2024. TUBench: Benchmarking large vision-language models on 
+
+AUROC coverage @ α=0 .10 
+
+model split glob +acq No-Acq BCEA LLaVA-1.5 random .82 .87 .28 .36 
+
+popular .77 .81 .06 .14 
+
+adversarial .73 .77 .03 .07 
+
+Qwen2.5-VL random .66 .75 .05 .13 
+
+popular .70 .78 .09 .18 
+
+adversarial .64 .72 .02 .09 
+
+LLaVA-NeXT random .56 .72 .09 .18 
+
+popular .59 .72 .03 .14 
+
+adversarial .57 .69 .02 .03 
+
+InternVL2 random .75 .82 .04 .08 
+
+popular .70 .82 .03 .16 
+
+adversarial .64 .71 .00 .02 
+
+Table 5: BCEA on the POPE benchmark, four VLMs × three splits ( ∼11 .5k claims). Acquisition improves detection AU-ROC (glob → +acq) and BCEA beats guaranteed abstention in coverage at every setting; BCEA’s 90 th-percentile risk tracks the target α=0 .10 to within ∼ 0.03 across all settings. Difficulty increases random < popular < adversarial. 
+
+Existence: coverage at certified risk αα No-Acq BCEA risk 
+
+0.05 0.01 0.15 0.05 0.10 0.13 0.22 0.10 0.20 0.22 0.30 0.21 
+
+AUROC: sglob =0 .70 , sacq =0 .77 ; spatial sglob =0 .50 
+
+Table 6: BCEA on Qwen2.5-VL-7B. The acquisition-and-recalibration recipe transfers: BCEA beats guaranteed ab-stention at every risk level, and global scoring is again at chance for relations. trustworthiness with unanswerable questions. arXiv preprint arXiv:2410.04107 .Huang, Q.; Dong, X.; Zhang, P.; Wang, B.; He, C.; Wang, J.; Lin, D.; Zhang, W.; and Yu, N. 2024. Opera: Alleviating hallucination in multi-modal large language models via over-trust penalty and retrospection-allocation. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 13418–13427. Jiang, R.; and Yu, K. 2024. Estimating means of bounded ran-dom variables by betting. JOURNAL OF THE ROYAL STA-TISTICAL SOCIETY SERIES B-STATISTICAL METHOD-OLOGY , 86(1). Kaul, P.; Li, Z.; Yang, H.; Dukler, Y.; Swaminathan, A.; Tay-lor, C.; and Soatto, S. 2024. Throne: An object-based hal-lucination benchmark for the free-form generations of large vision-language models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition ,27228–27238. Leng, S.; Zhang, H.; Chen, G.; Li, X.; Lu, S.; Miao, C.; and Bing, L. 2024. Mitigating object hallucinations in large vision-language models through visual contrastive decoding. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition , 13872–13882. Li, Y.; Du, Y.; Zhou, K.; Wang, J.; Zhao, X.; and Wen, J.-R. 2023. Evaluating object hallucination in large vision-language models. In Proceedings of the 2023 conference on empirical methods in natural language processing , 292–305. Li, Z.; Yan, C.; Jackson, N. J.; Cui, W.; Li, B.; Zhang, J.; and Malin, B. A. 2025. Towards statistical factuality guarantee for large vision-language models. In Proceedings of the 2025 Conference on Empirical Methods in Natural Language Processing , 11446–11467. Liu, H.; Li, C.; Li, Y.; and Lee, Y. J. 2024. Improved base-lines with visual instruction tuning. In Proceedings of the IEEE/CVF conference on computer vision and pattern recog-nition , 26296–26306. Mohri, C.; and Hashimoto, T. 2024. Language models with conformal factuality guarantees. In Proceedings of the 41st International Conference on Machine Learning , 36029– 36047. Ramdas, A.; Grünwald, P.; Vovk, V.; and Shafer, G. 2023. Game-theoretic statistics and safe anytime-valid inference. 
+
+Statistical Science , 38(4): 576–601. Shanmugam, D.; Lu, H.; Sankaranarayanan, S.; and Guttag, J. 2025. Test-time augmentation improves efficiency in con-formal prediction. In Proceedings of the Computer Vision and Pattern Recognition Conference , 20622–20631. Srinivasan, T.; Hessel, J.; Gupta, T.; Lin, B. Y.; Choi, Y.; Thomason, J.; and Chandu, K. 2024. Selective “selec-tive prediction”: Reducing unnecessary abstention in vision-language reasoning. In Findings of the Association for Com-putational Linguistics: ACL 2024 , 12935–12948. Tayebati, S.; Kumar, D.; Darabi, N.; Jayasuriya, D.; Krishnan, R.; and Trivedi, A. R. 2025. Learning conformal abstention policies for adaptive risk management in large language and vision-language models. arXiv preprint arXiv:2502.06884 .Wang, X.; Suresh, A.; Zhang, A.; More, R.; Jurayj, W.; Van Durme, B.; Farajtabar, M.; Khashabi, D.; and Nalisnick, E. 2026. Conformal Thinking: Risk Control for Reasoning on a Compute Budget. arXiv preprint arXiv:2602.03814 .Xu, Y.; Guo, W.; and Wei, Z. 2025. Selective Conformal Risk Control. arXiv preprint arXiv:2512.12844 .Yadkori, Y. A.; Kuzborskij, I.; Stutz, D.; György, A.; Fisch, A.; Doucet, A.; Beloshapka, I.; Weng, W.-H.; Yang, Y.-Y.; Szepesvári, C.; et al. 2024. Mitigating llm hallucinations via conformal abstention. arXiv preprint arXiv:2405.01563 .Zhang, J.; Khayatkhoei, M.; Chhikara, P.; and Ilievski, F. 2023. Towards perceiving small visual details in zero-shot visual question answering with multimodal llms. arXiv preprint arXiv:2310.16033 .
+
+## A Proofs 
+
+Setup and notation. Let Zi = ( Xi, C i, Y i), i = 1 , . . . , n ,be calibration claims and Z = ( X, C, Y ) a test claim, all i.i.d. from a distribution P on X × C × { 0, 1}, with Y =1 
+
+marking a supported claim. Model parameters θ are fixed and estimated on data independent of {Zi} ∪ { Z}. A score is any measurable s : X × C → R (it may use θ but not the labels 
+
+{Yi}); write Vi = s(Xi, C i) and V = s(X, C ). A selective rule asserts iff V ≥ τ ; its coverage is cov( τ ) = Pr[ V ≥ τ ]
+
+and its selective risk is Rs(τ ) = Pr[ Y =0 | V ≥ τ ].
+
+Lemma 1 (Label-independent maps transport exchangeabil-ity) . If s does not depend on {Yi}, then {(Vi, Y i)}ni=1 ∪{(V, Y )} are i.i.d. (hence exchangeable), and for any fixed 
+
+τ , conditional on {Vj ≥ τ } the accepted labels are i.i.d. 
+
+Bernoulli( Rs(τ )) .Proof. Each pair is the image of Zi (resp. Z) under the fixed measurable map (x, c, y ) 7 → (s(x, c ), y ); pushing an i.i.d. sample through one fixed map yields an i.i.d. sample. Independence across i then makes the events {Vi ≥ τ } in-dependent, and on the sub-population {Vi ≥ τ } each Yi is Bernoulli with parameter Pr[ Y =0 | V ≥ τ ] = Rs(τ ). □
+
+Theorem 1 (acquisition-adaptive validity). Let the acqui-sition policy define a score sA(x, c ) = A(x, c ; θ) that is mea-surable and does not read {Yi}. Fix a candidate grid Λ (e.g. the calibration scores together with +∞) and scan it from largest to smallest τ . At each τ let n(τ ) = # {i : Vi ≥ τ }
+
+and k(τ ) = # {i : Vi ≥ τ, Y i=0 }, and form the Clopper– Pearson upper bound Rδ (τ ) = Beta −11−δ
+
+ k(τ ) + 1 , n (τ ) −
+
+k(τ ). Output ˆτ , the smallest grid point at which Rδ (·) ≤ α
+
+has held at every point scanned so far. By Lemma 1, for each fixed τ , k(τ ) | n(τ ) ∼
+
+Binomial( n(τ ), R sA (τ )) , so Rδ (τ ) is an exact (1 −δ) up-per confidence bound for RsA (τ ); equivalently pτ =Pr Bin( n(τ ),α )[ ≥ k(τ ) ] is a valid p-value for Hτ : RsA (τ ) >α. Scanning Λ in a fixed order and stopping at the first accep-tance is a fixed-sequence test, which controls the family-wise error at level δ (Angelopoulos et al. 2025). Hence with prob-ability ≥ 1−δ no false rejection occurs and the selected ˆτ
+
+satisfies RsA (ˆ τ ) ≤ α. The only model-specific ingredient is that sA obeys Lemma 1, i.e. acquisition is folded into a single label-independent score—this is the principle of Shanmugam et al. (2025); Wang et al. (2026). □
+
+Proposition 4 (anytime-valid risk control). Fix τ ; by Lemma 1 the accepted-claim error indicators E1, E 2, . . . 
+
+are i.i.d. Bernoulli( r⋆) with r⋆ = R(τ ). For any predictable 
+
+λt (a function of E1, . . . , E t−1) with λt ∈ [0 , 1/r ), the pro-cess Mt(r) = Q
+
+> i≤t
+
+(1 + λi(r − Ei)) satisfies E[Mt(r⋆) |Ft−1] = Mt−1(r⋆)(1 + λt(r⋆ − E[Et])) = Mt−1(r⋆), so 
+
+Mt(r⋆) is a non-negative martingale with M0=1 . Ville’s inequality gives Pr[ ∃t : Mt(r⋆) ≥ 1/δ ] ≤ δ; therefore 
+
+Ct = {r : max r′≥r Mt(r′) < 1/δ } contains r⋆ for all t
+
+simultaneously with probability ≥ 1 − δ, i.e. its upper end 
+
+Rcs  
+
+> t
+
+(τ ) is an anytime-valid upper bound on R(τ ). Running the fixed-sequence selection of Theorem 1 with Rcs  
+
+> t
+
+in place of the Clopper–Pearson bound therefore controls the selec-tive risk at level α at every t at once, so stopping the calibra-tion stream at any data-dependent time leaves the guarantee intact. □
+
+Proposition 1 (naive acquisition is anti-conservative). 
+
+By construction sacq (x, c ) = max  ℓ(x), max b ℓ(x(b)) −
+
+ℓ(∅) ≥ ℓ(x) − ℓ(∅) = sglob (x, c ) pointwise, so {sacq ≥
+
+τα} ⊇ { sglob ≥ τα} for any τα. Suppose τα was calibrated on sglob , so (Theorem 1) Rsglob (τα) ≤ α. Decompose the deployed acceptance event as the disjoint union E ∪ E′ with 
+
+E = {sglob ≥ τα} and E′ = {sacq ≥ τα, s glob < τ α}.Writing w = Pr[ E′]/ Pr[ E ∪ E′], the deployed risk is the mixture 
+
+Rsacq (τα) = (1 − w) Rsglob (τα) + w Pr[ Y =0 | E′].
+
+The calibration certifies only the first term. If the error rate on the newly admitted claims satisfies Pr[ Y =0 | E′] > α ,then Rsacq (τα) > α whenever w > 0. The set E′ consists exactly of claims an ungrounded full-image score rejected but some crop pushed over τα; for hallucinated claims a crop can raise ℓ spuriously, so Pr[ Y =0 | E′] is typically large, and the guarantee is violated—as observed (Table 1, “Naive”). □
+
+Proposition 3 (sequential within-claim acquisition). Let the policy reveal views x(1) , x (2) , . . . and, after each, de-cide whether to stop using only {(x, c ), x (1) , . . . , x (b), θ };let κ ≤ B be the (data-determined) stopping index and 
+
+sA = max( ℓ(x), max b≤κ ℓ(x(b))) − ℓ(∅). Because every decision and the final aggregation are deterministic func-tions of the current claim and θ alone, sA = g(x, c ; θ) for a single fixed measurable g that does not read {Yi}. Lemma 1 and Theorem 1 therefore apply verbatim. (If g uses internal randomness, e.g. random crops, draw it from a fixed distri-bution independent of the data, or fix a common seed, so that the same g acts on calibration and test claims.) □
+
+Proposition 2 (monotone acquisition). For each (x, c ),
+
+s(B+1)  
+
+> A
+
+= max  s(B) 
+
+> A
+
+, ℓ (x(B+1) ) − ℓ(∅) ≥ s(B) 
+
+> A
+
+, so the map B 7 → s(B) 
+
+> A
+
+is pointwise non-decreasing and the ac-ceptance events are nested: {s(B) 
+
+> A
+
+≥ τ } ⊆ { s(B+1)  
+
+> A
+
+≥ τ }.Monotonicity of measure gives cov B (τ ) = Pr[ s(B) 
+
+> A
+
+≥ τ ] ≤
+
+cov B+1 (τ ) and, intersecting with the fixed event {Y =0 },
+
+Pr[ Y =0 , s (B) 
+
+> A
+
+≥ τ ] ≤ Pr[ Y =0 , s (B+1)  
+
+> A
+
+≥ τ ]. The condi-tional risk R(τ ) = Pr[ Y =0 | s(B) 
+
+> A
+
+≥ τ ], a ratio of two non-decreasing quantities, is not monotone in general; the newly admitted claims may be cleaner or dirtier than aver-age. This is exactly why a budget increase requires re-solving for τ rather than reusing it: at fixed τ both true and false ac-ceptances can only grow. □
+
+Proposition 5 (coverage at fixed risk is an ROC point). 
+
+With T = TPR S (τ ), F = FPR S (τ ), coverage is C =
+
+πT +(1 −π)F and selective risk is R = (1 −π)FπT +(1 −π)F . Solving 
+
+R ≤ α gives (1 − π)F (1 − α) ≤ απT , i.e. F/T ≤ ρ(α) =  
+
+> πα
+> (1 −π)(1 −α)
+
+: the feasible operating points are those on or below the ray of slope ρ(α) in ROC space. On any ray F =
+
+ρT , C = T (π + (1 − π)ρ) is strictly increasing in T , and C
+
+increases as the operating point moves up-right; hence over the feasible region the maximizer lies on the ray boundary 
+
+F/T = ρ(α) at the largest attainable T , giving CS (α) = (π + (1 − π)ρ(α)) TPR ⋆S (α). □
+
+Theorem 2 (acquisition helps iff ROC improves). (⇐)Suppose ROC S′ ≥ ROC S pointwise. Fix α and let (F, T )
+
+be the optimal operating point for S (Prop. 5). At the same 
+
+F , S′ attains T ′ = ROC S′ (F ) ≥ T . The point (F, T ′) has risk (1 −π)FπT ′+(1 −π)F ≤ (1 −π)FπT +(1 −π)F ≤ α (feasible) and cover-age πT ′ + (1 − π)F ≥ CS (α); hence CS′ (α) ≥ CS (α).(⇒) If ROC S′̸ ≥ ROC S , there is F0 with ROC S′ (F0) <
+
+ROC S (F0); choosing α with ρ(α) = F0/ROC S (F0) makes 
+
+(F0, ROC S (F0)) the S-optimal point, which S′ cannot match at that ray, so CS′ (α) < C S (α). Finally, if S′ is Blackwell-more-informative than S for Y , its ROC domi-nates (Neyman–Pearson: the likelihood-ratio test on the finer statistic is uniformly most powerful, so its ROC is the upper envelope), giving the sufficient condition. □
+
+Allocation (not claimed; for completeness). Were per-claim gains gi non-decreasing and concave, max P 
+
+> i
+
+gi(bi)
+
+s.t. P 
+
+> i
+
+bi ≤ Btot would be solved by greedily incrementing 
+
+arg max i ∆i(bi), ∆i(b) = gi(b+1) − gi(b): for any optimal 
+
+b∗̸ = bg pick p, q with bgp > b ∗
+
+> p
+
+, bgq < b ∗ 
+
+> q
+
+; since greedy pre-ferred p, ∆p(b∗
+
+> p
+
+) ≥ ∆q (b∗ 
+
+> q
+
+), and moving a unit from q to p
+
+changes the objective by ∆p(b∗
+
+> p
+
+) − ∆q (b∗ 
+
+> q
+
+− 1) ≥ 0 (concav-ity), so bg is optimal, with KKT level λ⋆ s.t. ∆i(bgi −1) ≥
+
+λ⋆ ≥ ∆i(bgi ). As the main text reports, the premise (pre-dictable heterogeneous gains) does not hold for our existence claims, so this allocation does not beat uniform in practice; we include it only to delimit when it could. □
+
+## B Implementation Details 
+
+Models. LLaVA-1.5-7B and Qwen2.5-VL-7B-Instruct (HuggingFace checkpoints), fp16, single A6000 each; in-ference only, no fine-tuning. 
+
+Scoring. For claim c and visual input v we feed the chat prompt “USER: <image> What is in this image? ASSIS-TANT: c” and average the token log-probabilities of the claim span c, locating the span by tokenizing the prompt prefix alone. The blank reference ∅ is an all-black image of the same size; crops are five overlapping 62% windows (four corners + center); region masks and one-instance masks black out ground-truth COCO boxes; the flip intervention is a horizontal mirror. 
+
+Claims. Built from COCO val2017 instance annotations. 
+
+Existence : present categories (true) vs. sampled absent cat-egories (false). Spatial : the two largest distinct categories whose centroids differ by > 0.25 of the image width, phrased “the A is to the left/right of the B”; the swapped direction is the false claim. Count : “there are exactly k A s” with k the true count (true) or k ± 1 (false), restricted to 2–6 instances. 
+
+Conformal procedure. Split-conformal with a 50 /50 cal-ibration/test split averaged over 300 random splits; δ=0 .1.The threshold is the smallest value whose Clopper–Pearson upper bound on the accepted-set error rate is ≤ α, scanned over the calibration scores (a monotone fixed-sequence test). We report mean test coverage and the 90 th-percentile realized risk across splits. 
+
+Calibration-set size. Coverage improves monotonically with calibration size (Table 7), the practical lever in the con-servative small-α regime; the slight risk inflation at 80% is small-test-set noise. calibration % 20 35 50 65 80           
+
+> coverage ( α=0 .10 )0.30 0.33 0.34 0.35 0.36
+> risk ( 90 th pct) 0.09 0.10 0.10 0.11 0.12
+
+Table 7: Calibration-set-size effect (LLaVA, existence). More calibration data buys coverage at controlled risk. 
+
+Score ablation. On existence claims, claim-detection AU-ROC rises from raw claim likelihood ( 0.808 ) to global un-grounding sglob (0.838 ) to the acquisition score sacq (0.879 ), confirming that image-dependence, and then acquisition, each add signal. 
+
+Compute. All experiments are inference-only on RTX A6000 GPUs; the full study (two models, ∼5k claims with five-crop acquisition, plus calibration sweeps) runs in a few GPU-hours.

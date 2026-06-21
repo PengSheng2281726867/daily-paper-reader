@@ -6,75 +6,80 @@
 </div>
 
 ## 每次日报
-- 最新运行日期：2026-06-20
-- 运行时间：2026-06-20 21:13:48 UTC
+- 最新运行日期：2026-06-21
+- 运行时间：2026-06-21 20:31:21 UTC
 - 运行状态：成功
-- 本次总论文数：17
-- 精读区：4
+- 本次总论文数：20
+- 精读区：7
 - 速读区：13
 
 ### 今日简报（AI）
-今日聚焦多语言语法纠错与视觉预对齐两大前沿，同步涉猎少样本生物医学关系抽取与多模态效率优化。
-
-精读推荐《Encode Errors》与《See First, Answer Later》，分别揭示表征检索增强多语言纠错效果与基于充分性驱动的视觉证据预对齐新策略。
-
-普通读者可重点关注多语言和视觉推理方法的交叉应用，以及少样本范式在专业领域（如生物医学）的落地潜力。
-- 详情：[/202606/20/README](/202606/20/README)
+今天更新了20篇论文，精读7篇、速读13篇，涵盖RLHF稳定性与高效视觉语言模型等热点。最值得关注的是《Uncertainty-Aware Reward Modeling for Stable RLHF》与《Moving Beyond Diversity: Visual Token Pruning for Efficient VLMs》，分别从不确定性建模和token剪枝角度提升模型效果与效率。建议优先精读这两篇，深入理解其方法细节，再视兴趣延伸速读其余方向。
+- 详情：[/202606/21/README](/202606/21/README)
 
 ### 精读区论文标签
-1. [Encode Errors: Representational Retrieval of In-Context Demonstrations for Multilingual Grammatical Error Correction](/202606/20/2606.15416v1-encode-errors-representational-retrieval-of-in-context-demonstrations-for-multilingual-grammatical-error-correction)  
-   标签：评分：8.0/10、query:llm-papers
-   evidence：利用LLM检索上下文示例进行语法纠错
-2. [See First, Answer Later: Visual Evidence Pre-Alignment via Sufficiency-Driven RL](/202606/20/2606.17678v1-see-first-answer-later-visual-evidence-pre-alignment-via-sufficiency-driven-rl)  
+1. [Uncertainty-Aware Reward Modeling for Stable RLHF](/202606/21/2606.19818v1-uncertainty-aware-reward-modeling-for-stable-rlhf)  
+   标签：评分：10.0/10、query:llm-papers
+   evidence：直接针对RLHF问题提出不确定性感知奖励建模
+2. [Moving Beyond Diversity: Visual Token Pruning as Subspace Reconstruction for Efficient VLMs](/202606/21/2606.18681v1-moving-beyond-diversity-visual-token-pruning-as-subspace-reconstruction-for-efficient-vlms)  
+   标签：评分：9.0/10、query:cv-lm
+   evidence：基于子空间重建的视觉语言模型视觉标记剪枝
+3. [VL2Spike: Spike-driven Distillation from VLMs for Low-Power Visual Perception in Embodied AI](/202606/21/2606.15898v1-vl2spike-spike-driven-distillation-from-vlms-for-low-power-visual-perception-in-embodied-ai)  
    标签：评分：8.0/10、query:vit
-   evidence：提出视觉证据预对齐，连接视觉和语言
-3. [DRIFT: Refining Instruction Data via On-Policy Data Attribution](/202606/20/2606.18307v1-drift-refining-instruction-data-via-on-policy-data-attribution)  
+   evidence：从视觉语言模型蒸馏尖峰Transformer用于低功耗视觉感知
+4. [Small Initialization Matters for Large Language Models](/202606/21/2606.17945v1-small-initialization-matters-for-large-language-models)  
    标签：评分：8.0/10、query:llm-papers
-   evidence：通过在线策略数据归因优化监督微调的指令数据
-4. [LARE: Low-Attention Region Encoding for Text-Image Retrieval](/202606/20/2606.18885v1-lare-low-attention-region-encoding-for-text-image-retrieval)  
+   evidence：研究初始化尺度对LLM预训练的影响
+5. [PerceptionDLM: Parallel Region Perception with Multimodal Diffusion Language Models](/202606/21/2606.19534v1-perceptiondlm-parallel-region-perception-with-multimodal-diffusion-language-models)  
+   标签：评分：8.0/10、query:cv-lm
+   evidence：多模态扩散语言模型实现并行视觉感知
+6. [FrequencyFormer: A Co-Designed Sensor-to-Processor Pipeline for Frequency-Domain Vision Transformer Inference](/202606/21/2606.19574v1-frequencyformer-a-co-designed-sensor-to-processor-pipeline-for-frequency-domain-vision-transformer-inference)  
    标签：评分：8.0/10、query:vit
-   evidence：对低关注区域进行双编码的文本-图像检索
+   evidence：频域视觉Transformer推理流水线
+7. [BrainG3N: A Dual-Purpose Tokenizer for Controllable 3D Brain MRI Generation](/202606/21/2606.19651v1-braing3n-a-dual-purpose-tokenizer-for-controllable-3d-brain-mri-generation)  
+   标签：评分：8.0/10、query:vit
+   evidence：使用掩码自编码器（MAE）作为3D脑MRI分词器
 
 ### 速读区论文标签
-1. [Few-Shot Biomedical Relation Extraction with Large Language Models: A Viable Alternative to Supervised Learning?](/202606/20/2606.15412v1-few-shot-biomedical-relation-extraction-with-large-language-models-a-viable-alternative-to-supervised-learning)  
-   标签：评分：7.0/10、query:llm-papers
-   evidence：使用大语言模型进行少样本生物医学关系抽取
-2. [Stepwise Token Selection for Efficient Multimodal Large Language Models](/202606/20/2606.16067v1-stepwise-token-selection-for-efficient-multimodal-large-language-models)  
-   标签：评分：7.0/10、query:cv-lm
-   evidence：逐步视觉token选择用于多模态LLM，提升效率
-3. [Tool-IQA: Augmenting Image Quality Assessment with Simple Tools](/202606/20/2606.16082v1-tool-iqa-augmenting-image-quality-assessment-with-simple-tools)  
-   标签：评分：7.0/10、query:cv-lm
-   evidence：使用视觉语言模型进行图像质量评估
-4. [Long-Context Modeling via GSS-Transformer Hybrid Architecture with Learnable Mixing](/202606/20/2606.16093v1-long-context-modeling-via-gss-transformer-hybrid-architecture-with-learnable-mixing)  
-   标签：评分：7.0/10、query:llm-papers
-   evidence：结合门控状态空间与Transformer的混合架构用于长上下文语言建模
-5. [PROSE: Training-Free Egocentric Scene Registration with Vision-Language Models](/202606/20/2606.16569v1-prose-training-free-egocentric-scene-registration-with-vision-language-models)  
+1. [GOOSE-M2F: Adapting Mask2Former for High-Fidelity, Long-Tailed Fine-Grained Semantic Segmentation in Unstructured Outdoor Terrain](/202606/21/2606.15937v1-goose-m2f-adapting-mask2former-for-high-fidelity-long-tailed-fine-grained-semantic-segmentation-in-unstructured-outdoor-terrain)  
    标签：评分：7.0/10、query:vit
-   evidence：使用预训练视觉语言模型进行场景配准
-6. [Tying the Loop -- Tied Expert Layers in Mixture-of-Experts Language Models](/202606/20/2606.16825v1-tying-the-loop----tied-expert-layers-in-mixture-of-experts-language-models)  
+   evidence：Mask2Former适配语义分割，属于视觉Transformer方法
+2. [KeepLoRA++: Continual Learning with Layer-Scaled Residual Gradient Adaptation](/202606/21/2606.16256v1-keeplora-continual-learning-with-layer-scaled-residual-gradient-adaptation)  
+   标签：评分：7.0/10、query:cv-lm
+   evidence：基于LoRA和层级分析的预训练视觉语言模型持续学习
+3. [Chronological Blindness: Benchmarking Temporal Reasoning in Vision-Language Models with CHRONOSIGHT](/202606/21/2606.16334v1-chronological-blindness-benchmarking-temporal-reasoning-in-vision-language-models-with-chronosight)  
+   标签：评分：7.0/10、query:cv-lm
+   evidence：视觉语言模型时间推理基准
+4. [Unified Multimodal Autoregressive Modeling with Shared Context-Visual Tokenizer is Key to Unification](/202606/21/2606.18249v1-unified-multimodal-autoregressive-modeling-with-shared-context-visual-tokenizer-is-key-to-unification)  
+   标签：评分：7.0/10、query:vit
+   evidence：统一多模态自回归建模与共享视觉分词器
+5. [Generating Natural and Expressive Robot Gestures through Iterative Reinforcement Learning with Human Feedback using LLMs](/202606/21/2606.18747v1-generating-natural-and-expressive-robot-gestures-through-iterative-reinforcement-learning-with-human-feedback-using-llms)  
    标签：评分：7.0/10、query:llm-papers
-   evidence：MoE大语言模型中的专家绑定减少内存
-7. [LoopCoder-v2: Only Loop Once for Efficient Test-Time Computation Scaling](/202606/20/2606.18023v1-loopcoder-v2-only-loop-once-for-efficient-test-time-computation-scaling)  
+   evidence：使用迭代强化学习与人类反馈（RLHF）训练LLM生成机器人手势
+6. [Complementary Attention Head Pruning for Efficient Transformers](/202606/21/2606.19150v1-complementary-attention-head-pruning-for-efficient-transformers)  
    标签：评分：7.0/10、query:llm-papers
-   evidence：用于代码生成测试时计算扩展的循环Transformer
-8. [A Self Consistency Based Reranking for Narrative Question Answering](/202606/20/2606.15741v1-a-self-consistency-based-reranking-for-narrative-question-answering)  
-   标签：评分：6.0/10、query:llm-papers
-   evidence：利用预训练语言模型的自一致性重排用于叙事问答
-9. [LaWAM: Latent World Action Models for Efficient Dynamics-Aware Robot Policies](/202606/20/2606.15768v1-lawam-latent-world-action-models-for-efficient-dynamics-aware-robot-policies)  
+   evidence：互补注意力头剪枝方法用于高效Transformer
+7. [Structured Inference with Large Language Gibbs](/202606/21/2606.19264v1-structured-inference-with-large-language-gibbs)  
+   标签：评分：7.0/10、query:llm-papers
+   evidence：利用LLM条件分布作为转移算子的结构化概率推理
+8. [Text-Driven Fusion for Infrared and Visible Images: Achieving Image Scene Adaptation on Hyperbolic Space](/202606/21/2606.15104v1-text-driven-fusion-for-infrared-and-visible-images-achieving-image-scene-adaptation-on-hyperbolic-space)  
+   标签：评分：6.0/10、query:vit
+   evidence：利用BLIP的文本驱动融合，在图像融合中连接文本和图像
+9. [Shift-and-Sum Quantization for Visual Autoregressive Models](/202606/21/2606.16131v1-shift-and-sum-quantization-for-visual-autoregressive-models)  
    标签：评分：6.0/10、query:cv-lm
-   evidence：使用预训练视觉语言模型构建潜在世界行动模型用于机器人策略
-10. [DYNA : Dynamic Episodic Memory Networks for Augmenting Large Language Models with Temporal Knowledge Graphs in Continuous Learning](/202606/20/2606.15778v1-dyna--dynamic-episodic-memory-networks-for-augmenting-large-language-models-with-temporal-knowledge-graphs-in-continuous-learning)  
-   标签：评分：6.0/10、query:llm-papers
-   evidence：用时序知识图谱增强大语言模型以实现持续学习
-11. [GOOSE-M2F: Adapting Mask2Former for High-Fidelity, Long-Tailed Fine-Grained Semantic Segmentation in Unstructured Outdoor Terrain](/202606/20/2606.15937v2-goose-m2f-adapting-mask2former-for-high-fidelity-long-tailed-fine-grained-semantic-segmentation-in-unstructured-outdoor-terrain)  
+   evidence：面向视觉自回归模型的训练后量化
+10. [Look Again Before You Abstain:Budgeted Conformal Evidence Acquisition for Reliable Vision-Language Model](/202606/21/2606.16667v1-look-again-before-you-abstainbudgeted-conformal-evidence-acquisition-for-reliable-vision-language-model)  
+   标签：评分：6.0/10、query:cv-lm
+   evidence：通过符合预测解决视觉语言模型幻觉问题，与大型视觉语言模型相关
+11. [Pareto LoRA: Mitigating Modality Imbalance in Unified Multimodal Models via Pareto-Optimal Gradient Integration](/202606/21/2606.17296v1-pareto-lora-mitigating-modality-imbalance-in-unified-multimodal-models-via-pareto-optimal-gradient-integration)  
+   标签：评分：6.0/10、query:cv-lm
+   evidence：解决多模态模型中的模态不平衡问题，提升视觉性能
+12. [LADBench: A Benchmark for Logical Fault Detection in Images](/202606/21/2606.17433v1-ladbench-a-benchmark-for-logical-fault-detection-in-images)  
+   标签：评分：6.0/10、query:cv-lm
+   evidence：大型视觉语言模型逻辑异常检测基准
+13. [Test-Time Training for Robust Text-Guided Open-Vocabulary Object Counting](/202606/21/2606.17601v1-test-time-training-for-robust-text-guided-open-vocabulary-object-counting)  
    标签：评分：6.0/10、query:vit
-   evidence：基于Mask2Former变换器的视觉分割适配
-12. [Hierarchical Fine-Grained Aerial Object Detection](/202606/20/2606.16448v1-hierarchical-fine-grained-aerial-object-detection)  
-   标签：评分：6.0/10、query:vit
-   evidence：层次化细粒度航空目标检测，引入专家先验知识
-13. [Does Traversal Order Matter? A Systematic Study of Tree Traversal Methods in Transformer Grammars](/202606/20/2606.16836v1-does-traversal-order-matter-a-systematic-study-of-tree-traversal-methods-in-transformer-grammars)  
-   标签：评分：6.0/10、query:llm-papers
-   evidence：变换器语法中遍历顺序的研究，用于语言建模
+   evidence：开放词汇目标计数结合测试时训练增强鲁棒性
 
 
 <div class="dpr-home-promo-card">
