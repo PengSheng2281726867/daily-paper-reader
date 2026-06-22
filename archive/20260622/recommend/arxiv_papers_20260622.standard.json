@@ -1,0 +1,818 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-22T21:29:36.532076+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 6,
+    "deep_cap": 8,
+    "deep_selected": 6,
+    "quick_candidates": 26,
+    "quick_skim_target": 13,
+    "quick_selected": 13
+  },
+  "deep_dive": [
+    {
+      "id": "2606.16222v1",
+      "source": "arxiv",
+      "title": "Latent Thought Flow: Efficient Latent Reasoning in Large Language Models",
+      "abstract": "Large Language Models (LLMs) increasingly rely on intermediate reasoning, yet explicit Chain-of-Thought (CoT) suffers from a linguistic space bottleneck: each thought must be decoded into tokens, causing high inference overhead. Latent reasoning moves deliberation into continuous space, but existing methods mostly learn deterministic or reward-maximizing paths, lacking a principled way to allocate probability across trajectories with different correctness and costs. We propose Latent Thought Flow (LTF), which models reasoning as variable-length continuous trajectories and trains a sampler to match a reward-induced posterior over answer quality and computation cost. We instantiate this with a continuous GFlowNet using stochastic latent transitions. To handle sparse answer supervision, we introduce an Entropy-Weighted Subtrajectory Balance objective for intermediate rewards and a reference-prior regularizer to anchor exploration. Experiments under finetuning and transfer learning settings show that LTF outperforms explicit CoT and latent reasoning baselines, improving accuracy by 9.5% while reducing reasoning length by 27.2% on average compared with strong latent reasoning baselines.",
+      "authors": [
+        "Xiandong Zou",
+        "Jing Huang",
+        "Jianshu Li",
+        "Pan Zhou"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-15T05:02:46+00:00",
+      "link": "https://arxiv.org/pdf/2606.16222v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Proposes latent reasoning in LLMs using continuous trajectories and GFlowNet.",
+      "llm_evidence_cn": "提出利用连续轨迹和GFlowNet在LLM中进行潜在推理。",
+      "llm_evidence": "提出利用连续轨迹和GFlowNet在LLM中进行潜在推理。",
+      "canonical_evidence": "提出利用连续轨迹和GFlowNet在LLM中进行潜在推理。",
+      "llm_tldr_en": "Latent Thought Flow models reasoning as continuous variable-length trajectories trained with a GFlowNet to match a reward-induced posterior, enabling efficient latent reasoning in LLMs.",
+      "llm_tldr_cn": "本文针对大语言模型显式思维链解码开销大的问题，提出潜在思维流（LTF）框架。将推理建模为可变长的连续轨迹，并用连续GFlowNet训练采样器以匹配答案质量和计算成本的奖励后验。该方法在多个推理任务上以更低的推理成本达到了与CoT竞争的性能，为高效潜在推理提供了新范式。",
+      "llm_tldr": "本文针对大语言模型显式思维链解码开销大的问题，提出潜在思维流（LTF）框架。将推理建模为可变长的连续轨迹，并用连续GFlowNet训练采样器以匹配答案质量和计算成本的奖励后验。该方法在多个推理任务上以更低的推理成本达到了与CoT竞争的性能，为高效潜在推理提供了新范式。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.17999v1",
+      "source": "arxiv",
+      "title": "VoidPadding: Let [VOID] Handle Padding in Masked Diffusion Language Models so that [EOS] Can Focus on Semantic Termination",
+      "abstract": "MDLMs generate text by denoising a preallocated masked response canvas, making response-length modeling central to instruction tuning. Existing MDLMs often inherit the autoregressive convention of using repeated \\texttt{[EOS]} tokens for padding during instruction tuning, giving \\texttt{[EOS]} a dual role as both a semantic terminator and a padding token. We show that this dual role is a root cause of \\texttt{[EOS]} overflow under large-block decoding. To decouple these roles, we propose VoidPadding, which introduces \\texttt{[VOID]} for padding and reserves \\texttt{[EOS]} for termination. During inference, the learned \\texttt{[EOS]} signal enables early stopping, while the learned \\texttt{[VOID]} signal guides adaptive response canvas expansion. On Dream-7B-Instruct, VoidPadding improves the block-size-averaged four-task mean across mathematical reasoning and code generation benchmarks by \\(+17.84\\) points over the original model and \\(+6.95\\) points over RainbowPadding, while reducing decoding NFE by 55.7\\% on average. Code is available at https://github.com/Haru-LCY/VoidPadding.",
+      "authors": [
+        "Chunyu Liu",
+        "Zhengyang Fan",
+        "Kaisen Yang",
+        "Alex Lamb"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-16T14:46:53+00:00",
+      "link": "https://arxiv.org/pdf/2606.17999v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:llm-papers"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Addresses padding issue in instruction tuning for masked diffusion language models",
+      "llm_evidence_cn": "解决掩码扩散语言模型指令微调中的填充问题",
+      "llm_evidence": "解决掩码扩散语言模型指令微调中的填充问题",
+      "canonical_evidence": "解决掩码扩散语言模型指令微调中的填充问题",
+      "llm_tldr_en": "VoidPadding decouples the dual role of [EOS] by introducing a dedicated [VOID] token, mitigating [EOS] overflow and enabling early stopping during instruction tuning of MDLMs.",
+      "llm_tldr_cn": "现有掩码扩散语言模型在指令微调中复用[EOS]作为填充和终止符，导致[EOS]溢出。VoidPadding引入专用[VOID]令牌负责填充，保留[EOS]仅作语义终止，从而解耦两者角色。推理时，学习到的[EOS]信号可实现提前停止，避免无效解码。该方法在保证生成质量的同时提升了解码效率，为MDLM的指令微调提供了更清晰的令牌语义分配方案。",
+      "llm_tldr": "现有掩码扩散语言模型在指令微调中复用[EOS]作为填充和终止符，导致[EOS]溢出。VoidPadding引入专用[VOID]令牌负责填充，保留[EOS]仅作语义终止，从而解耦两者角色。推理时，学习到的[EOS]信号可实现提前停止，避免无效解码。该方法在保证生成质量的同时提升了解码效率，为MDLM的指令微调提供了更清晰的令牌语义分配方案。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "instruction tuning for large language models",
+      "matched_requirement_id": "req-17",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.19534v1",
+      "source": "arxiv",
+      "title": "PerceptionDLM: Parallel Region Perception with Multimodal Diffusion Language Models",
+      "abstract": "Multimodal large language models (MLLMs) have achieved remarkable progress in visual understanding tasks. However, most existing MLLMs rely on autoregressive generation, which limits their efficiency for perception tasks that require captioning multiple regions. In this work, we propose PerceptionDLM, a multimodal diffusion language model optimized for efficient parallel region perception. Built upon PerceptionDLM-Base, a strong foundational baseline that achieves state-of-the-art performance among open-source diffusion MLLMs, our architecture fully leverages the parallel decoding nature of DLMs. Specifically, we introduce efficient prompting and structured attention masking to enable simultaneous perception of multiple masked regions, allowing the model to generate region descriptions in parallel at both the sequence and token levels. This design significantly improves inference efficiency compared with existing approaches that process regions sequentially. To systematically evaluate the parallelism property of visual perception capability for DLMs, we construct a new Parallel Detailed Localized Captioning Benchmark (ParaDLC-Bench) by scaling the DLC-Bench to include multiple region masks per image, enabling joint evaluation of both caption quality and inference efficiency. Experiments demonstrate that PerceptionDLM maintains competitive performance in region captioning while achieving substantial speed improvements for multi-region perception tasks. Our results highlight the potential of multimodal diffusion language models for efficient, parallel visual perception. To the best of our knowledge, we are the first to achieve parallel region caption and perception by leveraging the advantages of diffusion language models. Code, models, and datasets are released.",
+      "authors": [
+        "Yueyi Sun",
+        "Yuhao Wang",
+        "Jason Li",
+        "Ye Tian",
+        "Tao Zhang",
+        "Jacky Mai",
+        "Yihan Wang",
+        "Haochen Wang",
+        "Jinbin Bai",
+        "Ling Yang",
+        "Yunhai Tong"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-06-17T19:27:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.19534v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "multimodal diffusion language model for parallel region perception",
+      "llm_evidence_cn": "多模态扩散语言模型用于并行区域感知",
+      "llm_evidence": "多模态扩散语言模型用于并行区域感知",
+      "canonical_evidence": "多模态扩散语言模型用于并行区域感知",
+      "llm_tldr_en": "Proposes PerceptionDLM, a multimodal diffusion language model that enables parallel perception of multiple masked regions via efficient prompting and structured attention masking.",
+      "llm_tldr_cn": "该论文针对多模态大语言模型在需要描述多个区域时自回归生成效率低的问题，提出PerceptionDLM扩散语言模型。利用扩散模型的并行解码特性，设计高效提示和结构化注意力掩码，实现对多个掩盖区域的同步感知。在开放源码的扩散MLLM基准上达到最优性能，显著提升了多区域感知的速度与质量。该工作推动了扩散语言模型在视觉感知中的应用。",
+      "llm_tldr": "该论文针对多模态大语言模型在需要描述多个区域时自回归生成效率低的问题，提出PerceptionDLM扩散语言模型。利用扩散模型的并行解码特性，设计高效提示和结构化注意力掩码，实现对多个掩盖区域的同步感知。在开放源码的扩散MLLM基准上达到最优性能，显著提升了多区域感知的速度与质量。该工作推动了扩散语言模型在视觉感知中的应用。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.19528v1",
+      "source": "arxiv",
+      "title": "Techniques for Peak Memory Reduction for LoRA Fine-tuning of LLMs on Edge Devices",
+      "abstract": "Fine-tuning of Large Language Models (LLMs) using Low-Rank Adaptation (LoRA) on an end-user's data offers personalized experiences while keeping data private, but faces severe memory constraints on consumer hardware. Peak memory during fine-tuning often exceeds device limits, especially for models with billions of parameters and long-context training data. This paper introduces a suite of complementary techniques to reduce memory footprint without sacrificing model quality: (1) base model quantization with on-the-fly dequantization, (2) memory-efficient checkpointing combining selective activation caching and disk offloading, (3) softmax approximation using semantically relevant token subsets, and (4) logits masking. Experiments on Llama-3.2 3B and Qwen-2.5 3B demonstrate up to $26\\times$ and $28\\times$ reduction in peak memory, enabling fine-tuning on resource-constrained devices.",
+      "authors": [
+        "Hassan Dbouk",
+        "Matthias Reisser",
+        "Prathamesh Mandke",
+        "Likhita Arun Navali",
+        "Christos Louizos"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-17T19:20:06+00:00",
+      "link": "https://arxiv.org/pdf/2606.19528v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "techniques to reduce peak memory for LoRA fine-tuning of LLMs",
+      "llm_evidence_cn": "降低LLM LoRA微调峰值内存的技术",
+      "llm_evidence": "降低LLM LoRA微调峰值内存的技术",
+      "canonical_evidence": "降低LLM LoRA微调峰值内存的技术",
+      "llm_tldr_en": "This paper introduces a suite of complementary techniques (quantization, checkpointing, softmax approximation, logits masking) to reduce peak memory for LoRA fine-tuning of LLMs on edge devices, enabling fine-tuning of Llama-3.2 with limited memory.",
+      "llm_tldr_cn": "针对边缘设备上LLM LoRA微调内存不足的问题，本文提出一套互补技术：基础模型量化与即时反量化、内存高效检查点（选择性激活缓存与磁盘卸载）、基于语义相关子集的softmax近似以及logits掩码。在Llama-3.2上的实验表明，这些技术将峰值内存降低至原来的几分之一，同时保持模型质量基本不变，使得在消费级硬件上微调大模型成为可能。",
+      "llm_tldr": "针对边缘设备上LLM LoRA微调内存不足的问题，本文提出一套互补技术：基础模型量化与即时反量化、内存高效检查点（选择性激活缓存与磁盘卸载）、基于语义相关子集的softmax近似以及logits掩码。在Llama-3.2上的实验表明，这些技术将峰值内存降低至原来的几分之一，同时保持模型质量基本不变，使得在消费级硬件上微调大模型成为可能。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "instruction tuning for large language models",
+      "matched_requirement_id": "req-17",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.19882v1",
+      "source": "arxiv",
+      "title": "Multimodal Concept Bottleneck Models",
+      "abstract": "Concept Bottleneck Models (CBMs) enhance the interpretability of deep learning networks by aligning the features extracted from images with natural concepts. However, existing CBMs are constrained in their ability to generalize beyond a fixed set of predefined classes and the risk of non-concept information leakage, where predictive signals outside the intended concepts are inadvertently exploited. In this paper, we propose Multimodal Concept Bottleneck Model (MM-CBM) to address these issues and extend CBMs into CLIP. MM-CBM utilizes dual Concept Bottleneck Layers (CBLs) to align both the image and text embeddings into interpretable features. This allows us to perform new vision tasks like zero-shot classification or image retrieval in an interpretable way. Compared to existing methods, MM-CBM achieves up to 51.26% accuracy improvement on average across four standard benchmarks. Our method maintains high accuracy, staying within ~5% of black-box performance while offering greater interpretability.",
+      "authors": [
+        "Tongqing Shi",
+        "Ge Yan",
+        "Tuomas Oikarinen",
+        "Tsui-Wei Weng"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-18T07:41:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.19882v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "extends Concept Bottleneck Models to CLIP, enabling interpretable zero-shot classification",
+      "llm_evidence_cn": "将概念瓶颈模型扩展到CLIP，实现可解释的零样本分类",
+      "llm_evidence": "将概念瓶颈模型扩展到CLIP，实现可解释的零样本分类",
+      "canonical_evidence": "将概念瓶颈模型扩展到CLIP，实现可解释的零样本分类",
+      "llm_tldr_en": "Multimodal Concept Bottleneck Model extends CBMs to CLIP by using dual concept bottleneck layers to align image and text embeddings into interpretable features, enabling zero-shot classification and image retrieval with interpretability.",
+      "llm_tldr_cn": "本文将概念瓶颈模型（CBM）扩展到CLIP，提出多模态概念瓶颈模型（MM-CBM）。通过双概念瓶颈层分别对齐图像和文本嵌入到可解释特征，解决了传统CBM难以泛化到未定义类别且存在非概念信息泄露的问题。该模型在零样本分类和图像检索任务上保持了高可解释性，同时性能与黑箱模型相当。",
+      "llm_tldr": "本文将概念瓶颈模型（CBM）扩展到CLIP，提出多模态概念瓶颈模型（MM-CBM）。通过双概念瓶颈层分别对齐图像和文本嵌入到可解释特征，解决了传统CBM难以泛化到未定义类别且存在非概念信息泄露的问题。该模型在零样本分类和图像检索任务上保持了高可解释性，同时性能与黑箱模型相当。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.20089v1",
+      "source": "arxiv",
+      "title": "IHUBERT: Vector-Based Semantic Deduplication and Domain-Balanced Pretraining for Persian Resources",
+      "abstract": "Persian pretrained language models (PLMs) are still limited by the scarcity of large-scale, high-quality pretraining corpora and by insufficient evaluation beyond standard classification and NER tasks. We present IHUBERT, a monolingual Persian PLM trained from scratch with the RoBERTa-base encoder (125M parameters) on a 45 GB curated subset of the Sepahr-Danesh collection (about 7-8B tokens). To improve corpus quality and reduce redundancy, we employ a multi-stage preprocessing pipeline that includes normalization, exact and near-duplicate removal, anonymization, and vector-database-based semantic deduplication for distribution balancing control across domains and registers. We additionally train a 139k-vocabulary BPE tokenizer on the full pretraining corpus to better capture Persian morphology and orthographic variation. IHUBERT is evaluated on seven Persian NLU benchmarks covering NER, sentiment analysis, topic classification, NLI, extractive question answering, and relation extraction, using task-standard metrics (entity-level F1, Macro-F1, EM/F1). IHUBERT achieves its strongest gains on extractive QA, ranking first on both PQuAD (F1 88.3542) and ParsiNLU-RC (F1 49.0987), and attains the best result on FarsTail (Macro-F1 0.8350). On NER and topic classification, it remains competitive (e.g., 0.8308 F1 on ParsTwiNER; 0.7953 Macro-F1 on DigiMag), while relation extraction remains the main remaining gap (0.6684 Macro-F1 on PERLEX). A controlled tokenizer ablation on the IHUBERT pretraining corpus shows that BPE yields slightly lower subword fragmentation than WordPiece at matched vocabulary size, supporting our tokenization design. Overall, IHUBERT advances Persian language modeling through semantically curated large-scale pretraining and broad evaluation across both classification and comprehension-oriented tasks.",
+      "authors": [
+        "Arash Ghafouri",
+        "Mahdi Firouzmandi",
+        "Hossein Saberi",
+        "Mohammad Reza Hasani Ahangar"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-18T11:10:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.20089v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Pretraining pipeline for Persian language model with semantic deduplication",
+      "llm_evidence_cn": "波斯语语言模型的预训练流程，包含语义去重",
+      "llm_evidence": "波斯语语言模型的预训练流程，包含语义去重",
+      "canonical_evidence": "波斯语语言模型的预训练流程，包含语义去重",
+      "llm_tldr_en": "IHUBERT trains a Persian RoBERTa-base from scratch with a 45GB curated corpus using multi-stage preprocessing including semantic deduplication and domain balancing.",
+      "llm_tldr_cn": "波斯语预训练语言模型受限于高质量语料稀缺。IHUBERT从头训练了一个基于RoBERTa-base的波斯语模型（125M参数），使用45GB精选子集。预处理流程包括归一化、精确与近似去重、匿名化以及基于向量数据库的语义去重，并通过域平衡控制语料分布。此外，训练了139k词汇的BPE分词器。该工作为低资源语言的大规模预训练提供了可复现的实践参考。",
+      "llm_tldr": "波斯语预训练语言模型受限于高质量语料稀缺。IHUBERT从头训练了一个基于RoBERTa-base的波斯语模型（125M参数），使用45GB精选子集。预处理流程包括归一化、精确与近似去重、匿名化以及基于向量数据库的语义去重，并通过域平衡控制语料分布。此外，训练了139k词汇的BPE分词器。该工作为低资源语言的大规模预训练提供了可复现的实践参考。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "pretraining methods for language models",
+      "matched_requirement_id": "req-16",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.15963v1",
+      "source": "arxiv",
+      "title": "PreLort: Prefix-Nested LoRA for Federated Fine-Tuning under Rank Heterogeneity",
+      "abstract": "Federated fine-tuning of large language models using parameter-efficient methods such as LoRA enables privacy-preserving adaptation of foundation models. Heterogeneous hardware resources introduce challenges, as clients with different adapter ranks cannot be directly aggregated. While existing methods enable aggregation under heterogeneous ranks, they fail to control how information is distributed across rank dimensions, leading to suboptimal use of shared low-rank representations. Instead, we propose PreLort: a nested low-rank formulation for federated LoRA that organizes adapter dimensions into a prefix hierarchy. Our approach ensures that lower-rank dimensions encode task-relevant information, while higher-rank dimensions capture additional capacity. Building on this, we introduce (i) a segment-wise aggregation rule that averages only over clients contributing to each rank segment, avoiding dilution from zero-padded lower-rank clients, and (ii) a prefix-nested training strategy that optimizes each adapter under multiple rank truncations, encouraging useful signal to concentrate in low-rank prefix dimensions. Together, these components encourage a consistent low-rank prefix capturing the most task-relevant information, while higher-rank dimensions learn additional capacity. This allows low-rank clients to benefit from richer information contributed by higher-rank clients, as prefix dimensions are consistently learned and aggregated. Experiments demonstrate that our method consistently outperforms prior heterogeneous federated LoRA methods in accuracy and ROUGE-L, while achieving lower or comparable perplexity across multiple base models.",
+      "authors": [
+        "Muhammad Waseem",
+        "Nurbek Tastan",
+        "Andrej Jovanovic",
+        "Nicholas D. Lane",
+        "Nils Lukas",
+        "Karthik Nandakumar",
+        "Samuel Horvath"
+      ],
+      "primary_category": "cs.DC",
+      "categories": [
+        "cs.DC",
+        "cs.AI",
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-06-14T18:44:47+00:00",
+      "link": "https://arxiv.org/pdf/2606.15963v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "federated fine-tuning of LLMs with LoRA under rank heterogeneity",
+      "llm_evidence_cn": "异构rank下联邦微调大语言模型的LoRA方法",
+      "llm_evidence": "异构rank下联邦微调大语言模型的LoRA方法",
+      "canonical_evidence": "异构rank下联邦微调大语言模型的LoRA方法",
+      "llm_tldr_en": "Proposes PreLort, a nested low-rank formulation for federated LoRA that organizes adapter dimensions into a prefix hierarchy to enable aggregation under heterogeneous ranks.",
+      "llm_tldr_cn": "该论文针对联邦微调中不同客户端LoRA秩不一致导致无法直接聚合的问题，提出PreLort方法，通过前缀层次嵌套低秩结构，确保低维编码任务相关信息，高维捕获额外细节，从而在不增加通信开销下实现异构秩聚合。实验表明该方法能有效利用共享低秩表示，提升联邦微调性能。本研究为参数高效迁移学习在联邦场景中的应用提供了新思路。",
+      "llm_tldr": "该论文针对联邦微调中不同客户端LoRA秩不一致导致无法直接聚合的问题，提出PreLort方法，通过前缀层次嵌套低秩结构，确保低维编码任务相关信息，高维捕获额外细节，从而在不增加通信开销下实现异构秩聚合。实验表明该方法能有效利用共享低秩表示，提升联邦微调性能。本研究为参数高效迁移学习在联邦场景中的应用提供了新思路。",
+      "llm_tags": [
+        "query:llm-papers:composite"
+      ],
+      "matched_query_tag": "query:llm-papers:composite",
+      "matched_query_text": "Papers central to 大模型重要论文检索, especially work that connects or combines: large language model survey; pretraining methods for language models; instruction tuning for large language models; RLHF training for language models; few-shot learning with large language models; seminal papers on large language model development; key research on transformer based language models; important works on instruction fine tuning and alignment.",
+      "matched_requirement_id": "req-composite-llm-papers",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.15778v1",
+      "source": "arxiv",
+      "title": "DYNA : Dynamic Episodic Memory Networks for Augmenting Large Language Models with Temporal Knowledge Graphs in Continuous Learning",
+      "abstract": "Large Language Models (LLMs) struggle to incorporate new knowledge without forgetting or costly retraining. We propose DYNA, a lightweight framework that augments a frozen LLM with a temporal knowledge graph where events are nodes and temporal relations are directed, timestamped edges. The graph serves as an external, updatable memory. At query time, DYNA retrieves relevant nodes via random walks and centrality measures, then augments the LLM's response. Evaluated on three temporal recall tasks, DYNA reduces catastrophic forgetting by ~7% compared to fine-tuning and improves temporal ordering by ~5% over standard RAG. Higher graph clustering coefficients correlate with better retrieval, showing that graph structure matters. Contributions: (1) episodic memory as temporal KG, (2) retraining-free LLM augmentation, (3) graph properties as predictors of retrieval performance.",
+      "authors": [
+        "Ali Sarabadani",
+        "Mahtab Tajvidiyan"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG",
+        "cs.SI"
+      ],
+      "published": "2026-06-14T12:27:26+00:00",
+      "link": "https://arxiv.org/pdf/2606.15778v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "LLM continual learning with temporal knowledge graphs",
+      "llm_evidence_cn": "LLM持续学习与时序知识图谱",
+      "llm_evidence": "LLM持续学习与时序知识图谱",
+      "canonical_evidence": "LLM持续学习与时序知识图谱",
+      "llm_tldr_en": "DYNA augments frozen LLMs with a temporal knowledge graph to reduce catastrophic forgetting in continuous learning, achieving ~7% less forgetting than fine-tuning.",
+      "llm_tldr_cn": "大型语言模型在持续学习中容易遗忘旧知识。DYNA提出一种轻量级框架，通过时序知识图谱作为外部可更新记忆，在推理时检索相关事件增强LLM输出。实验表明，相比微调，DYNA减少约7%的灾难性遗忘，相比标准RAG提升约5%的时序排序能力。该工作为LLM知识更新提供了一种高效低成本的方案。",
+      "llm_tldr": "大型语言模型在持续学习中容易遗忘旧知识。DYNA提出一种轻量级框架，通过时序知识图谱作为外部可更新记忆，在推理时检索相关事件增强LLM输出。实验表明，相比微调，DYNA减少约7%的灾难性遗忘，相比标准RAG提升约5%的时序排序能力。该工作为LLM知识更新提供了一种高效低成本的方案。",
+      "llm_tags": [
+        "query:llm-papers:composite"
+      ],
+      "matched_query_tag": "query:llm-papers:composite",
+      "matched_query_text": "Papers central to 大模型重要论文检索, especially work that connects or combines: large language model survey; pretraining methods for language models; instruction tuning for large language models; RLHF training for language models; few-shot learning with large language models; seminal papers on large language model development; key research on transformer based language models; important works on instruction fine tuning and alignment.",
+      "matched_requirement_id": "req-composite-llm-papers",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.16474v1",
+      "source": "arxiv",
+      "title": "MVOFormer: Flow-Semantic Transformer for Robust Monocular Visual Odometry",
+      "abstract": "Monocular visual odometry (MVO) is foundational to autonomous navigation and robotic localization. However, existing learning-based MVO approaches often struggle with either a lack of interpretable, complementary features or overly complex multi-stage architectures. These limitations inherently restrict their robustness and cross-domain generalization. In this work, we propose MVOFormer, a novel transformer framework for robust monocular visual odometry. Our architecture features a Flow-Semantic Dual Branch Encoder that synergizes dense geometric motion cues with object-centric semantic priors, explicitly distinguishing static structures from dynamic distractors. These representations are then fused by an Iterative Multimodal Decoder, enabling coarse-to-fine pose refinement while dynamically suppressing attention on unreliable regions. Extensive evaluations demonstrate that, without any target-domain fine-tuning, MVOFormer achieves superior zero-shot generalization and robustness, significantly outperforming prior learning-based frame-to-frame methods across diverse benchmarks including TartanAir, KITTI, TUM-RGBD, and ETH3D-SLAM.",
+      "authors": [
+        "Jituo Li",
+        "Shunwang Sun",
+        "Jialu Zhang",
+        "Xinqi Liu",
+        "Jinyao Hu",
+        "Zhicheng Lu",
+        "Sajad Saeedi",
+        "Guodong Lu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-15T09:39:28+00:00",
+      "link": "https://arxiv.org/pdf/2606.16474v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Transformer-based framework for computer vision task",
+      "llm_evidence_cn": "基于Transformer的计算机视觉任务框架",
+      "llm_evidence": "基于Transformer的计算机视觉任务框架",
+      "canonical_evidence": "基于Transformer的计算机视觉任务框架",
+      "llm_tldr_en": "MVOFormer proposes a Flow-Semantic Dual Branch Encoder with Iterative Multimodal Decoder for robust monocular visual odometry using transformer architecture.",
+      "llm_tldr_cn": "MVOFormer提出了一种新颖的Transformer框架用于单目视觉里程计。其流-语义双分支编码器融合了密集几何运动与物体语义先验，并通过迭代多模态解码器处理动态干扰。实验表明该方法在鲁棒性和跨域泛化上显著优于现有方法。",
+      "llm_tldr": "MVOFormer提出了一种新颖的Transformer框架用于单目视觉里程计。其流-语义双分支编码器融合了密集几何运动与物体语义先验，并通过迭代多模态解码器处理动态干扰。实验表明该方法在鲁棒性和跨域泛化上显著优于现有方法。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.16256v1",
+      "source": "arxiv",
+      "title": "KeepLoRA++: Continual Learning with Layer-Scaled Residual Gradient Adaptation",
+      "abstract": "Continual learning for pre-trained vision-language models requires balancing three competing objectives: retaining pre-trained knowledge, preserving knowledge from a sequence of learned tasks, and maintaining the plasticity to acquire new knowledge. This paper presents KeepLoRA++, balancing these objectives through a unified dual-dimensional knowledge retention mechanism. We analyze knowledge distribution of Transformer architecture from both inter-layer and intra-layer perspectives. The inter-layer perspective examines how retention is distributed across layers, while the intra-layer perspective focuses on the parameter space within each layer. Our analysis reveals a structural property: general transferable knowledge is mainly encoded in the shallow layers and the principal subspace of the parameters, while task-specific adaptations are localized in the deep layers and the residual subspace. Motivated by this insight, KeepLoRA++ introduces a layer-scaled residual gradient adaptation method. New tasks are learned by restricting LoRA parameter updates to the residual subspace, combined with a shallow-to-deep layer scaling, to prevent interference with previously acquired capabilities. Specifically, the gradient of a new task is projected onto a subspace orthogonal to both the principal subspace of the pre-trained model and the dominant directions of previous task features, while simultaneously assigning smaller update magnitudes to shallow layers and larger ones to deeper layers. Our theoretical analysis and empirical evaluations confirm that KeepLoRA++ successfully balances these three competing objectives, consistently outperforming representative baselines across image classification, visual question answering, and video understanding tasks.",
+      "authors": [
+        "Mao-Lin Luo",
+        "Yi-Lin Zhang",
+        "Zi-Hao Zhou",
+        "Yankun Hong",
+        "Xialiang Tong",
+        "Mingxuan Yuan",
+        "Tong Wei",
+        "Min-Ling Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-15T05:57:59+00:00",
+      "link": "https://arxiv.org/pdf/2606.16256v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "KeepLoRA++ enables continual learning for pre-trained vision-language models by balancing knowledge retention across layers.",
+      "llm_evidence_cn": "KeepLoRA++通过平衡层间知识保留实现预训练视觉-语言模型的持续学习",
+      "llm_evidence": "KeepLoRA++通过平衡层间知识保留实现预训练视觉-语言模型的持续学习",
+      "canonical_evidence": "KeepLoRA++通过平衡层间知识保留实现预训练视觉-语言模型的持续学习",
+      "llm_tldr_en": "KeepLoRA++ introduces a dual-dimensional retention mechanism for continual learning of vision-language models, preserving pre-trained, task, and plasticity knowledge.",
+      "llm_tldr_cn": "持续学习中预训练视觉-语言模型需同时保留预训练知识、历史任务知识和获取新知识的可塑性。本文提出KeepLoRA++，通过层间和层内双重知识保留机制，分析Transformer中的知识分布，实现通用迁移知识编码在浅层、任务特定知识在深层的结构化保留，在多个持续学习基准上取得最优。",
+      "llm_tldr": "持续学习中预训练视觉-语言模型需同时保留预训练知识、历史任务知识和获取新知识的可塑性。本文提出KeepLoRA++，通过层间和层内双重知识保留机制，分析Transformer中的知识分布，实现通用迁移知识编码在浅层、任务特定知识在深层的结构化保留，在多个持续学习基准上取得最优。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "important research on pre trained vision models",
+      "matched_requirement_id": "req-13",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.16783v1",
+      "source": "arxiv",
+      "title": "Gen-VCoT: Generative Visual Chain-of-Thought Reasoning via Diffusion-Based RGB Intermediate Representations",
+      "abstract": "Multimodal large language models (MLLMs) excel at visual reasoning but rely on text-based chain-of-thought (CoT), lacking interpretable visual intermediates. Existing methods use opaque tokens or external tools, missing key properties. We propose Gen-VCoT, a framework using expert vision models to generate RGB images as reasoning intermediates. It has three stages: visual grounding (SAM segmentation), geometric reasoning (Marigold depth maps), and semantic reasoning (Qwen2-VL integration). An adaptive router selects reasoning depth. Evaluations show Gen-VCoT improves spatial (25% better) and depth (50% better) questions, but may hurt simple factual queries. Text CoT outperforms visual intermediates on CLEVR (91.2% vs 62.5%), showing task-dependent optimal representations. Gen-VCoT establishes a new paradigm for interpretable multimodal reasoning.",
+      "authors": [
+        "Zhiqiang Zhou",
+        "Junliang Dai",
+        "Xu ling"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-15T14:27:57+00:00",
+      "link": "https://arxiv.org/pdf/2606.16783v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "visual chain-of-thought reasoning using diffusion-based RGB intermediates",
+      "llm_evidence_cn": "基于扩散RGB中间表示的视觉链式推理",
+      "llm_evidence": "基于扩散RGB中间表示的视觉链式推理",
+      "canonical_evidence": "基于扩散RGB中间表示的视觉链式推理",
+      "llm_tldr_en": "Gen-VCoT generates RGB images as reasoning intermediates for MLLMs, improving spatial and depth reasoning by 25% and 50% respectively.",
+      "llm_tldr_cn": "多模态大语言模型依赖文本链式思维，缺乏可解释的视觉中间步骤。Gen-VCoT利用SAM分割、深度估计和语义推理生成RGB中间图像作为推理过程，并通过自适应路由器选择推理深度。实验显示，在空间和深度问题上分别提升25%和50%，但在简单事实查询上可能下降。该工作增强了MLLM的可解释性和复杂视觉推理能力。",
+      "llm_tldr": "多模态大语言模型依赖文本链式思维，缺乏可解释的视觉中间步骤。Gen-VCoT利用SAM分割、深度估计和语义推理生成RGB中间图像作为推理过程，并通过自适应路由器选择推理深度。实验显示，在空间和深度问题上分别提升25%和50%，但在简单事实查询上可能下降。该工作增强了MLLM的可解释性和复杂视觉推理能力。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.17118v1",
+      "source": "arxiv",
+      "title": "MODE: Modality-Decomposed Expert-Level Mixed-Precision Quantization for MoE Multimodal LLMs",
+      "abstract": "Mixture-of-Experts Multimodal Large Language Models (MoE-MLLMs) offer remarkable performance but incur prohibitive GPU memory costs, making compression essential. Among PTQ methods, expert-level mixed-precision quantization has proven effective for MoE-LLMs, yet suffers notable degradation on MoE-MLLMs due to two overlooked biases in expert importance estimation. (1) At the cross-modal level, the numerical dominance of vision tokens causes expert selection frequency to be dominated by vision tokens, masking experts that are critical to the text modality; (2) at the intra-vision level, the large proportion of redundant vision tokens further skew frequency statistics, obscuring experts critical for informative visual content. To bridge gaps, we propose MODE, a modality-decomposed expert-level mixed-precision quantization framework for MoE-MLLMs that decomposes expert selection frequency by modality, filters redundant vision tokens to obtain denoised visual frequency, and further evaluates quantization sensitivity per modality as a complementary signal to frequency-based estimation. These signals are integrated into an Integer Linear Programming formulation to assign per-expert bit-widths under a given budget. Extensive experiments show that MODE is particularly well-suited for MoE-MLLMs, limiting average performance loss to within 2.9% at W3A16, with larger gains at the extreme 2-bit setting.",
+      "authors": [
+        "Yuanteng Chen",
+        "Peisong Wang",
+        "Zhilei Liu",
+        "Nanxin Zeng",
+        "Yuantian Shao",
+        "Shiqiang Lang",
+        "Tao Liu",
+        "Chuangyi Li",
+        "Qinghao Hu",
+        "Gang Li",
+        "Jing Liu",
+        "Jian Cheng"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-15T10:59:11+00:00",
+      "link": "https://arxiv.org/pdf/2606.17118v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "quantization for MoE multimodal LLMs, related to transformer-based language models",
+      "llm_evidence_cn": "MoE多模态大模型的量化，与基于Transformer的语言模型相关",
+      "llm_evidence": "MoE多模态大模型的量化，与基于Transformer的语言模型相关",
+      "canonical_evidence": "MoE多模态大模型的量化，与基于Transformer的语言模型相关",
+      "llm_tldr_en": "Proposes MODE, a modality-decomposed mixed-precision quantization method for MoE-MLLMs, addressing token bias in expert importance estimation.",
+      "llm_tldr_cn": "该论文提出MODE方法，用于混合专家多模态大模型（MoE-MLLM）的专家级混合精度量化。针对现有方法忽略跨模态和视觉内标记偏差的问题，MODE通过模态分解的专家重要性估计实现更准确的量化。实验证明MODE在保持性能的同时显著降低显存占用。该工作为高效部署多模态大模型提供了关键技术。",
+      "llm_tldr": "该论文提出MODE方法，用于混合专家多模态大模型（MoE-MLLM）的专家级混合精度量化。针对现有方法忽略跨模态和视觉内标记偏差的问题，MODE通过模态分解的专家重要性估计实现更准确的量化。实验证明MODE在保持性能的同时显著降低显存占用。该工作为高效部署多模态大模型提供了关键技术。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.17430v1",
+      "source": "arxiv",
+      "title": "CIAN: Multi-Stage Framework for Event-Enriched Image Captioning via Retrieval-Augmented Generation",
+      "abstract": "Event-enriched image captioning describes not only visible content but also the broader context of events, including timing, location, and participants, capabilities missing in most pixel-bound models. We propose the Contextual Image-Article Narrator (CIAN), a multi-stage framework that enriches captions with external narratives. CIAN retrieves relevant articles using SigLIP, summarizes them to guide a Narrative Generation stage with a LoRA-fine-tuned Qwen model, and applies N-Gram-based Refinement for fluency and coherence. On the OpenEvents-V1 benchmark, CIAN achieves high retrieval performance (mAP 0.979) and improves caption quality, increasing CIDEr from 0.030 to 0.094. These results highlight the effectiveness of retrieval-augmented reasoning combined with linguistic refinement for generating context-aware, human-like captions.",
+      "authors": [
+        "Trinh Thi Thu Hien",
+        "Trung-Nghia Le"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-16T02:24:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.17430v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "event-enriched image captioning using LLM and retrieval augmentation",
+      "llm_evidence_cn": "使用LLM和检索增强的事件增强图像描述",
+      "llm_evidence": "使用LLM和检索增强的事件增强图像描述",
+      "canonical_evidence": "使用LLM和检索增强的事件增强图像描述",
+      "llm_tldr_en": "CIAN enriches image captions with external narratives by retrieving relevant articles via SigLIP, summarizing with an LLM, and refining with N-gram based filtering, improving caption quality on OpenEvents benchmark.",
+      "llm_tldr_cn": "传统图像描述只能描述可见内容，无法提供事件上下文。本文提出CIAN，通过SigLIP检索相关文章，用LoRA微调的Qwen模型生成叙事摘要，再经N-gram优化。在OpenEvents数据集上CIDEr从0.030提升到0.094，展示了检索增强LLM在图像描述中的潜力。",
+      "llm_tldr": "传统图像描述只能描述可见内容，无法提供事件上下文。本文提出CIAN，通过SigLIP检索相关文章，用LoRA微调的Qwen模型生成叙事摘要，再经N-gram优化。在OpenEvents数据集上CIDEr从0.030提升到0.094，展示了检索增强LLM在图像描述中的潜力。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.17334v1",
+      "source": "arxiv",
+      "title": "FATE: Pillar Encoding and Frequency-Aware Training for Event-Based Object Detection",
+      "abstract": "Event cameras are bio-inspired sensors that asynchronously capture logarithmic intensity changes, offering inherent advantages in high-speed and high-dynamic-range scenarios. However, the sparse and asynchronous nature of event streams poses a fundamental challenge for modern deep learning architectures. To enable compatibility with standard models, most existing approaches partition the accumulation window into fixed temporal sub-bins. While effective for spatial processing, this internal discretization discards fine-grained temporal structure and constrains inference to the low temporal frequencies imposed by training supervision. To address this limitation, we propose FATE, a unified framework built upon a novel Pillar Encoding (PE). While operating over discrete macro-accumulation windows dictated by the target frequency, PE avoids internal temporal sub-binning. It organizes events into spatial pillars and approximates their intra-window evolution via projection onto a continuous-time orthogonal polynomial basis. This formulation yields an L2-optimal representation that retains rich temporal dynamics in a dense pseudo-image, mitigating information loss under sparse event conditions. To fully leverage this representation, we introduce Frequency-Aware Training (FAT), a soft mean-teacher curriculum that generates temporally dense pseudo-labels, effectively bridging the mismatch between low-frequency supervision and high-frequency inference. Extensive experiments demonstrate that FATE generalizes across architectural paradigms and consistently outperforms strong baselines. It enables robust object detection at high temporal resolutions up to 200 Hz, while incurring minimal overhead in parameter count and inference latency",
+      "authors": [
+        "Md Tawheedul Islam Bhuian",
+        "Kyoung-Don Kang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-15T22:32:09+00:00",
+      "link": "https://arxiv.org/pdf/2606.17334v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "transformer-based object detection with event cameras",
+      "llm_evidence_cn": "基于Transformer的事件相机目标检测",
+      "llm_evidence": "基于Transformer的事件相机目标检测",
+      "canonical_evidence": "基于Transformer的事件相机目标检测",
+      "llm_tldr_en": "FATE proposes Pillar Encoding and frequency-aware training for event-based object detection using transformer-like processing.",
+      "llm_tldr_cn": "FATE针对事件相机数据提出了一种新的柱状编码（Pillar Encoding）和频率感知训练框架。它解决了现有方法因固定时间分箱而丢失细粒度时间结构的问题，通过Transformer风格的处理实现了更高时间分辨率的检测性能。",
+      "llm_tldr": "FATE针对事件相机数据提出了一种新的柱状编码（Pillar Encoding）和频率感知训练框架。它解决了现有方法因固定时间分箱而丢失细粒度时间结构的问题，通过Transformer风格的处理实现了更高时间分辨率的检测性能。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "DETR transformer for object detection paper",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.17522v1",
+      "source": "arxiv",
+      "title": "An expressivity analysis of hierarchical modelling in deep transformers via bounded-depth grammars",
+      "abstract": "Deep neural networks are widely believed to derive their expressive power from their ability to form \\textbf{hierarchical representations}, capturing progressively more abstract and compositional features across layers. In language modeling, \\textbf{transformers} have emerged as the dominant architecture, with early layers capturing local syntactic patterns and later layers encoding more complex clause-level dependencies. While this intuition has shaped model design, there remains a lack of rigorous theoretical work demonstrating \\textbf{how} deep transformers represent such hierarchical structures. In this work, we analyze the expressiveness of deep transformer models through the formal lens of bounded-depth, non-recursive context-free grammars. For this class of grammars, we explicitly construct transformers with positional attention whose depth grows linearly with grammar depth, while the neuron count scales with the number of derivation-tree shapes and quadratically with the number of production rules. Our theoretical results support the linear representation hypothesis by demonstrating that these architectures possess the structural capacity to encode abstract grammatical states into low-dimensional, linearly separable subspaces within the residual stream.",
+      "authors": [
+        "Vinoth Nandakumar",
+        "Qiang Qu",
+        "Pramod Thebe",
+        "Sakshi Khachariya",
+        "Tongliang Liu"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-06-16T05:02:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.17522v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Theoretical analysis of hierarchical representation in deep transformers",
+      "llm_evidence_cn": "深度Transformer层次表示的理论分析",
+      "llm_evidence": "深度Transformer层次表示的理论分析",
+      "canonical_evidence": "深度Transformer层次表示的理论分析",
+      "llm_tldr_en": "Provides a theoretical framework using bounded-depth grammars to analyze how deep transformers represent hierarchical structures, linking layer depth to compositional abstraction.",
+      "llm_tldr_cn": "深度Transformer被认为通过层次化表示捕获抽象特征，但缺乏严格理论证明。本文借助有界深度非递归语法这一形式工具，分析了深度Transformer表达层次结构的能力。研究揭示了层深度与特征抽象程度之间的理论联系，为理解Transformer内部机制提供了形式化基础。该工作填补了实证直觉与理论分析之间的空白。",
+      "llm_tldr": "深度Transformer被认为通过层次化表示捕获抽象特征，但缺乏严格理论证明。本文借助有界深度非递归语法这一形式工具，分析了深度Transformer表达层次结构的能力。研究揭示了层深度与特征抽象程度之间的理论联系，为理解Transformer内部机制提供了形式化基础。该工作填补了实证直觉与理论分析之间的空白。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.17601v1",
+      "source": "arxiv",
+      "title": "Test-Time Training for Robust Text-Guided Open-Vocabulary Object Counting",
+      "abstract": "Text-guided Open-vocabulary Object Counting (TOOC) enables counting arbitrary object categories specified by text prompts, offering substantially greater flexibility than conventional closed-set counting. However, existing TOOC methods are developed and evaluated primarily on ideal images, while real-world scenes often suffer from adverse conditions such as rain, fog, darkness, and sensor noise, which severely degrade visual quality and impair vision-language alignment. To bridge this gap, we introduce Robust-TOOC, the first benchmark for evaluating TOOC under diverse corruption conditions, which covers six representative degradation types: rain, fog, darkness, Gaussian noise, salt-and-pepper noise, and mixed corruption. To improve robustness while preserving the original counting architecture, we propose Dual-TTT, a dual-architecture test-time training framework for TOOC. Specifically, during test-time training, Dual-TTT updates only the Text-guided Lightweight Denoising module (TL-Denoiser), while keeping the original counting network frozen. Inspired by diffusion models, the TL-Denoiser is optimized to remove corruption-aware noise from image representations under degraded conditions. Since only the TL-Denoiser is trained at test time, Dual-TTT is annotation-free and can be seamlessly integrated into existing TOOC models without modifying their original architecture. Extensive experiments on multiple recent TOOC baselines demonstrate the effectiveness of our method.",
+      "authors": [
+        "Hao-Yuan Ma",
+        "Yuda Zou",
+        "Li Zhang",
+        "Yongchao Xu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-16T07:08:02+00:00",
+      "link": "https://arxiv.org/pdf/2606.17601v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "open-vocabulary object counting with vision-language alignment",
+      "llm_evidence_cn": "开放词汇目标计数与视觉语言对齐",
+      "llm_evidence": "开放词汇目标计数与视觉语言对齐",
+      "canonical_evidence": "开放词汇目标计数与视觉语言对齐",
+      "llm_tldr_en": "Robust-TOOC benchmark for text-guided open-vocabulary object counting under corruptions, with test-time training for robustness.",
+      "llm_tldr_cn": "该论文提出首个针对文本引导开放词汇目标计数在多种退化条件下的鲁棒性基准Robust-TOOC，并利用测试时训练策略提升视觉语言对齐的鲁棒性，覆盖雨雾、黑暗、噪声等六种退化类型。",
+      "llm_tldr": "该论文提出首个针对文本引导开放词汇目标计数在多种退化条件下的鲁棒性基准Robust-TOOC，并利用测试时训练策略提升视觉语言对齐的鲁棒性，覆盖雨雾、黑暗、噪声等六种退化类型。",
+      "llm_tags": [
+        "query:vit:composite"
+      ],
+      "matched_query_tag": "query:vit:composite",
+      "matched_query_text": "Papers central to 计算机视觉CCF-A类会议重要论文检索, especially work that connects or combines: Vision Transformer ViT important paper computer vision; DETR transformer for object detection paper; Masked Autoencoder MAE visual representation learning; CLIP model connecting text and images; self-supervised learning with vision transformers; generative adversarial networks for computer vision at CCF-A venues; landmark papers in computer vision after the introduction of Transformer; Find influential papers on object detection from CCF A computer vision conferences; Retrieve seminal works on deep learning based visual recognition from CCF A venues.",
+      "matched_requirement_id": "req-composite-vit",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.18472v1",
+      "source": "arxiv",
+      "title": "Domain Generalizable Adaptation of 3D Vision-Language Models via Regularized Fine-Tuning",
+      "abstract": "Domain adaptation remains a central challenge in 3D vision, especially for multimodal foundation models that align 3D point clouds with visual and textual data. While these models demonstrate strong general capabilities, adapting them to downstream domains with limited data often leads to overfitting and catastrophic forgetting. To address this, we introduce ReFine3D, a regularized fine-tuning framework designed for domain-generalizable tuning of 3D large multimodal models (LMMs). ReFine3D combines selective layer tuning with two targeted regularization strategies: multi-view consistency across augmented point clouds and text diversity through synonym-based prompts generated by large language models. Additionally, we incorporate point-rendered vision supervision and a test-time augmentation mechanism with confidence-based aggregation to further enhance robustness. Extensive experiments across different 3D domain generalization benchmarks show that ReFine3D improves base-to-novel class generalization by 1.36%, cross-dataset transfer by 2.43%, robustness to corruption by 1.80%, and few-shot accuracy by up to 3.11%, outperforming prior state-of-the-art methods with minimal added computational overhead.",
+      "authors": [
+        "Sneha Paul",
+        "Zachary Patterson",
+        "Nizar Bouguila"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-16T20:31:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.18472v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Regularized fine-tuning for domain generalization of 3D vision-language models",
+      "llm_evidence_cn": "面向3D视觉语言模型域泛化的正则化微调",
+      "llm_evidence": "面向3D视觉语言模型域泛化的正则化微调",
+      "canonical_evidence": "面向3D视觉语言模型域泛化的正则化微调",
+      "llm_tldr_en": "ReFine3D combines selective layer tuning with multi-view consistency and synonym-based text diversity to enable domain-generalizable adaptation of 3D vision-language models.",
+      "llm_tldr_cn": "3D视觉语言模型在下游域适配时面临过拟合和灾难性遗忘。ReFine3D提出正则化微调框架，通过选择性层微调、多视角一致性（增强点云）和基于同义词的文本多样性（由LLM生成提示）来提升域泛化能力。实验表明该方法在保持泛化性的同时提高了目标域性能，为3D多模态模型的实际部署提供了有效策略。",
+      "llm_tldr": "3D视觉语言模型在下游域适配时面临过拟合和灾难性遗忘。ReFine3D提出正则化微调框架，通过选择性层微调、多视角一致性（增强点云）和基于同义词的文本多样性（由LLM生成提示）来提升域泛化能力。实验表明该方法在保持泛化性的同时提高了目标域性能，为3D多模态模型的实际部署提供了有效策略。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.18510v1",
+      "source": "arxiv",
+      "title": "Architectural Bias in Face Presentation Attack Detection: A Comparative Study of Vision Transformers and Convolutional Neural Networks",
+      "abstract": "Face Presentation Attack Detection (PAD) systems constitute a critical security layer in biometric authentication; however, existing approaches exhibit systematic performance disparities across demographic groups, disproportionately affecting individuals with darker skin tones. This paper presents a comparative empirical investigation of whether Vision Transformer architectures reduce demographic bias in face PAD systems relative to convolutional baselines. Experiments are conducted on the CASIA-SURF Cross-Ethnicity Face Anti-Spoofing (CeFA) dataset. Three architectures are evaluated: a Multimodal ViT-Tiny trained from scratch, a ResNet18 CNN baseline, and a pretrained DeiT-S fine-tuned on CeFA across African, East Asian, and zero-shot Central Asian demographic groups. DeiT-S achieves the highest overall accuracy of 97.27% and the lowest EER of 0.86%, outperforming ResNet18 at 90.15% accuracy. In terms of fairness, DeiT-S reduces the inter-ethnic ACER gap between African and East Asian subjects to 0.13%, compared to 0.75% reported in an LBP-based work [6], representing an 83% reduction. Most notably, while ResNet18 records a BPCER of 10.44% on zero-shot Central Asian subjects, DeiT-S maintains 2.89% on the same unseen group, demonstrating a 3.6x generalization advantage. These results suggest that pretrained Vision Transformers achieve superior PAD accuracy, produce smaller demographic performance gaps, and generalize more equitably across unseen demographic groups, indicating that cross-demographic fairness in PAD may partly be influenced by architectural design.",
+      "authors": [
+        "Ngela Landon Ntung",
+        "Floride Tuyisenge",
+        "Jema David Ndibwile"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CR"
+      ],
+      "published": "2026-06-16T22:00:27+00:00",
+      "link": "https://arxiv.org/pdf/2606.18510v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "compares Vision Transformer and CNN for face anti-spoofing, studies ViT architecture",
+      "llm_evidence_cn": "比较Vision Transformer和CNN在人脸防伪中的表现，研究ViT架构",
+      "llm_evidence": "比较Vision Transformer和CNN在人脸防伪中的表现，研究ViT架构",
+      "canonical_evidence": "比较Vision Transformer和CNN在人脸防伪中的表现，研究ViT架构",
+      "llm_tldr_en": "Compares ViT and CNN for face PAD, finding ViT reduces demographic bias compared to CNN baselines.",
+      "llm_tldr_cn": "该论文比较了Vision Transformer（ViT）和卷积神经网络（CNN）在人脸呈现攻击检测（PAD）中的性能与人口统计偏差。实验采用多模态ViT、ResNet18和DeiT-S架构，在跨种族数据集上测试。结果表明ViT在降低偏差方面优于CNN，为公平性人脸识别提供了依据。该工作属于ViT在安全领域的应用研究。",
+      "llm_tldr": "该论文比较了Vision Transformer（ViT）和卷积神经网络（CNN）在人脸呈现攻击检测（PAD）中的性能与人口统计偏差。实验采用多模态ViT、ResNet18和DeiT-S架构，在跨种族数据集上测试。结果表明ViT在降低偏差方面优于CNN，为公平性人脸识别提供了依据。该工作属于ViT在安全领域的应用研究。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.18587v1",
+      "source": "arxiv",
+      "title": "Dual Dimensionality for Local and Global Attention",
+      "abstract": "Decoder-only Transformers compute attention over the KV cache of preceding tokens. Keys (and Values) are typically represented with the same dimensionality, regardless of its distance from the prediction target. In natural language, however, the next word is most strongly influenced by the immediately preceding tokens. We hypothesize that local and distant tokens impose asymmetric demands on representational capacity: local tokens are more critical for predicting immediate outputs and thus require richer representations, whereas distant tokens primarily serve as long-range memory, for which lower-dimensional representations may suffice. We formalize this idea as Distance-Adaptive Representation (DAR), implemented in a controlled setting that preserves full-dimensional representations within a local context window while assigning reduced-dimensional representations (e.g. 1/4 of the original dimensionality) to tokens beyond that window. Across multiple pretraining scales (70M to 410M parameters), as well as continued supervised fine-tuning on a 1B-scale model, this approach closely matches the performance of full-dimensional baselines. In contrast, uniformly reducing dimensionality across all token positions leads to worse performance. These results challenge the common assumption that key and value dimensionality should be uniform across token positions. Our findings suggest a new direction for designing attention architectures that adaptively allocate representational capacity across sequences, enabling further reductions in KV cache during inference.",
+      "authors": [
+        "Zhiyuan Wang",
+        "Xuan Luo",
+        "Sirui Zeng",
+        "Xifeng Yan"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-17T01:27:33+00:00",
+      "link": "https://arxiv.org/pdf/2606.18587v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "transformer attention with variable dimensionality for local and global tokens",
+      "llm_evidence_cn": "Transformer注意力中局部与全局token的可变维度",
+      "llm_evidence": "Transformer注意力中局部与全局token的可变维度",
+      "canonical_evidence": "Transformer注意力中局部与全局token的可变维度",
+      "llm_tldr_en": "DAR proposes Distance-Adaptive Representation for transformer attention, using higher dimensionality for local tokens and lower for distant ones, improving efficiency.",
+      "llm_tldr_cn": "解码器Transformer对所有过去token使用相同维度表示，但局部与远程token对预测的影响不同。DAR根据距离调整表示维度：局部token用高维，远程token用低维。在保持全维度的可控设置下，该方法在语言建模任务上提升了效率，验证了注意力不对称假设。该工作为Transformer架构优化提供了新视角。",
+      "llm_tldr": "解码器Transformer对所有过去token使用相同维度表示，但局部与远程token对预测的影响不同。DAR根据距离调整表示维度：局部token用高维，远程token用低维。在保持全维度的可控设置下，该方法在语言建模任务上提升了效率，验证了注意力不对称假设。该工作为Transformer架构优化提供了新视角。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

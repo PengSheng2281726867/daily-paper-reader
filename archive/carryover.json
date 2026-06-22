@@ -1,20 +1,20 @@
 {
-  "generated_at": "2026-06-21T20:21:31.206809+00:00",
-  "updated_date": "20260621",
+  "generated_at": "2026-06-22T21:29:36.533456+00:00",
+  "updated_date": "20260622",
   "carryover_days": 9,
   "tag_states": {
     "vit": {
-      "updated_date": "20260621",
+      "updated_date": "20260622",
       "carryover_days": 9,
       "items": []
     },
     "cv-lm": {
-      "updated_date": "20260621",
+      "updated_date": "20260622",
       "carryover_days": 9,
       "items": []
     },
     "llm-papers": {
-      "updated_date": "20260621",
+      "updated_date": "20260622",
       "carryover_days": 9,
       "items": []
     }
