@@ -1,0 +1,844 @@
+Title: VTOS: Learning to Orchestrate Vision Tools by Co-Searching Solutions and Observers
+
+URL Source: https://arxiv.org/pdf/2606.20728v1
+
+Published Time: Tue, 23 Jun 2026 00:14:20 GMT
+
+Number of Pages: 18
+
+Markdown Content:
+# VTOS: Learning to Orchestrate Vision Tools by Co-Searching Solutions and Observers 
+
+Jinchao Ge 
+
+University of Wollongong 
+
+jge@uow.edu.au 
+
+Lingqiao Liu *
+
+Adelaide University 
+
+lingqiao.liu@adelaide.edu.au 
+
+Shuwen Zhao 
+
+Tianjin University of Technology 
+
+DonutZsw@gmail.com 
+
+Lei Wang 
+
+University of Wollongong 
+
+leiw@uow.edu.au 
+
+Abstract 
+
+Vision foundation tools such as open-vocabulary detectors, segmentation models, and post-processing operators are powerful building blocks for computer vision, but their effectiveness depends heavily on how they are orchestrated: which tools are used, in what order, with what parameters, and under what visual conditions. Existing visual-programming agents typically generate a fixed solution pipeline, making them brittle under dense objects, occlusion, small targets, and domain shift. We introduce VTOS (Vision Tools Orchestration Search), a framework for adaptive visual tool orchestration through joint solution–observer search. VTOS co-searches executable solution programs that compose vision tools such as Grounding DINO, SAM, NMS, and slice-and-detect, together with observer programs that diagnose candidate solutions, identify failure modes, and generate actionable feedback. These observations are accumulated in a shared VisionThoughts knowledge base to guide subsequent search. We evaluate VTOS through two case stud-ies: dense object counting on LVIS-Count and zero-shot plant-disease segmentation on PlantSeg-OOD, which stress different orchestration challenges including threshold calibration, NMS, slicing, mask refinement, and domain generalization. Across both tasks, VTOS outperforms static tool pipelines and agentic visual-programming baselines, showing that co-searching solutions and observers is an effective strategy for adapting vision tools to challenging computer vision tasks. 
+
+1 Introduction 
+
+The development of vision foundation models has changed how computer vision systems can be built. Instead of collecting task-specific data 
+
+> *Corresponding author.
+
+and retraining a dedicated model for every new task, practitioners can increasingly solve vision problems by orchestrating reusable tools: open-vocabulary detectors can localize text-described concepts, segmentation models can refine spatial prompts into masks, visual-language models can provide semantic inspection, and classical oper-ators can structure, filter, or aggregate interme-diate outputs. This tool-based paradigm makes computer vision development more flexible and lightweight, especially when labelled data or train-ing resources are limited. However, it also intro-duces a new challenge: performance now depends not only on the capability of each tool, but on how these tools are composed into an effective task-solving procedure. Visual tool orchestration is far from trivial. A task may require decomposing a high-level re-quest into perceptual subproblems, selecting suit-able tools, deciding how intermediate outputs should be represented and passed between tools, and invoking alternative strategies when an initial pipeline fails. Dense counting, for example, re-quires coordinating detection, duplicate handling, spatial aggregation, and density-aware processing, while fine-grained segmentation often requires lo-calization, mask refinement, and post-processing to work together. As vision foundation tools be-come more general-purpose, the bottleneck in-creasingly shifts from training new models to dis-covering how to orchestrate existing tools. While recent visual-programming methods (e.g., ViperGPT (Surís et al., 2023), Vis-Prog (Gupta and Kembhavi, 2023)) provide an im-portant step toward tool orchestration, they oper-ate in an open-loop fashion without systematically learning from execution failures. Therefore, we argue that effective use of vision foundation tools requires more than one-shot program synthesis. A useful agent should learn an orchestration algo-rithm : an executable procedure that decomposes 1                               
+
+> arXiv:2606.20728v1 [cs.CV] 17 Jun 2026 Q1 · Counting
+> How many apples are in this image?
+> [dense · 41 apples, heavy occlusion]
+> DIRECT TOOL USE ✗
+> VLM (direct): “I’d estimate 15–20 apples — they overlap a lot,
+> hard to be exact.”
+> ungrounded prose, no per-object evidence ✗
+> Fixed detector: fixed-threshold detector over-counts clutter,
+> misses occluded fruit
+> (aggregate zero-shot test MAE 53, Bias +27)
+> Answer: 15–20 ✗(ground truth: 41)
+> VTOS PROGRAM (OURS) ✓
+> boxes = detect (img, "apple" )
+> → 53 candidate boxes
+> boxes = nms (boxes, iou=0.6)
+> → 41 boxes after dedup
+> return count (boxes)
+> Answer: 41 ✓= ground truth
+> — traceable program; intermediate values inspectable
+> Q2 · Segmentation
+> Segment the disease regions on this leaf.
+> [unseen species · irregular lesions]
+> DIRECT TOOL USE ✗
+> VLM (direct): “Lesions near (0.1,0.2)–(0.4,0.5), (0.5,0.3)… — I
+> can’t give exact masks.”
+> fabricated coordinates, no pixel grounding ✗
+> Fixed detector: zero-shot detector collapses on unseen species
+> (small-lesion Dice ≈ 25)
+> Answer: coords ✗(no pixel grounding)
+> VTOS PROGRAM (OURS) ✓
+> boxes = detect (img, "lesion" )
+> → candidate disease regions
+> masks = sam_refine (img, boxes)
+> → 4 pixel-precise masks
+> return masks
+> Answer: 4 masks ✓= pixel-precise
+> — traceable program; intermediate values inspectable
+
+Figure 1: Static tool use fails on hard scenes; VTOS searches an auditable adaptive program. For two representative tasks—dense object counting (Q1) and out-of-distribution leaf-disease segmentation (Q2)—directly applying a VLM yields ungrounded prose answers, while a fixed-threshold detector breaks down under clutter, occlusion, and unseen species (aggregate zero-shot test MAE 53 / Bias +27 for counting; small-lesion Dice ≈ 25 
+
+for segmentation). VTOS instead searches a short, executable program whose intermediate values are auditable (e.g., candidate detections → NMS → final count), recovering the correct answer; its recovered detections (boxes) and segmentation masks are overlaid on the input images (left). The deployed artefact is an inspectable program, not opaque prose. 
+
+the task, composes available tools, manages inter-mediate outputs, and adapts its strategy when pre-vious attempts fail. This motivates the key idea of VTOS (Vision Tools Orchestration Search): co-searching solu-tions and observers . In VTOS, the search process learns two coupled forms of executable knowl-edge. The first is a solution program , which or-chestrates vision tools to solve the target task. The second is an observer program , which inspects candidate solutions, analyzes their execution be-havior, and produces diagnostic observations that guide future solution generation. The observer is not a fixed critic prompt or a hand-designed eval-uator; it is itself a searched program whose role is to transform execution feedback into actionable insight. The framework realizes this idea through a Producer–Analyzer architecture. The Producer proposes candidate solution programs from a con-strained tool library, and each candidate is exe-cuted and evaluated in a sandboxed environment. The Analyzer proposes observer programs that ex-amine top-ranked solutions using execution traces, numerical summaries, visual diagnostics, and a budgeted set of visual-inspection tools. The re-sulting observations are accumulated in a shared 
+
+VisionThoughts Knowledge Base, which stores empirical insights, tool-use hypotheses, and ex-ploration directions. This knowledge conditions subsequent rounds of both solution and observer search, forming a closed loop in which the system improves both its task-solving strategy and its un-derstanding of previous failures. Ultimately, the final output of this search is an inspectable Python program that orchestrates vision foundation tools and can be deployed efficiently without invoking VLMs at test time. We then evaluate VTOS through two case stud-ies that expose different visual-tool orchestra-tion challenges. The first is dense object count-ing on LVIS-Count, a 180-image subset sam-pled from LVIS, where successful solutions must coordinate detection, spatial aggregation, dupli-cate handling, and density-aware processing un-der object crowding and occlusion. The second is zero-shot plant-disease segmentation on PlantSeg-OOD, a 180-image species-disjoint subset sam-pled from PlantSeg, where open-vocabulary local-ization must be combined with mask refinement 2and post-processing under species-level domain shift and small target regions. These tasks serve as representative settings where static tool orches-tration fails in different ways and where solution– observer co-search can demonstrate its value. In summary, our contributions are: • Tool orchestration as algorithm search. 
+
+We formulate computer vision task solv-ing as learning orchestration algorithms over reusable vision foundation tools, rather than retraining task-specific models. • Joint solution–observer co-search via aProducer–Analyzer loop. We introduce a co-search framework that learns both task-solving programs and diagnostic observer programs, instantiated through a Producer– Analyzer architecture whose observations ac-cumulate in a shared VisionThoughts Knowl-edge Base to guide subsequent search. • Case studies on counting and segmenta-tion. We evaluate VTOS on LVIS-Count and PlantSeg-OOD, showing improvements over static tool pipelines and agentic visual-programming baselines. 
+
+2 Related Work 
+
+Code-Based Visual Reasoning. Neuro-symbolic approaches that compile natural-language queries into executable programs have emerged as a com-pelling alternative to monolithic vision-language models (VLMs), which are widely observed to hallucinate numerical and spatial details when asked to count objects or localise regions — the failure mode contrasted in Figure 1. ViperGPT (Surís et al., 2023) and VisProg (Gupta and Kembhavi, 2023) synthesise Python programs invoking pre-trained vision APIs, yielding com-positional interpretability that end-to-end models such as LLaVA (Liu et al., 2023a) cannot pro-vide. AutoMMLab (Yang et al., 2024) and Kim et al. (2025) extend this paradigm toward fully autonomous computer-vision pipelines driven by natural-language specifications. Despite their promise, these systems operate in an open-loop 
+
+fashion: they rely on a single generation pass and lack mechanisms to interpret execution fail-ures or iteratively revise solutions. Program syn-thesis research (Gao et al., 2023) has long recog-nised the importance of iterative refinement, yet the closed-loop integration of runtime feedback with a structured search over candidate algorithms remains underexplored. VTOS closes this gap by treating both runtime errors and analyzer-observed failure modes as informative signals that drive a Producer–Analyzer algorithm search, enabling systematic hypothesis revision rather than one-shot generation. 
+
+LLM-Based Agentic Reasoning. ReAct (Yao et al., 2023) demonstrated the efficacy of alter-nating reasoning and action steps in language models, and PAL (Gao et al., 2023) showed that program-aided decomposition grounds LLM rea-soning in executable logic. MM-ReAct (Yang et al., 2023) extends this paradigm to multimodal settings by coupling ChatGPT with vision-expert pools. Self-correction through feedback loops has gained traction via Reflexion (Shinn et al., 2023), which uses verbal reinforcement learning for iter-ative improvement, REFINER (Paul et al., 2024), which trains a critic to provide structured rea-soning feedback, and Self-Refine (Madaan et al., 2023), which has a single LLM iteratively cri-tique and refine its own output. The Producer– Analyzer split in VTOS inherits this genera-tor/critic structural motif, which it shares with actor-critic and generator-discriminator architec-tures more broadly. Unlike those approaches, however, VTOS anchors the distinction in tool af-fordances rather than prompts: the Analyzer is given a separate, budgeted Visual Toolbox that the Producer cannot access. Consequently, deployed programs cannot smuggle in analyzer-only VLM tools, and the asymmetric-modality boundary is preserved by construction. Unlike probabilistic self-critique or prompt-tuning approaches, VTOS grounds its correction signal in deterministic in-terpreter execution. Syntax errors, tracebacks, and variable-state inspections provide “hard” con-straints that enable more reliable search guidance. 
+
+AutoML agent. Recent work has increasingly framed machine learning engineering as an LLM-agent-based search problem, where agents iter-atively propose code, run experiments, observe validation feedback, and refine candidate solu-tions. MLE-Bench provides a key benchmark for this direction by evaluating agents on real-istic Kaggle-style ML tasks involving data pro-cessing, model training, debugging, and submis-sion generation (Chan et al., 2025). Building on this benchmark, AIDE explores tree search over executable code solutions (Jiang and others, 2025), R&D-Agent decomposes the process into 3Solution Synthesis  Diagnosis 
+
+> LLM
+
+Producer                        
+
+> Solution Synthesizer
+> TFKₜ₋₁ Sₜ₋₁
+> for tin slice_grid(img):
+> b+= gdino(t, q, θ)
+> b=nms_filter(b, ρ)
+> m=sam_refine(img, b)
+> return count(m)
+> Solution Program πₖ
+> $ Evaluate on D
+> score ·trace ·failures
+> Deployed π* · calls F only
+> Solution Archive S ₜ
+> π₁
+> π₃
+> π₂
+> Top-K
+> Tools F
+> G-DINO SAM
+> NMS
+> Tools G · ≤5 VLM
+> inspect diagnose
+> LLM
+
+Analyzer                             
+
+> Diagnostic Critic
+> TGKₜ₋₁ Top(Sₜ)
+> for sin top(S_t):
+> r=find_failures(s)
+> o+= vlm_verify(img, r)
+> o+= density_hotspots(img)
+> return digest(o)
+> Observer Program αₜ
+> $ Observe on D
+> failure modes ·
+> observations
+> K candidates
+> run αₜ
+> run
+> bar s(π) ∝
+> VLM tools search-only — deployed π* never calls a VLM
+> VisionThoughts K ₜ
+> insights · analyzer-insights
+> slicing helps dense
+> hypotheses
+> NMS merges overlaps
+> key problems
+> miscounts dense crowds
+> directions · status
+> try region filtering
+> z : score · trace ₜ
+> Top(S ) ₜ
+> Sₜ
+> K ₋₁ ₜ
+> top-ranked S ₋₁ ₜK ₋₁ ₜ
+> write O ₜ
+> × N
+> iterations
+> Fcalls G
+> argmax s(π)
+> data conditioning Top(S ) ₜ
+> Producer / solution Analyzer / observer Deployment Shared state S , K ₜₜTool libraries F, G
+> Slice
+> seeded by π₀ (DINO baseline)
+
+</> 
+
+</> Figure 2: VTOS Framework. The framework runs for ×N iterations. In each iteration, a Producer proposes K
+
+candidate solution programs from a constrained tool library; programs are executed and scored by a sandboxed subprocess evaluator. An Analyzer then proposes observer programs targeting the top-ranked solutions Top( St)
+
+(amber coupling line), generating qualitative failure observations via a budgeted toolbox of pure-CV and VLM-as-eyes tools. All observations and empirical insights are written into a shared VisionThoughts Knowledge Base—the 
+
+central state carried across iterations. A dashed Search / Deployment Boundary separates the search phase from deployment: at test time only the top-ranked solution program is deployed (asymmetric modality—VLMs serve only as diagnostic feedback during search, not at inference). 
+
+researcher and developer agents for iterative so-lution building (Yang et al., 2025), and AI Re-search Agents for Machine Learning studies how different search policies, including greedy, evolu-tionary, and MCTS-style strategies, affect perfor-mance on MLE-Bench (Toledo et al., 2025). Other recent systems improve specific components of the loop: MLE-STAR combines web-based model re-trieval with targeted refinement (Nam et al., 2025), MLE-Dojo provides an interactive Gym-style en-vironment for training and evaluating ML agents (Qiang et al., 2025), and recent work on ideation diversity and learned ideators highlights the im-portance of generating diverse and useful research directions before implementation (Audran-Reiss et al., 2025; Zhang et al., 2026). Synthetic Sand-box further studies scalable training environments for ML engineering agents (Zhou et al., 2026). Together, these works move beyond classical Au-toML over predefined model and hyperparameter spaces, toward open-ended search over ML pro-grams, experimental strategies, and algorithmic design choices. 
+
+3 Method 
+
+We present VTOS (Vision Tools Orchestration Search), a framework for learning to orchestrate vision foundation tools through solution–observer co-search . Figure 2 illustrates the overall architec-ture. Instead of retraining model weights or gener-ating a single open-loop program, VTOS searches over executable tool-use procedures for solving a target computer vision task. VTOS runs a sin-gle iterative search loop. In each iteration, a Pro-ducer module (§3.1) first proposes candidate so-lution programs from a constrained tool library, and the system executes and evaluates these can-didates to obtain scores, traces, intermediate out-puts, and failure cases. An Analyzer module (§3.2) then proposes observer programs for selected eval-uated solutions, converting their execution behav-ior into diagnostic observations. These observa-tions are written into a shared Knowledge Base 
+
+(§3.3), together with empirical insights, tool-use hypotheses, and exploration directions. The up-dated Knowledge Base conditions the next itera-tion, allowing future solution and observer propos-4als to be informed by previous execution feedback. Both the Producer and the Analyzer are instan-tiated by the same underlying LLM, conditioned on different prompts and tool libraries; the same model also performs the Knowledge Base update. 
+
+3.1 Producer: History-Aware Search for Orchestration Programs 
+
+At each iteration t, the Producer proposes candi-date solution programs that orchestrate the avail-able vision tools to solve the target task. Each solution program π is an executable Python pro-cedure over a constrained solution-tool library F,which may include open-vocabulary localization, segmentation, region processing, spatial aggrega-tion, filtering, and post-processing primitives. The Producer is therefore not asked to answer a sin-gle visual query directly; rather, it searches for a reusable orchestration algorithm that can be ap-plied across the task distribution. The Producer is history-aware: it conditions on the task, the solution-tool library, prior solution snapshots, and the current Knowledge Base — making each proposal an informed revision rather than an independent restart. Formally, the Producer generates K candidate solution programs as 
+
+Πt = {π(t)1 , . . . , π (t) 
+
+> K
+
+}∼ pLLM 
+
+ · | T , F, Kt−1, St−1
+
+, (1) where St−1 is the archive of evaluated solution snapshots. To constrain the context length, in practice we only select several top-ranked solu-tions from the archive St−1 for the Producer to generate the next solutions. Information about other trials will be absorbed in the knowledge base 
+
+Kt−1. The conditioning of St−1 and Kt−1 allows the Producer to generate candidates that are not independent restarts, but informed revisions of the current search trajectory. For example, if previ-ous observers found that a pipeline failed because an intermediate representation was unreliable, the Producer can explore a different decomposition or introduce an alternative tool chain rather than merely perturbing the previous code. Such an agentic-style algorithm search has proven more ef-fective as shown in recent studies (Qu et al., 2026). Each proposed solution program is executed in a sandboxed environment on the task dataset D.The evaluator records the program output, task score, execution trace, errors, intermediate states, and representative success or failure cases: 
+
+z(t) 
+
+> k
+
+= Evaluate  π(t) 
+
+> k
+
+, D,
+
+St = St−1 ∪ { z(t) 
+
+> k
+
+}Kk=1 .
+
+(2) Here, z(t) 
+
+> k
+
+denotes a solution snapshot containing both quantitative performance and execution ev-idence. These snapshots are later inspected by the Analyzer and may also be selected as exam-ples for future Producer calls. Constraining pro-grams to F keeps the search executable and repro-ducible, while the history-aware prompt context enables the Producer to explore different decom-positions, tool compositions, control flows, inter-mediate representations, and recovery strategies based on what has already been learned during search. 
+
+3.2 Analyzer: Learning Solution-Conditioned Diagnostics 
+
+The Analyzer converts the behavior of candidate solutions into actionable feedback for the next search iteration. A task score can rank solution programs, but it rarely explains why a solution fails or how the orchestration should be revised. Therefore, VTOS treats diagnosis itself as a learn-able object: at each iteration, the Analyzer gener-ates an executable observer program that inspects the current best solution attempts. Formally, given the task T , observer-tool li-brary G, Knowledge Base Kt−1, and selected top solution snapshots Top( St), the Analyzer pro-poses one observer program: 
+
+αt ∼ pLLM 
+
+ · | T , G, Kt−1, Top( St). (3) where αt denotes the proposed observer program, generated by the same LLM as in Eq. (1). Condi-tioning on Top( St) is important: it tells the LLM what the current best solutions are, how they are implemented, and where they still fail. The re-sulting diagnosis code is therefore customized to the actual solution strategies under consideration, rather than being a generic fixed critic. Executing the observer program produces diag-nostic observations: 
+
+Ot = αt
+
+ Top( St), D; G. (4) These observations may identify recurring failure modes, unreliable intermediate outputs, regime-specific weaknesses, or differences between com-peting solution strategies. They are then written 5into the Knowledge Base and used to guide future solution generation. The observer program is used only during search; the final deployed solution is selected from the solution archive and calls only the solution-tool library F, preserving an asymmetric-modality boundary at deployment. 
+
+3.3 VisionThoughts: Knowledge-Guided Co-Search 
+
+The Knowledge Base, denoted by Kt, is the shared memory that connects iterations of solution– observer co-search. It stores what the system has learned from previous solution attempts and diag-nostic observations, so that later generations are informed by the accumulated search history rather than starting from scratch. 
+
+Kt is organized into structured fields — in-sights, hypotheses, key problems, and exploration directions — defined fully in Appendix G. After each iteration, the same LLM updates the Knowledge Base from the evaluated solution snap-shots and the observer-generated diagnostic obser-vations — deciding which insights and hypotheses to add, which to confirm or refute against the new evidence, and which exploration directions to pur-sue or prune: 
+
+Kt = Update  Kt−1, St, O t
+
+. (5) This update records which orchestration strategies worked, which failed, under what conditions they failed, and what should be explored next. The up-dated Kt then conditions both the Producer and the Analyzer in the next iteration: the Producer uses it to generate better solution programs, while the Analyzer uses it to design more targeted diagnos-tic observers. 
+
+4 Evaluation Setup 
+
+We evaluate VTOS on two visual reasoning tasks whose static-tool failure modes are well-characterised but orthogonal: dense object count-ing stresses calibration of detection thresholds and non-maximum suppression under occlusion, while grounded segmentation stresses spatial grounding and pixel-precise boundary recovery on out-of-distribution categories. Both tasks derive ground truth from existing annotations (LVIS bounding boxes; PlantSeg pixel masks), enabling rigorous evaluation without subjective labelling (Figure 3, Appendix A). 
+
+Algorithm 1 VTOS: Solution–Observer Co-Search 
+
+Require: Task T , dataset D, solution tools F, ob-server tools G, iterations N
+
+Ensure: Best solution program π⋆ 
+
+> 1:
+
+Initialize knowledge base K0 and solution archive S0 
+
+> 2:
+
+for t = 1 , . . . , N do  
+
+> 3:
+
+Sample K candidates: Πt ←
+
+Producer( T , F, Kt−1, St−1) 
+
+> 4:
+
+St ← S t−1 ∪ Evaluate(Π t, D) 
+
+> 5:
+
+αt ← Analyzer( T , G, Kt−1, Top( St))  
+
+> 6:
+
+Ot ← Observe( αt, Top( St), D) 
+
+> 7:
+
+Kt ← Update( Kt−1, St, O t) 
+
+> 8:
+
+end for  
+
+> 9:
+
+return π⋆ = arg max 
+
+> π∈S N
+
+s(π)
+
+4.1 Counting: LVIS-Count 
+
+The counting task uses LVIS-Count , a 180-image subset sampled from LVIS (Gupta et al., 2019) spanning 30 categories across five semantic do-mains (60 train / 20 val / 100 zero-shot test). Test images fall into two density regimes: Nor-mal (10 ≤ N ≤ 50 ), where threshold and NMS calibration dominate, and Extreme (51 ≤ N ≤
+
+100 ), where heavy occlusion forces algorithmic strategy shifts. We exclude the Sparse regime (N < 10 ) because zero-shot detectors already sat-urate it (Grounding DINO at low threshold reaches 
+
+≥ 0.45 mIoU), giving no discriminative signal be-tween methods. 
+
+4.2 Segmentation: PlantSeg-OOD 
+
+The segmentation task uses PlantSeg-OOD , a 180-image species-disjoint subset of the public PlantSeg benchmark, split 60/20/100 train/val/test across 24 plant species, with the 10 test species held out from the 14 train/val species, so the 100-image test set evaluates VTOS on 21 disease classes from 10 plant species never seen during search. Lesions are stratified by mask-area ratio into Small (area < 10% , discovery is the bottle-neck) and Moderate (10% –30% , boundary pre-cision is the bottleneck) tiers; the original large 
+
+tier ( ≥ 30% ) is excluded so reported scores can-not be inflated by trivially-large foreground area. The 100-image test split contains 56 small and 44 
+
+moderate lesions. 6Table 1: LVIS-Count Overall Metrics. Aggregated performance on the 100-image zero-shot test set (no density stratification). Bias is signed mean count error (negative = undercount; zero is best). Best per column in bold . All VTOS rows use Sonnet 4.6 as the LLM and Grounding DINO + SAM as the Vision Foundation Model (VFM) toolbox. Per-density breakdown is in Table 3.                                                               
+
+> Family Method MAE ↓RMSE ↓Bias ( ↓ | · | )mIoU% ↑
+> End-to-End VLM Sonnet 4.6 (Count Only) 35.13 56.88 −4.35 —Sonnet 4.6 (Direct Bbox) 35.18 42.31 −33 .64 7.54 Qwen3-VL-8B (Direct) 54.26 54.26 −54 .26 3.38 Qwen3-VL-32B (Direct) 48.32 47.26 −47 .26 9.98
+> Specialist Grounding DINO (thr=0.10) 52.76 77.61 +27 .44 32.19 CountGD (vanilla) 43.01 126.82 +32 .05 36.13 CountGD (Crop+NMS) 48.84 156.13 +42 .52 36.59
+> Heuristics SAHI (DINO) 46.57 50.42 −44 .65 15.91
+> Agentic ReAct (Sonnet 4.6 + DINO) 46.31 52.60 −46 .03 19.66 CodeAct (Sonnet 4.6 + tools) 39.38 49.66 −32 .40 29.21 Reflexion (Sonnet 4.6 + visual critic) 44.28 56.54 −25 .88 24.91
+> VTOS (ours) Analyzer OFF 32.83 47.86 −16 .39 36.75 Analyzer ON 23.36 37.77 −4.02 40.48
+> VTOS (Analyzer ON) wins MAE, RMSE, Bias, and mIoU. The per-density-tier breakdown is in Table 3 (Appendix).
+
+4.3 Evaluation Metrics 
+
+For counting we report mIoU , the mean Intersection-over-Union between predicted and ground-truth bounding boxes after a Hungarian-style one-to-one match constrained to symmetric centre-in-box hits, and MAE , the mean absolute error in object count per image. We addition-ally report counting Bias (signed mean error), RMSE (root-mean-square count error), and per-density-tier breakdowns. For segmentation we report Dice mask (pixel-level Dice coefficient between predicted and ground-truth masks; our primary segmentation metric) and mIoU mask (pixel-level IoU averaged across instances). Per-tier breakdowns ( small /
+
+moderate ) expose where each method fails. 
+
+5 Experiments 
+
+5.1 Experimental Setup 
+
+We evaluate on the two tasks described in §4 using the metrics defined in §4.3. The 80-image LVIS-Count training split is used for algo-rithm search; all results below are on the held-out 100-image zero-shot test set. We compare against four baseline families: (i) direct end-to-end VLM prompting (Sonnet 4.6 Count-Only and Direct-Bbox; Qwen3-VL-8B and 32B Direct), (ii) specialist counting/detection models (Grounding DINO (Liu et al., 2023b) at varying thresholds; CountGD (Amini-Naieni et al., 2024) vanilla and Crop+NMS), (iii) heuristic pipelines (SAHI-style slice-and-detect (Akyon et al., 2022)), and (iv) agentic baselines (ReAct (Yao et al., 2023), Code-Act (Wang et al., 2024), Reflexion (Shinn et al., 2023) with visual critique). VTOS’s search bud-get defaults to N =15 iterations (Appendix E.2), with N =25 for ceiling numbers with the Analyzer module enabled. Because no random seed is fixed and program synthesis is stochastic, independent runs of the same configuration can synthesize dif-ferent programs and therefore yield different num-bers; Table 1 reports a single conservative run, while the appendix ablations report separate runs. 
+
+5.2 Counting: LVIS-Count 
+
+Table 1 reports aggregate zero-shot test-set metrics across four baseline families and two VTOS con-figurations; per-density stratification of the same 13 methods is in Table 3 (Appendix). 
+
+VTOS dominates the aggregate metrics. The full VTOS (Analyzer ON, N =15 ) wins MAE (23.36), RMSE (37.77), Bias ( −4.02 ), and mIoU (40.48) on the aggregate test set — the four met-rics that jointly measure counting accuracy, scale-aware error, signed bias, and box localisation. VTOS’s improvement over the strongest specialist (CountGD vanilla) is +4 .4 mIoU (40.48 vs. 36.13) at 54% of its MAE (23.36 vs. 43.01); direct-Bbox VLM prompting (Sonnet 4.6 or Qwen3-VL) trails at 3–10% mIoU, confirming end-to-end VLMs cannot ground at this scale. On the per-density breakdown, VTOS (Analyzer ON) wins Normal mIoU (44.24), Normal MAE (17.28), and Extreme MAE (29.44), while CountGD Crop+NMS edges 7Table 2: PlantSeg-OOD zero-shot results. Dice mask (%) on the 100-image OOD test set; species and diseases are entirely held out from train/val. “All” = mean over the test set; “Mod.” / “Small” = stratified means on the two difficulty tiers. VTOS Base is the configuration without analyzer-loop diagnostics; VTOS adds the Analyzer step. Bold = best in column.                                                   
+
+> Method LLM Dice All ↑Dice Mod. ↑Dice Small ↑mIoU All ↑
+> Detector-only baselines
+> SAM 2 (segment-everything) —20.05 30.76 11.64 3.71 SAM 2 + CLIP (vanilla zero-shot) —23.11 32.04 16.09 5.75 Grounded-SAM 2 (zero-shot) —36.56 51.24 25.03 9.75
+> VLM zero-shot
+> VLM-direct GPT-4o-mini 17.30 21.53 13.98 4.61 VLM-direct Sonnet 4.6 30.45 42.18 21.24 9.22
+> Iterative / agentic
+> Reflexion ( K=3 )Sonnet 4.6 31.62 38.14 26.50 10.57 VisProg Sonnet 4.6 36.33 45.79 28.90 14.27 VTOS Base (Ours) Sonnet 4.6 36.79 45.30 30.10 12.84
+> VTOS (Ours) Sonnet 4.6 39.38 50.00 31.03 13.48
+
+Extreme mIoU (37.06 vs 36.73), motivating the Analyzer-budget ablation in §5.4. 
+
+Component contribution. Within VTOS, the Analyzer module contributes the largest gain: en-abling the Analyzer adds +3 .7 aggregate mIoU and cuts MAE by 9.5 points ( 32 .83 → 23 .36 ). 
+
+5.3 Cross-Domain Generalisation: PlantSeg-OOD 
+
+To probe transfer beyond counting, we benchmark on PlantSeg-OOD (see §4.2 for dataset details) against detector-only baselines (SAM 2 (Ravi et al., 2024), SAM 2+CLIP (Radford et al., 2021), and Grounded-SAM 2), agentic baselines (Vis-Prog, Reflexion), and direct VLM prompting. Ta-ble 2 reports zero-shot Dice mask and mIoU mask on the 100-image OOD test split (56 small + 44 mod-erate lesions). 
+
+Main segmentation result. VTOS attains the best Dice mask on the All set ( 39 .38 vs. 36 .56 for Grounded-SAM 2) and on the Small tier ( 31 .03 
+
+vs. 28 .90 VisProg, 25 .03 Grounded-SAM 2), where the Producer–Analyzer advantage is largest: static detectors frequently miss lesions below 10% of image area. Adding the Analyzer loop to VTOS Base lifts Dice All by +2 .59 and Dice Small by +0 .93 .
+
+5.4 Ablation Summary 
+
+We report four verified ablations in Appendix E: (i) search-iteration budget N ∈ { 5, 10 , 15 , 20 };(ii) Analyzer Diagnostic toggle; (iii) per-iteration proposal count K ∈ {1, 3}; (iv) DINO confidence-threshold sensitivity. The Analyzer ablation is the key finding: at fixed budget N =10 ,the Analyzer cuts MAE by 36% ( 33 .51 → 21 .38 )and drives Bias from +11 .6 to near-zero ( +0 .6); raising the budget to N =25 attains the best mIoU in the experiment matrix ( 41 .66 ). Appendix E also reports the per-density counting breakdown across all 14 methods (Table 3), a density-tier mIoU trajectory under Producer–Analyzer search, and a qualitative case-study walkthrough of a sin-gle search run. 
+
+5.5 Discussion 
+
+VTOS’s advantage comes from treating vision tools as scene-sensitive dynamic instruments: the Producer–Analyzer search discovers per-scene pa-rameter combinations (DINO threshold 0.10 –
+
+0.15 , tighter NMS IoU ≈ 0.3, morphological di-lation) through hypothesis-driven trial-and-error that one-shot program synthesis cannot. CountGD edges Extreme-tier mIoU by 0.3pp because it is a purpose-built dense-scene counter, but pays with 
+
++32 .05 Bias and aggregate MAE nearly double VTOS’s — the two systems reward orthogonal capabilities. The default N =15 budget saturates the Analyzer-OFF configuration; enabling the An-alyzer extends gains up to N =25 , beyond which compute yields diminishing returns. Listing 1 (Appendix H) gives a representative analyzer program; to show what such diagnos-tics buy, we trace the PlantSeg-OOD run behind Table 2 (its full trajectory is in Appendix H). The Analyzer’s observations isolate a sequence of distinct failure modes: small lesions go un-detected at the seed’s high detection threshold, 8SAM mask boundaries come back ragged, and a bare disease query mislocalises on unfamiliar plant species. The search converts each observa-tion into a targeted, auditable revision — lowering the detection threshold to 0.15 with an area filter, adding clean_mask boundary post-processing, grounding the query as “ disease on plant ”, and loosening NMS to preserve co-located lesions — which the Producer composes into its best pro-gram, raising this run’s training-split Dice from 
+
+32 .90 to 40 .00 . Aggregated over the held-out test set, the same diagnose →revise loop yields the 
+
++2 .59 Dice-All / +0 .93 Dice-Small gain of VTOS over VTOS Base in Table 2, turning an opaque score gap into auditable code edits. 
+
+6 Conclusion 
+
+We have presented VTOS, a Producer–Analyzer search framework that redefines visual reason-ing as a dynamic, self-evolving algorithm search rather than a static, one-shot program synthesis task. By treating vision tools as dynamic instru-ments requiring scene-specific calibration rather than static oracles assumed to be infallible, our approach addresses a fundamental yet overlooked brittleness in existing neuro-symbolic reasoning systems. The Producer loop proposes candidate algorithms drawn from a constrained tool library, the Analyzer loop proposes diagnostic programs that surface qualitative failure modes, and a shared Knowledge Base of verified insights and hypothe-ses guides both loops across iterations. Exper-imental results on dense object counting (LVIS-Count) and grounded segmentation (PlantSeg-OOD) demonstrate that this search-based self-correction yields substantial improvements over direct VLM prompting, specialist detectors, and program-synthesis baselines, particularly in high-density counting and out-of-distribution segmen-tation regimes where static toolchains collapse. 
+
+Limitations 
+
+Scope of evaluation. Our experiments cover two visual-reasoning tasks: dense object count-ing on LVIS-Count (180 images, 30 categories, English category labels grouped into 5 seman-tic domains) and zero-shot grounded segmentation on PlantSeg-OOD (180 images across 24 plant species; the 10 test species are held out from train/-val). Generalisation to other visual domains (med-ical imaging, satellite, document understanding), to languages other than English, and to compo-sitional queries that mix counting with relational reasoning is not evaluated; we expect degradation under each of these shifts. 
+
+Compute and reproducibility. VTOS is a test-time search method with no parameter updates, so reproduction does not require GPU training in-frastructure. A full N =15 search run with the Analyzer-ON configuration issues approximately 
+
+90 calls to a single LLM (Claude Sonnet 4.6, used identically for the Producer, the Analyzer, and the Knowledge-Base update — not an ensemble of different models), plus an equivalent number of subprocess evaluations against the VFM toolbox per task; reduced-budget configurations ( N =5 ,Analyzer OFF) recover most of the gain at pro-portionally lower cost (Appendix E). 
+
+Tool-use safety. VTOS delegates execution to external VFM tools (Grounding DINO, SAM, NMS) and to an LLM API. The benchmark does not include adversarial tool inputs (e.g., im-ages crafted to cause specific NMS-threshold fail-ures); production deployment would require ad-ditional sandboxing of the subprocess evaluator, rate-limiting on the LLM/API budget, and audit-logging of the deployed program output. 
+
+Reasoning ceiling. Performance is bounded by the intersection of three capability ceilings: the VLM’s diagnostic fidelity during Analyzer steps, the LLM’s program-synthesis capability during Producer steps, and the VFM toolbox’s percep-tual expressiveness at deployment. When a fail-ure mode falls outside this intersection the Knowl-edge Base records it as an U NVERIFIED hypoth-esis, but the search cannot self-correct beyond its tool repertoire; disentangling these three ceilings empirically is left to future work. Moreover, the tool library is fixed: VTOS composes and cali-brates existing primitives but cannot invent per-ceptual operators beyond those provided. 
+
+Acknowledgments 
+
+This research was supported by the Australian Government through the Australian Research Council’s Discovery Projects funding scheme (project DP220101784). 
+
+References        
+
+> Fatih Cagatay Akyon, Sinan Onur Altinuc, and Alptekin Temizel. 2022. Slicing aided hyper infer-ence and fine-tuning for small object detection. In
+
+92022 IEEE international conference on image pro-cessing (ICIP) , pages 966–970. TLDR: An open-source framework called Slicing Aided Hyper In-ference (SAHI) is proposed that provides a generic slicing aided inference and fine-tuning pipeline for small object detection, and is integrated with Detec-tron2, MMDetection and YOLOv5 models. Niki Amini-Naieni, Tengda Han, and Andrew Zis-serman. 2024. CountGD: Multi-modal open-world counting. In Advances in neural information pro-cessing systems , volume 37, pages 48810–48837. Curran Associates, Inc. Alexis Audran-Reiss, Jordi Armengol Estapé, Karen Hambardzumyan, Amar Budhiraja, Martin Josi-foski, Edan Toledo, Rishi Hazra, Despoina Magka, Michael Shvartsman, Parth Pathak, Justine T. Kao, Lucia Cipolina-Kun, Bhavul Gauri, Jean-Christophe Gagnon-Audet, Emanuel Tewolde, Jenny Zhang, Taco Cohen, Yossi Adi, Tatiana Shavrina, and Yoram Bachrach. 2025. What does it take to be a good AI research agent? Studying the role of ideation diversity. arXiv preprint arXiv:2511.15593 . ArXiv: 2511.15593 [cs.AI]. Jun Shern Chan, Samuel Chow, Oliver Jaffe, Matias D. Aung, Daniel Sherburn, Evan Mays, Giulio Starace, Kevin Liu, Leon Maksin, Tejal Patwardhan, Lil-ian Weng, Giovanni Monea, Jiahai Peng, Channing Yang, Kevin Wu, Steven Wu, Aaron Aung, Daniel McDuff, Josh White, and 3 others. 2025. MLE-Bench: Evaluating machine learning agents on ma-chine learning engineering. In International confer-ence on learning representations .Yumin Choi, Jinheon Baek, and Sung Ju Hwang. 2025. System prompt optimization with meta-learning. 
+
+arXiv preprint . ArXiv:2505.09666 [cs] TLDR: This work introduces the novel problem of bilevel sys-tem prompt optimization, whose objective is to de-sign system prompts that are robust to diverse user prompts and transferable to unseen tasks, and pro-poses a meta-learning framework that meta- learns the system prompt by optimizing it over various user prompts across multiple datasets. Luyu Gao, Aman Madaan, Shuyan Zhou, Uri Alon, Pengfei Liu, Yiming Yang, Jamie Callan, and Gra-ham Neubig. 2023. PAL: program-aided language models. In International conference on machine learning, ICML 2023, 23-29 july 2023, honolulu, hawaii, USA , Proceedings of machine learning re-search, pages 10764–10799. PMLR. Tex.bibsource: dblp computer science bibliography, https://dblp.org tex.timestamp: Thu, 16 Oct 2025 19:53:09 +0200. Agrim Gupta, Piotr Dollár, and Ross Girshick. 2019. LVIS: A dataset for large vocabulary instance seg-mentation. arXiv preprint . ArXiv:1908.03195 [cs]. Tanmay Gupta and Aniruddha Kembhavi. 2023. Vi-sual Programming: Compositional visual reasoning without training. In 2023 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) ,pages 14953–14962, Vancouver, BC, Canada. IEEE. TLDR: Visprog avoids the need for any task-specific training, and uses the incontext learning ability of large language models to generate python-like mod-ular programs, which are then executed to get both the solution and a comprehensive and interpretable rationale. Yutai Hou, Hongyuan Dong, Xinghao Wang, Bohan Li, and Wanxiang Che. 2023. MetaPrompting: Learning to learn better prompts. arXiv preprint .ArXiv:2209.11486 [cs]. Z. Jiang and others. 2025. AIDE: AI-driven ex-ploration in the space of code. arXiv preprint arXiv:2502.13138 . ArXiv: 2502.13138 [cs.AI]. Jin Kim, Muhammad Wahi-Anwa, Sangyun Park, Shawn Shin, John M. Hoffman, and Matthew S. Brown. 2025. Autonomous computer vision de-velopment with agentic AI. arXiv preprint .ArXiv:2506.11140 [cs] TLDR: This work demon-strates that a specialized computer vision system can be built autonomously from a natural language prompt using Agentic AI methods and shows the po-tential for autonomous planning and tool configura-tion that has traditionally been performed by a data scientist in the development of computer vision ap-plications. Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. 2023a. Visual instruction tuning. In 
+
+Advances in neural information processing systems ,volume 36, pages 34892–34916. Curran Associates, Inc. Shilong Liu, Zhaoyang Zeng, Tianhe Ren, Feng Li, Hao Zhang, Jing Yang, Chunyuan Li, Jianwei Yang, Hang Su, Jun Zhu, and others. 2023b. Ground-ing DINO: Marrying DINO with grounded pre-training for open-set object detection. arXiv preprint arXiv:2303.05499 .Aman Madaan, Niket Tandon, Prakhar Gupta, Skyler Hallinan, Luyu Gao, Sarah Wiegreffe, Uri Alon, Nouha Dziri, Shrimai Prabhumoye, Yiming Yang, Shashank Gupta, Bodhisattwa Prasad Majumder, Katherine Hermann, Sean Welleck, Amir Yazdan-bakhsh, and Peter Clark. 2023. SELF-REFINE: iter-ative refinement with self-feedback. In Proceedings of the 37th international conference on neural infor-mation processing systems , Nips ’23, New Orleans, LA, USA. Curran Associates Inc. Number of pages: 61 tex.address: Red Hook, NY, USA tex.articleno: 2019. Jaehyun Nam, Jinsung Yoon, and others. 2025. MLE-STAR: Machine learning engineering agent via search and targeted refinement. In Advances in neu-ral information processing systems .Debjit Paul, Mete Ismayilzada, Maxime Peyrard, Beatriz Borges, Antoine Bosselut, Robert West, and Boi Faltings. 2024. REFINER: Reasoning feedback on intermediate representations. arXiv 
+
+10 preprint . ArXiv:2304.01904 [cs] TLDR: REFINER is a framework for finetuning LMs to explicitly gen-erate intermediate reasoning steps while interacting with a critic model that provides automated feedback on the reasoning that provides structured feedback that the reasoning LM uses to iteratively improve its intermediate arguments. Rushi Qiang, Yuchen Zhuang, Yinghao Li, Dingu Sagar V K, Rongzhi Zhang, Changhao Li, Ian Shu-Hei Wong, Sherry Yang, Percy Liang, Chao Zhang, and Bo Dai. 2025. MLE-Dojo: Inter-active environments for empowering LLM agents in machine learning engineering. arXiv preprint arXiv:2505.07782 . ArXiv: 2505.07782 [cs.AI]. Ao Qu, Han Zheng, Zijian Zhou, Yihao Yan, Yi-hong Tang, Shao Yong Ong, Fenglu Hong, Kaichen Zhou, Chonghe Jiang, Minwei Kong, Jiacheng Zhu, Xuan Jiang, Sirui Li, Cathy Wu, Bryan Kian Hsiang Low, Jinhua Zhao, and Paul Pu Liang. 2026. CORAL: Towards autonomous multi-agent evolu-tion for open-ended discovery. arXiv e-prints , page arXiv:2604.01658. ArXiv: 2604.01658 [cs.AI] Number: arXiv:2604.01658 tex.adsnote: Provided by the SAO/NASA Astrophysics Data System. Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, and Ilya Sutskever. 2021. Learning transferable visual models from natu-ral language supervision. arXiv e-prints , page arXiv:2103.00020. ArXiv: 2103.00020 [cs.CV] Number: arXiv:2103.00020 tex.adsnote: Provided by the SAO/NASA Astrophysics Data System. Viresh Ranjan, Udbhav Sharma, Thu Nguyen, and Minh Hoai. 2021. Learning to count everything. 
+
+arXiv preprint . ArXiv:2104.08391 [cs]. Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Rong-hang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman Rädle, Chloe Rolland, Laura Gustafson, Eric Mintun, Junting Pan, Kalyan Va-sudev Alwala, Nicolas Carion, Chao-Yuan Wu, Ross Girshick, Piotr Dollár, and Christoph Fe-ichtenhofer. 2024. SAM 2: Segment anything in images and videos. arXiv e-prints , page arXiv:2408.00714. ArXiv: 2408.00714 [cs.CV] Number: arXiv:2408.00714 tex.adsnote: Provided by the SAO/NASA Astrophysics Data System TLDR: A data engine is built, which improves model and data via user interaction, to collect the largest video segmentation dataset to date, and a simple transformer architecture with streaming memory for real-time video processing. Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and Yueting Zhuang. 2023. Hugging-GPT: Solving AI tasks with ChatGPT and its friends in Hugging Face. In Advances in Neural Informa-tion Processing Systems (NeurIPS) .Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao. 2023. Re-flexion: language agents with verbal reinforcement learning. In Proceedings of the 37th international conference on neural information processing sys-tems , Nips ’23, New Orleans, LA, USA. Curran As-sociates Inc. Number of pages: 19 tex.address: Red Hook, NY, USA tex.articleno: 377. Dídac Surís, Sachit Menon, and Carl Vondrick. 2023. ViperGPT: Visual Inference via Python Execu-tion for Reasoning. In 2023 IEEE/CVF Inter-national Conference on Computer Vision (ICCV) ,pages 11854–11864, Paris, France. IEEE. TLDR: A framework that leverages code-generation models to compose vision-and-language models into subrou-tines to produce a result for any query is introduced, which achieves state-of-the-art results across various complex visual tasks. Edan Toledo, Karen Hambardzumyan, Martin Josi-foski, Rishi Hazra, Nicolas Baldwin, Alexis Audran-Reiss, Michael Kuchnik, Despoina Magka, Minqi Jiang, Alisia Maria Lupidi, Andrei Lupu, Roberta Raileanu, Kelvin Niu, Tatiana Shavrina, Jean-Christophe Gagnon-Audet, Michael Shvartsman, Shagun Sodhani, Alexander H. Miller, Abhishek Charnalia, and 6 others. 2025. AI research agents for machine learning: Search, exploration, and generalization in MLE-Bench. arXiv preprint arXiv:2507.02554 . ArXiv: 2507.02554 [cs.LG]. Dequan Wang, Evan Shelhamer, Shaoteng Liu, Bruno A. Olshausen, and Trevor Darrell. 2021. Tent: Fully test-time adaptation by entropy mini-mization. In International conference on learning representations .Xingyao Wang, Yangyi Chen, Lifan Yuan, Yizhe Zhang, Yunzhu Li, Hao Peng, and Heng Ji. 2024. Executable code actions elicit better LLM agents. In Proceedings of the 41st international conference on machine learning , ICML’24, Vienna, Austria. JMLR.org. Number of pages: 25 tex.articleno: 2054. Xu Yang, Xiao Yang, Shikai Fang, Bowen Xian, Yuante Li, Jian Wang, Minrui Xu, Haoran Pan, Xinpeng Hong, Weiqing Liu, Yelong Shen, Weizhu Chen, and Jiang Bian. 2025. R&D-Agent: Automat-ing data-driven AI solution building through LLM-powered automated research, development, and evo-lution. arXiv preprint arXiv:2505.14738 . ArXiv: 2505.14738 [cs.AI]. Zekang Yang, Wang Zeng, Sheng Jin, Chen Qian, Ping Luo, and Wentao Liu. 2024. AutoMMLab: Auto-matically generating deployable models from lan-guage instructions for computer vision tasks. arXiv preprint . ArXiv:2402.15351 [cs] TLDR: A novel request-to-model task, which involves understand-ing the user’s natural language request and execut-ing the entire workflow to output production-ready models, is proposed, which empowers non-expert individuals to easily build task-specific models via a user-friendly language interface. 
+
+11 Zhengyuan Yang, Linjie Li, Jianfeng Wang, Kevin Lin, Ehsan Azarnasab, Faisal Ahmed, Zicheng Liu, Ce Liu, Michael Zeng, and Lijuan Wang. 2023. MM-REACT: Prompting ChatGPT for Multimodal Reasoning and Action. arXiv preprint . Version Number: 1 TLDR: This paper defines and explores a comprehensive list of advanced vision tasks that are intriguing to solve, but may exceed the capabil-ities of existing vision and vision-language models and proposes MM-REACT, a system paradigm that integrates ChatGPT with a pool of vision experts to achieve multimodal reasoning and action. Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik R. Narasimhan, and Yuan Cao. 2023. ReAct: Synergizing reasoning and acting in language models. In The eleventh international conference on learning representations, ICLR 2023, kigali, rwanda, may 1-5, 2023 . OpenReview.net. Tex.bibsource: dblp computer science bibliography, https://dblp.org tex.timestamp: Fri, 19 Dec 2025 20:56:24 +0100. Mert Yuksekgonul, Federico Bianchi, Joseph Boen, Sheng Liu, Zhi Huang, Carlos Guestrin, and James Zou. 2024. TextGrad: Automatic "differentiation" via text. arXiv preprint . ArXiv:2406.07496 [cs] TLDR: TextGrad backpropagates textual feedback provided by LLMs to improve individual compo-nents of a compound AI system, a powerful frame-work performing automatic “differentiation” via text that lays a foundation to accelerate the development of the next-generation of AI systems. Yunxiang Zhang, Kang Zhou, Zhichao Xu, Kiran Ram-nath, Yun Zhou, Sangmin Woo, Haibo Ding, and Lin Lee Cheong. 2026. Learning to ideate for ma-chine learning engineering agents. In Proceedings of the 19th conference of the european chapter of the association for computational linguistics (volume 2: Short papers) , pages 436–447, Rabat, Morocco. As-sociation for Computational Linguistics. Yuhang Zhou, Lizhu Zhang, Yifan Wu, Jiayi Liu, Xi-angjun Fan, Zhuokai Zhao, and Hong Yan. 2026. Synthetic sandbox for training machine learning en-gineering agents. arXiv preprint arXiv:2604.04872 .ArXiv: 2604.04872 [cs.LG]. 
+
+12 TASK 1 · COUNTING 
+
+LVIS-Count 
+
+> 180 images · 60 / 20 / 100
+> 30 categories · 5 domains
+> zero-shot test
+> NORMAL
+> 10 ≤ N ≤ 50
+> threshold & NMS calibration
+> 50 images · median N = 47
+> • • • • • • •
+> EXTREME
+> 51 ≤ N ≤ 100
+> slice-and-detect required
+> 50 images · median N = 81
+> • • • • • • • • • • • •
+> TASK 2 · SEGMENTATION
+
+PlantSeg-OOD 
+
+> 180 images · 60 / 20 / 100
+> 24 species · 34 diseases
+> species-disjoint OOD
+> SMALL
+> area < 10%
+> discovery is the bottleneck
+> 56 images · tiny lesions
+> • • •
+> MODERATE
+> 10 – 30%
+> boundary precision matters
+> 44 images · mid-scale
+> • • • • • •
+
+Figure 3: Two-task evaluation setup. VTOS is evaluated on dense object counting (top, LVIS-Count: 180 images sampled from LVIS, 30 categories, two density tiers — Normal 10 ≤ N ≤ 50 and Extreme 51 ≤ N ≤ 100 ) and on grounded segmentation (bottom, PlantSeg-OOD: 100-image OOD test sampled from PlantSeg, three-way species-disjoint splits, two lesion-area tiers — Small < 10% and Moderate 10 –30% ). Both tasks expose distinct failure modes of static tool invocation. 
+
+A Evaluation Setup Figure 
+
+For reference, Figure 3 gives a visual overview of the two evaluation tasks; tier definitions and split details are in §4. 
+
+B Extended Related Work 
+
+Adaptive Perception and Test-Time Calibra-tion. Fixed vision models require calibration to generalise across diverse domains—a challenge addressed by test-time adaptation methods that update model weights to mitigate distribution shift (Wang et al., 2021). For tool-augmented agents, however, the bottleneck is not weight adaptation but parameter-level sensitivity : atomic tools such as object detectors depend critically on hyper-parameters (confidence thresholds, NMS values) that vary per image. Counting-oriented methods (Ranjan et al., 2021) further underscore this difficulty by revealing wide performance vari-ance across density regimes. While frameworks like HuggingGPT (Shen et al., 2023) explore dy-namic tool selection, they do not perform per-instance parameter tuning. VTOS fills this niche by modelling vision tools as dynamic instruments 
+
+whose configurations are adjusted at inference time through visual feedback, without requiring any parameter updates to the underlying models. 
+
+Prompt-Tuning and Differentiable Text Op-timisation. TextGrad (Yuksekgonul et al., 2024) introduces automatic differentiation over text to optimise compound AI systems, while system-level prompt-optimisation approaches such as MetaPrompting (Hou et al., 2023) and MetaSPO (Choi et al., 2025) explore meta-learning frameworks for robust prompt design. These methods optimise prompts rather than executable code; VTOS differs in that it searches over executable Python programs and uses de-terministic interpreter feedback as the correction signal (§2). 
+
+C Benchmark Statistics 
+
+The two datasets total 360 images; the 100-image LVIS-Count test split is balanced 50/50 between the Normal ( 10 ≤ N ≤ 50 ) and Extreme ( 51 ≤ N ≤
+
+100 ) tiers, and the 100-image PlantSeg-OOD test split contains 56 small and 44 moderate lesions. Full per-task statistics are in §4. 
+
+D Implementation Mechanisms Not Detailed in the Main Method 
+
+For reviewers and reproducibility, we document four engineering mechanisms present in the re-leased code but elided from the main Method. Both Producer- and Analyzer-proposed programs run in isolated Python subprocesses; the evalua-tor returns metrics as JSON over stdout, and a crashed subprocess records a score of −∞ with a traceback into its snapshot. A hard cap of five VLM calls per analyzer execution keeps the Ana-lyzer from degenerating into an expensive Visual-QA wrapper. The full VisionSearchState 
+
+is serialised to records.json after each itera-13 Figure 4: VTOS detection examples on LVIS-Count (zero-shot test set). Top row: Normal tier ( 10 ≤ N ≤ 50 ); bottom row: Extreme tier ( 51 ≤ N ≤ 100 ). Cyan boxes mark ground-truth instances; each panel reports the VTOS program’s predicted count versus ground truth. These representative cases show the searched counting program recovering the correct count across object categories and density regimes. 
+
+tion, so an interrupted run resumes from the last completed step. Finally, an AST-level lint pass re-jects out-of-library imports before execution, pre-venting the LLM from hallucinating new tools and keeping deployed programs portable. 
+
+E Extended Empirical Results 
+
+E.1 Qualitative Detection Examples 
+
+Figure 4 shows representative VTOS counting re-sults on the zero-shot LVIS-Count test set, span-ning eight object categories and both density tiers. Ground-truth instance boxes are overlaid in cyan; for each panel the count returned by VTOS’s searched program matches the ground-truth count, illustrating that the discovered orchestration gen-eralises across diverse categories (fruit, vegeta-bles, animals, baked goods, toys) and crowding levels. 
+
+E.2 Ablation Studies 
+
+We report four verified ablations: (i) scaling the per-task search iteration budget; (ii) toggling the Analyzer diagnostic module; (iii) varying the per-iteration proposal count K; and (iv) DINO confidence-threshold sensitivity. The Analyzer ablation is the key finding: at fixed budget N =10 , the Analyzer cuts MAE by 36% (33.51 → 21.38) and drives Bias from +11 .6
+
+to near-zero ( +0 .6). It also raises the achievable performance ceiling: Analyzer-OFF saturates at 
+
+N =15 (additional iterations degrade mIoU), but Analyzer-ON continues to improve up to N =25 ,attaining 41 .66 mIoU — the best number in the entire experiment matrix. The K=1 vs K=3 comparison shows the cost-quality trade-off of parallel proposal generation: 
+
+K=3 adds a small mIoU lift ( +0 .5) and reduces MAE by ∼ 6% at 3× the LLM cost per iteration. We default to K=3 in headline numbers. The threshold sweep underscores the brittleness motivating VTOS: mIoU rises monotonically from 
+
+14 .13 at the COCO-default threshold of 0.35 to 
+
+32 .19 at threshold 0.10 , but MAE bottoms out at threshold 0.20 (39.34) and rebounds at 0.10 
+
+(52.76) because the lowest threshold floods the scene with false positives. No single threshold is optimal on both metrics simultaneously — a per-scene calibration target that VTOS’s search is de-signed to discover. 
+
+E.3 Evolutionary Trajectory Analysis 
+
+Figure 5 visualises the self-correction trajectory across the two density regimes on the 60-image training split. Both regimes show clear im-provement from the baseline (Normal 0.243 →
+
+14 Table 3: Per-Density Breakdown on LVIS-Count. Same 13 methods as Table 1, stratified into Normal ( 10 ≤
+
+N ≤ 50 ) and Extreme ( 51 ≤ N ≤ 100 ) density tiers. Bias is signed count error; zero is best. Best-per-column-within-tier in bold .                                                                                                     
+
+> Normal (10 ≤N≤50 )Extreme (51 ≤N≤100 )
+> Family Method MAE ↓Bias ( ↓ | · | )mIoU% ↑MAE ↓Bias ( ↓ | · | )mIoU% ↑
+> End-to-End VLM Sonnet 4.6 (Count Only) 24.56 −3.40 —45.70 −5.30 —Sonnet 4.6 (Direct Bbox) 22.56 −19 .80 8.44 47.80 −47 .48 6.65 Qwen3-VL-8B (Direct) 35.58 −35 .58 5.24 72.94 −72 .94 1.52 Qwen3-VL-32B (Direct) 31.78 −47 .26 9.98 64.80 −64 .80 6.20
+> Specialist Grounding DINO (thr=0.10) 54.30 +40 .90 33.08 51.22 +13 .98 31.30 CountGD (vanilla) 45.32 +36 .80 36.07 40.70 +27 .30 36.19 CountGD (Crop+NMS) 51.28 +46 .72 36.12 46.40 +38 .32 37.06
+> Heuristics SAHI (DINO) 29.94 −26 .66 21.25 63.20 −62 .64 10.57
+> Agentic ReAct (Sonnet 4.6 + DINO) 30.20 −29 .64 25.47 62.42 −62 .42 13.85 CodeAct (Sonnet 4.6 + tools) 26.00 −14 .80 35.01 52.76 −50 .00 23.41 Reflexion (Sonnet 4.6 + visual critic) 34.18 −10 .98 29.23 54.38 −40 .78 20.58
+> VTOS (ours) Analyzer OFF 24.18 −1.18 41.62 41.48 −31 .60 31.87 Analyzer ON 17.28 +9 .44 44.24 29.44 −17 .48 36.73
+
+VTOS (Analyzer ON) wins Normal MAE, Normal mIoU, and Extreme MAE; VTOS (Analyzer OFF) wins Normal Bias. CountGD (Crop+NMS) edges Extreme mIoU. Bold marks the best entry per column within its tier. 
+
+Table 4: Ablation 1 — Scaling Search Iterations. VTOS (Analyzer OFF) at N ∈ { 5, 10 , 15 , 20 }. Aggregate over the full LVIS-Count test set. 
+
+Config mIoU ↑ MAE ↓ RMSE ↓ Bias ( ↓ | · | )
+
+N =5 38.09 30.93 51.37 −3.71 
+
+N =10 35.05 33.51 53.63 +11 .57 
+
+N =15 36.74 30.34 53.95 +7 .20 
+
+N =20 36.37 32.03 54.68 +2 .70 
+
+0.364 ; Extreme 0.254 → 0.318 ) but the trajec-tory is not monotonic: at iter 3 the Producer pro-poses solutions that regress on both tiers (Ex-treme drops from 0.30 to 0.22 ) before recover-ing at iter 4. Such regressions correspond to Knowledge-Base updates in which an existing hypothesis is re-statused from U NVERIFIED to REFUTED and a new strategy is proposed (e.g., switching from threshold-based NMS to morpho-logical post-processing). After iter 9 the running best plateaus with small oscillations characteristic of search saturation. 
+
+F Future Work and Code/Data Availability 
+
+Future Work. We see three natural extensions: (i) extending the search to additional visual rea-soning tasks such as fine-grained attribute analysis and geometric distortion correction; (ii) integrat-ing lightweight tool fine-tuning as a complement to parameter-level calibration; and (iii) investigat-ing whether VisionThoughts accumulation across hundreds of diverse visual tasks exhibits emergent compositional capabilities. The bounded scope of evaluation, compute profile, and capability ceil-ings are discussed in the Limitations section. 
+
+Code and Data Availability. Source code, the LVIS-Count and PlantSeg-OOD dataset splits, and complete search-run logs (including the Vision-Thoughts Knowledge Bases and ranked solution snapshots) will be released as supplementary ma-terial upon acceptance. 
+
+G Knowledge Base Field Definitions 
+
+The Knowledge Base holds six fields, K =
+
+⟨I , H, A, E, p, e ⟩, all updated by the LLM each it-eration from the previous state and the new evi-dence. The insights I are empirical facts observed during search (e.g., that threshold 0.10 maximises mIoU on dense scenes but inflates MAE), while the hypotheses H are ⟨statement, status, evidence ⟩
+
+triples, with status in {C ONFIRMED , R EFUTED ,PARTIAL , UNVERIFIED }, that are re-assessed each iteration. The analyzer-insights A track which analyses yield actionable findings so as to steer later analyzer proposals, and the exploration-
+
+15 Table 5: Ablation 2 — Analyzer Diagnostic Module. Two control regimes: same-budget ( N =10 ) and ceiling-budget (Analyzer-OFF best at N =15 ; Analyzer-ON ceiling at N =25 ).                      
+
+> Regime Config mIoU ↑MAE ↓Bias ( ↓ | · | )Same budget ( N=10 )Analyzer OFF 35.05 33.51 +11.57 Analyzer ON 39.82 21.38 +0 .56
+> Ceiling Analyzer OFF ( N=15 )36.74 30.34 +7 .20
+> Analyzer ON ( N=25 )41.66 19.63 +4 .15
+
+Table 6: Ablation 3 — Proposal Scaling K. Effect of per-iteration proposal count. Analyzer-OFF base, 
+
+N =10 .       
+
+> Config mIoU ↑MAE ↓
+> K=1 34.53 35.83
+> K=3 (default) 35.05 33.51
+
+Table 7: Ablation 4 — DINO Confidence-Threshold Sensitivity. mIoU/MAE on LVIS-Count as the DINO open-vocabulary detection threshold sweeps from 0.10 to 0.35.           
+
+> DINO threshold mIoU ↑MAE ↓
+> 0.35 14.13 52.12 0.30 18.37 48.21 0.20 29.01 39.34
+> 0.10 32.19 52.76
+
+directions E are ⟨direction, status, performance ⟩
+
+triples for strategies tried, planned, or abandoned. The remaining two fields summarise search state: the key-problems p name the current bottlenecks in free text, and the exploration-status e is a label (improving, stuck, or converging) that biases the next iteration toward exploration or exploitation. The Knowledge Base is serialised to JSON each iteration, so an interrupted run resumes from the last completed step. 
+
+H How Co-Search Grows a Program: Two Trajectories 
+
+Open-loop visual-programming systems (e.g., ViperGPT, VisProg) emit a single fixed pipeline in one generation pass. Every VTOS program, by contrast, is searched : each revision is trace-able to a specific analyzer diagnosis of the pre-vious attempt. We walk through the two paper runs — one per task. For each, a table gives the diagnosis-driven trajectory at a glance, and the listings below show the actual code growing step by step. Scores along a chain are training-split metrics (mIoU for counting, Dice for segmenta-tion); the selected programs attain the held-out test 
+
+0 3 6 9 12 15 
+
+0.15 
+
+0.2
+
+0.25 
+
+0.3
+
+0.35 
+
+0.4
+
+0.45 
+
+Search Iteration Best-of-K mIoU 
+
+Self-Correction Trajectory (LVIS-Count Training) 
+
+Normal ( 10 ≤N ≤50 )Extreme ( 51 ≤N ≤100 )
+
+Figure 5: mIoU Trajectory over Search Iterations 
+
+on the LVIS-Count training split. Per-iteration best-of-K (K=3 ) mIoU stratified by density tier (Normal: 
+
+10 ≤N ≤50 ; Extreme: 51 ≤N ≤100 ). The trajectory is non-monotonic — both tiers show occasional regres-sions (e.g., Extreme dips at iter 3 from 0.30 to 0.22 ) as the Producer explores new code directions in response to Analyzer feedback. Best Normal mIoU ( 0.364 ) is reached at iter 9, best Extreme ( 0.318 ) at iter 7; subse-quent iterations plateau with small oscillations charac-teristic of search saturation. 
+
+numbers of Tables 1 and 2. 
+
+H.1 Counting Trajectory 
+
+The paper’s Analyzer-ON counting run grows a single Grounding DINO call into an image-adaptive program; its selected program attains test mIoU 40 .48 (Table 1). Table 8 traces the search at a glance; the listings then show the code growing. 
+
+Seed (24 .84 ):    
+
+> 1bboxes =detect(box_threshold=0.10)
+
+,→ + two-threshold union (31 .58 ):       
+
+> 1bboxes =nms(detect(0.10) +detect (0.20), iou=0.35)
+
+,→ + density-adaptive NMS (32 .42 ):             
+
+> 1max_cell =densest_3x3_cell(bboxes)
+> 2iou =0.25 if max_cell >8else 0.35
+
+16 Table 8: Counting co-search : each analyzer diagnosis drives a traceable revision, and the training mIoU rises monotonically toward the deployed program. 
+
+it Analyzer diagnosis Solution revision mIoU (%) 0 — (seed) single Grounding DINO @ 0.10 24.84 1 duplicate boxes inflate the count two-threshold union, then NMS 31.58 2 crowded cells over-merge under fixed NMS density-adaptive NMS by cell density 32.42 3 images with <40 detections under-detect conditional slice_and_detect (n < 40 ) 33.54 12 a dense image still under-detected (conf-ratio 0.83 ) learned ratio +count slicing triggers 35.90 
+
+Table 9: Segmentation co-search : a different family of revisions — query phrasing and mask refinement rather than detection routing. 
+
+it Analyzer diagnosis Solution revision Dice (%) 0 — (seed) detect @0.30 then SAM 32.90 1 small lesions missed at high threshold lower threshold to 0.15 + area filter 38.10 2 SAM mask boundaries are ragged clean_mask boundary post-processing 38.10 3 bare query mislocalises across plants contextual query ( disease on plant ) 39.20 4 tight NMS merges co-located lesions loosen NMS to 0.55 40.00 
+
+if max_cell > 4 else 0.45  
+
+> 3
+
+bboxes = nms(bboxes, iou) 
+
+,→ + conditional slicing (33 .54 ):  
+
+> 1
+
+if len (bboxes) < 40: 
+
+# under-detected -> recover by slicing  
+
+> 2
+
+bboxes = nms(bboxes +slice_and_detect(grid=(2,2), 0.15), 0.30) 
+
+,→ Final (test mIoU 40.48 ):  
+
+> 1
+
+ratio = n_high / max (n_low, 1)  
+
+> 2
+
+if n_low < 32 or (n_low < 55 and 
+
+ratio > 0.70 and n_high < 35):  
+
+> 3
+
+bboxes = nms(bboxes_low +slice_and_detect(grid=(3,3), 0.12), 0.28)  
+
+> 4
+
+elif n_low > 55: bboxes = nms(detect (0.14), 0.25) # dense: tighter threshold + NMS  
+
+> 5
+
+else : bboxes = nms( bboxes_low, 0.30) 
+
+H.2 Segmentation Trajectory 
+
+The Analyzer-ON segmentation run instead evolves query phrasing, thresholds, and mask post-processing; its selected program attains test Dice 39 .38 (Table 2). The strategies it discovers (Table 9) are an entirely different family from the counting chain — co-search adapts to each task’s distinct failure modes. 
+
+Seed (32 .90 ):  
+
+> 1
+
+bboxes = detect(target, threshold =0.30)  
+
+> 2
+
+polygons = segment(bboxes) 
+
+# SAM 
+
+,→ + low threshold + area filter (38 .10 ):  
+
+> 1
+
+bboxes = detect(target, threshold =0.15) # recover small lesions  
+
+> 2
+
+bboxes = nms(filter_by_area(bboxes, 0.0003, 0.80), 0.40) 
+
+,→ + clean_mask (38 .10 ):  
+
+> 1
+
+polygons = clean_mask(segment(bboxes )) # smooth ragged SAM boundaries 
+
+,→ + contextual query (39 .20 ):  
+
+> 1
+
+bboxes = detect(f"{target} on {plant }", threshold=0.15) # ground the disease in its plant 
+
+,→ Final (test Dice 39.38 ):  
+
+> 1
+
+bboxes = detect(f"{target} on {plant}", threshold=0.15)  
+
+> 2
+
+bboxes = nms(filter_by_area(bboxes , 0.0002, 0.80), iou=0.55) #loose NMS keeps co-located lesions  
+
+> 3
+
+polygons = clean_mask(segment(bboxes )) 
+
+To show the observer side concretely, Listing 1 re-produces a diagnostic program from a PlantSeg-OOD search run. It stratifies images by ground-truth lesion count, summarises Dice and precision on the densest tier, and flags over-segmentation (predicted area exceeding twice the ground truth) — the kind of plain-text observation the Producer 17 consumes on its next revision.  
+
+> 1
+
+def analyze(per_image_results):  
+
+> 2
+
+observations = []  
+
+> 3
+
+# over- vs under-detection across the batch (signed box error)  
+
+> 4
+
+over = [r for r in 
+
+per_image_results if r[’ signed_bb_error’] > 0]  
+
+> 5
+
+under = [r for r in 
+
+per_image_results if r[’ signed_bb_error’] < 0]  
+
+> 6
+
+zero = [r for r in 
+
+per_image_results if r[’ n_pred_bb’] == 0]  
+
+> 7
+
+mean_area_err = sum (r[’ signed_area_error’] for r in 
+
+per_image_results) / len (per_image_results)  
+
+> 8
+
+observations.append(  
+
+> 9
+
+f"{len(over)} over-, {len( under)} under-detected, {len( zero)} with zero boxes; " 
+
+> 10
+
+f"mean area error {mean_area_err:+.3f} " 
+
+> 11
+
+f"({’masks over-shoot’ if mean_area_err > 0 else ’masks under-cover’}).")  
+
+> 12 13
+
+# many boxes but little area -> small false-positive flood  
+
+> 14
+
+fp = [r for r in 
+
+per_image_results  
+
+> 15
+
+if r[’signed_bb_error’] >2 and r[’signed_area_error’] <0]  
+
+> 16
+
+if fp:  
+
+> 17
+
+observations.append(f"{len( fp)} tasks flood small FPs --tighten NMS or raise threshold." ) 
+
+> 18 19
+
+# plant species the detector misses entirely  
+
+> 20
+
+if zero:  
+
+> 21
+
+plants = sorted (set (r[’plant ’] for r in zero))  
+
+> 22
+
+observations.append(f"zero detections on {plants} -- try multi-query or lower threshold." ) 
+
+> 23 24
+
+# SAM boundary ceiling: box is right but mask Dice lags far behind  
+
+> 25
+
+gap = [r for r in 
+
+per_image_results if r[’ dice_bbox’] - r[’dice_mask’] >0.3]  
+
+> 26
+
+if gap:  
+
+> 27
+
+observations.append(f"{len( gap)} tasks: bbox Dice >> mask Dice -- SAM boundary is the bottleneck.")  
+
+> 28
+
+return observations 
+
+Listing 1: Analyzer program from the segmentation run: it profiles over- vs. under-detection from signed box error, flags small-false-positive floods, names the plant species the detector misses entirely, and detects the SAM mask-boundary ceiling (box Dice far exceeding mask Dice) — the plain-text observations the Producer consumes on the next iteration. 
+
+Both trajectories tell the same story through op-posite strategies: from a one-line seed, the search turns specific, measured analyzer diagnoses — a named bottleneck image in counting, a mislocal-ising bare query in segmentation — into targeted, auditable code revisions whose internal scores rise monotonically toward the deployed program. Aone-shot synthesiser, which commits to a fixed pipeline without ever observing how it fails, has access to none of this. 18

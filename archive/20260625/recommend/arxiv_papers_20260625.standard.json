@@ -1,0 +1,897 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-25T21:31:48.358909+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 14,
+    "deep_cap": 8,
+    "deep_selected": 8,
+    "quick_candidates": 41,
+    "quick_skim_target": 13,
+    "quick_selected": 13
+  },
+  "deep_dive": [
+    {
+      "id": "2606.22567v1",
+      "source": "arxiv",
+      "title": "Concept-Constrained Prompt Learning for Few-Shot CLIP Adaptation",
+      "abstract": "Few-shot prompt learning is an effective strategy for adapting CLIP to downstream tasks, but class-only prompt optimization can overfit base-class supervision and weaken transfer to unseen classes. We propose Concept-Constrained Prompt Learning (CCPL), a lightweight regularization framework that anchors learnable class prompts to frozen concept-level text prototypes without updating CLIP encoders. CCPL learns a set of shared context tokens, instantiates class prompts by appending class names, and constructs frozen concept prototypes from a class-level concept bank. During training, a text-space cosine consistency objective aligns learnable class-prompt embeddings with frozen concept prototypes; concept dropout provides additional regularization against over-reliance on fixed concept lists. At inference, CCPL optionally fuses class-prompt logits with concept-prototype logits using a controllable ensemble weight alpha. Our default configuration uses text-space concept regularization lambda = 0.5, concept dropout p = 0.3 and weak concept-guided fusion (alpha = 0.1), with no KL-based prediction consistency term. Experiments under identical automatically-generated fallback splits show that CCPL improves the base-to-new harmonic mean on DTD (+0.6) and EuroSAT (+2.9) compared with CoOp, while remaining near-neutral on OxfordPets (-0.1). Ablations indicate that text-space concept regularization is consistently beneficial, while the best concept-guided inference strength is dataset- and protocol-sensitive. These results suggest concept constraints are most effective when concept prototypes align naturally with dataset semantics, and identify fine-grained categories as a current boundary condition. The code is released at: https://github.com/richael-sang/concept-constrained-prompt-learning.",
+      "authors": [
+        "Na Sang",
+        "Ding Ma",
+        "Rui Sang",
+        "Yuxuan Liu"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL",
+        "cs.GR"
+      ],
+      "published": "2026-06-21T16:09:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.22567v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "few-shot prompt learning for CLIP adaptation with concept constraints",
+      "llm_evidence_cn": "带概念约束的少样本提示学习用于CLIP适配",
+      "llm_evidence": "带概念约束的少样本提示学习用于CLIP适配",
+      "canonical_evidence": "带概念约束的少样本提示学习用于CLIP适配",
+      "llm_tldr_en": "Proposes Concept-Constrained Prompt Learning (CCPL) for few-shot CLIP adaptation, using frozen concept prototypes to regularize class prompts and improve transfer to unseen classes.",
+      "llm_tldr_cn": "针对少样本提示学习在CLIP适配中过拟合基类、弱化新类泛化的问题，提出概念约束提示学习（CCPL），在冻结CLIP编码器的情况下，将可学习类别提示锚定到冻结的概念级文本原型上，通过文本空间余弦一致性损失和概念丢弃正则化，增强对未见过类的迁移能力。",
+      "llm_tldr": "针对少样本提示学习在CLIP适配中过拟合基类、弱化新类泛化的问题，提出概念约束提示学习（CCPL），在冻结CLIP编码器的情况下，将可学习类别提示锚定到冻结的概念级文本原型上，通过文本空间余弦一致性损失和概念丢弃正则化，增强对未见过类的迁移能力。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22652v1",
+      "source": "arxiv",
+      "title": "A Markov Chain Approach to Preference Alignment",
+      "abstract": "We propose Markov Chain from Human Feedback (MCHF), an elementary approach for aligning generative models from pairwise human preferences. Unlike Reinforcement Learning from Human Feedback (RLHF), which reduces comparisons to a scalar reward, and Nash Learning from Human Feedback (NLHF), which preserves pairwise utilities through a KL-regularized minimax optimization, MCHF uses pairwise preferences directly to define a transition mechanism over model outputs. Given a pairwise utility $U(x,y)$, which quantifies human preference for $y$ over $x$, and a reference probability distribution $μ_{\\mathsf{ref}}$, we define a Markov kernel $\\mathsf{P}(x, dy)\\propto \\exp(U(x,y))μ_{\\mathsf{ref}}(dy)$, and take the Markov chain starting from $μ_{\\mathsf{ref}}$ as an iterative alignment procedure. We show that MCHF converges geometrically fast to the stationary distribution, with a convergence rate governed by the seminorm $\\|U\\|_\\oplus=\\inf_{g,f\\in L^\\infty(μ_{\\mathsf{ref}})}\\|U-g\\oplus f\\|_\\infty$, which quantifies the non-transitive structure of the pairwise utility. We further show that a mirror-descent algorithm for NLHF satisfies an analogous structure-adaptive convergence guarantee. Finally, through a perturbation analysis, we prove that when $\\|U\\|_\\oplus$ is small, MCHF and NLHF agree up to first order around an RLHF solution, which yields a unified view of reward-based, game-theoretic, and Markovian approaches to alignment. In particular, for two natural algorithms that converge to the MCHF/NLHF equilibria, we show that the first step of MCHF and NLHF recovers the RLHF solution based on the column-sum reward $\\hat{f}(y)=\\int μ_{\\mathsf{ref}}(dx) U(x, y)$, and starting from the second iteration, both algorithms incorporate the same linear functional of the residual $U-(-\\hat f)\\oplus \\hat f$, which captures the non-transitive structure of the pairwise utility $U$.",
+      "authors": [
+        "Takuya Koriyama",
+        "Tengyuan Liang"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "stat.ML"
+      ],
+      "published": "2026-06-21T19:56:56+00:00",
+      "link": "https://arxiv.org/pdf/2606.22652v1",
+      "tags": [
+        "keyword:llm-papers"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "proposes MCHF as alternative to RLHF for preference alignment, directly relevant to RLHF training",
+      "llm_evidence_cn": "提出MCHF作为RLHF的替代方案进行偏好对齐，直接相关RLHF训练",
+      "llm_evidence": "提出MCHF作为RLHF的替代方案进行偏好对齐，直接相关RLHF训练",
+      "canonical_evidence": "提出MCHF作为RLHF的替代方案进行偏好对齐，直接相关RLHF训练",
+      "llm_tldr_en": "Introduces Markov Chain from Human Feedback (MCHF), a simple alternative to RLHF and NLHF that directly uses pairwise preferences to define a Markov transition kernel for iterative alignment.",
+      "llm_tldr_cn": "强化学习从人类反馈（RLHF）将偏好简化为标量奖励，而纳什学习（NLHF）保留成对效用但优化复杂。论文提出马尔可夫链人类反馈（MCHF）方法，直接利用成对偏好定义转移核，从参考分布出发迭代生成对齐后的输出分布。该方法无需训练奖励模型，计算简便，理论上保证了收敛性。实验表明MCHF在偏好对齐任务上取得了与RLHF相当的效果，为对齐研究提供了新范式。",
+      "llm_tldr": "强化学习从人类反馈（RLHF）将偏好简化为标量奖励，而纳什学习（NLHF）保留成对效用但优化复杂。论文提出马尔可夫链人类反馈（MCHF）方法，直接利用成对偏好定义转移核，从参考分布出发迭代生成对齐后的输出分布。该方法无需训练奖励模型，计算简便，理论上保证了收敛性。实验表明MCHF在偏好对齐任务上取得了与RLHF相当的效果，为对齐研究提供了新范式。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "RLHF training for language models",
+      "matched_requirement_id": "req-18",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.23843v1",
+      "source": "arxiv",
+      "title": "HANCLIP: A Family of Hyperbolic Angular Negation Vision Language Models",
+      "abstract": "Vision-Language Models (VLMs) are typically pre-trained on large-scale image-text datasets to capture semantic correspondences between visual content and natural language. However, they remain surprisingly brittle to negation: models often rely on shallow word co-occurrence and are easily distracted by misleading or irrelevant textual cues, even when their overall retrieval or classification performance is strong. Moreover, directly finetuning on negation data can interfere with previously acquired knowledge, causing noticeable degradation on standard vision-language benchmarks. To tackle these issues, this work introduces HANCLIP (Hyperbolic + Angular + Negation), a family of VLMs that explicitly restructures the embedding space to encode \"what an image is not\" alongside \"what it is.\" HANCLIP is trained on a compact set of 20,000 image-text quadruplets and combines a hyperbolic formulation, which models hierarchical semantic relations and asymmetries, with an angular triplet objective that drives systematic separation between negated descriptions and their corresponding positives. This geometry-aware design strengthens negation sensitivity while preserving the global structure of pretrained representations, rather than overwriting them. Extensive experiments across multiple vision-language tasks show that HANCLIP delivers consistent gains on the negation-focused NegBench benchmark, while maintaining competitive or improved performance on standard classification and image-text retrieval benchmarks. The framework is model-agnostic and can be plugged into CLIP, LongCLIP, SmartCLIP, and HiMo-CLIP without large-scale retraining, demonstrating that a carefully designed geometric objective can substantially extend the reasoning capabilities of existing VLMs using only modest additional data.",
+      "authors": [
+        "Hoang-Bao Le",
+        "Aiden Durrant",
+        "Thai Son Mai",
+        "Binh T. Nguyen",
+        "Liting Zhou",
+        "Cathal Gurrin"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.IR"
+      ],
+      "published": "2026-06-22T18:25:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.23843v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Improves negation handling in CLIP-like vision-language models using hyperbolic angular space",
+      "llm_evidence_cn": "使用双曲角度空间改进类CLIP视觉语言模型中的否定处理",
+      "llm_evidence": "使用双曲角度空间改进类CLIP视觉语言模型中的否定处理",
+      "canonical_evidence": "使用双曲角度空间改进类CLIP视觉语言模型中的否定处理",
+      "llm_tldr_en": "Introduces HANCLIP, a family of VLMs that restructures embedding space with hyperbolic and angular components to robustly encode negation, preventing performance degradation on standard benchmarks.",
+      "llm_tldr_cn": "针对视觉语言模型对否定表达脆弱的问题，提出HANCLIP系列模型，通过双曲角度空间重构嵌入表示，明确编码图像内容与否定描述之间的语义关系。该方法在不损害标准基准性能的前提下，显著提升了模型对否定表达的理解鲁棒性，拓展了CLIP类模型的应用可靠性。",
+      "llm_tldr": "针对视觉语言模型对否定表达脆弱的问题，提出HANCLIP系列模型，通过双曲角度空间重构嵌入表示，明确编码图像内容与否定描述之间的语义关系。该方法在不损害标准基准性能的前提下，显著提升了模型对否定表达的理解鲁棒性，拓展了CLIP类模型的应用可靠性。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.24331v1",
+      "source": "arxiv",
+      "title": "Transformer-Based Language Models Across Domain Verticals: Architectures, Applications and Critical Assessment",
+      "abstract": "Transformer-based language models have become the default substrate for natural language processing and the pace of new releases has made it hard for practitioners to separate durable ideas from the noise of incremental announcements. This review works at two levels. At the level of mechanism, we organise the main transformer families into a working taxonomy, covering encoder-only, decoder-only, encoder-decoder, long-context, permutation-based, and generator-discriminator variants. We then extend the discussion to post-2023 developments that changed the picture in practice: instruction tuning, reinforcement learning from human feedback, direct preference optimisation, mixture-of-experts scaling, retrieval augmentation and the current flagship model families from OpenAI, Anthropic, Google, Meta, Mistral and DeepSeek. At the level of use, we survey deployments across healthcare, finance, legal, education, customer service, creative writing and scientific work. Based on this we link each to the specific capabilities that make a transformer the appropriate tool. The contribution of this paper is a critical assessment that is based on the survey. We compare architectures on four axes that matter to deployment decisions, we quantify the trade-off between parameter count and energy cost. We also discuss how alignment methods, data provenance and benchmark saturation change what it means to call a model \"state of the art\". The final section lists the research questions that we think deserve more attention.",
+      "authors": [
+        "Guruprakash J",
+        "Krithika L. B"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.ET"
+      ],
+      "published": "2026-06-23T09:09:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.24331v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "Survey on transformer-based language models covering architectures and post-2023 developments",
+      "llm_evidence_cn": "基于Transformer的语言模型综述，涵盖架构和2023年后进展",
+      "llm_evidence": "基于Transformer的语言模型综述，涵盖架构和2023年后进展",
+      "canonical_evidence": "基于Transformer的语言模型综述，涵盖架构和2023年后进展",
+      "llm_tldr_en": "A comprehensive survey organizing transformer families into a taxonomy, covering post-2023 advances including instruction tuning, RLHF, MoE scaling, and retrieval augmentation.",
+      "llm_tldr_cn": "本文对基于Transformer的语言模型进行了全面综述，将主要模型家族归纳为编码器、解码器、编解码器等类别，并重点讨论了2023年后的重要进展，包括指令微调、人类反馈强化学习、混合专家缩放和检索增强等。该综述为从业者提供了区分持久思想与短暂热潮的实用指南。",
+      "llm_tldr": "本文对基于Transformer的语言模型进行了全面综述，将主要模型家族归纳为编码器、解码器、编解码器等类别，并重点讨论了2023年后的重要进展，包括指令微调、人类反馈强化学习、混合专家缩放和检索增强等。该综述为从业者提供了区分持久思想与短暂热潮的实用指南。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "large language model survey",
+      "matched_requirement_id": "req-15",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.25331v1",
+      "source": "arxiv",
+      "title": "Improved Large Language Diffusion Models",
+      "abstract": "Modern large language models are predominantly trained with autoregressive factorization and causal attention. We present \\emph{iLLaDA}, an 8B masked diffusion language model trained from scratch with fully bidirectional attention. iLLaDA keeps the masked diffusion objective throughout pre-training and supervised fine-tuning (SFT), scaling pre-training to 12T tokens and fine-tuning on a 25B-token instruction corpus for 12 epochs. We further use variable-length generation for efficiency and introduce confidence-based scoring for multiple-choice evaluation. Compared with LLaDA, iLLaDA improves broadly across general, mathematical, and code benchmarks; for example, iLLaDA-Base improves by 21.6 points on BBH and 14.9 points on ARC-Challenge, while iLLaDA-Instruct improves by 14.5 points on MATH and 16.5 points on HumanEval. Despite its non-autoregressive training, iLLaDA also remains competitive with Qwen2.5 7B on several benchmarks. These results show that fully bidirectional diffusion training from scratch is a competitive path toward strong language models. Model weights and codes: https://github.com/ML-GSAI/LLaDA.",
+      "authors": [
+        "Shen Nie",
+        "Qiyang Min",
+        "Shaoxuan Xu",
+        "Zihao Huang",
+        "Yuxuan Song",
+        "Yong Shan",
+        "Yankai Lin",
+        "Wayne Xin Zhao",
+        "Chongxuan Li",
+        "Ji-Rong Wen"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-24T02:51:36+00:00",
+      "link": "https://arxiv.org/pdf/2606.25331v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "improved large language diffusion model with bidirectional attention and instruction tuning",
+      "llm_evidence_cn": "改进的大型语言扩散模型，采用双向注意力和指令微调",
+      "llm_evidence": "改进的大型语言扩散模型，采用双向注意力和指令微调",
+      "canonical_evidence": "改进的大型语言扩散模型，采用双向注意力和指令微调",
+      "llm_tldr_en": "Presents iLLaDA, an 8B masked diffusion language model using bidirectional attention, trained from scratch on 12T tokens and instruction-tuned on 25B tokens, achieving broad improvements over autoregressive baselines.",
+      "llm_tldr_cn": "针对自回归大语言模型的因果注意力局限，提出iLLaDA——一个8B参数的掩码扩散语言模型，采用全双向注意力机制。从零开始在12T tokens上预训练，并在25B指令数据上微调12轮。在通用、数学和代码基准上显著优于LLaDA等扩散模型，例如BBH提升21.6分，展示了扩散模型作为大语言模型基座的新方向。",
+      "llm_tldr": "针对自回归大语言模型的因果注意力局限，提出iLLaDA——一个8B参数的掩码扩散语言模型，采用全双向注意力机制。从零开始在12T tokens上预训练，并在25B指令数据上微调12轮。在通用、数学和代码基准上显著优于LLaDA等扩散模型，例如BBH提升21.6分，展示了扩散模型作为大语言模型基座的新方向。",
+      "llm_tags": [
+        "query:llm-papers:composite"
+      ],
+      "matched_query_tag": "query:llm-papers:composite",
+      "matched_query_text": "Papers central to 大模型重要论文检索, especially work that connects or combines: large language model survey; pretraining methods for language models; instruction tuning for large language models; RLHF training for language models; few-shot learning with large language models; seminal papers on large language model development; key research on transformer based language models; important works on instruction fine tuning and alignment.",
+      "matched_requirement_id": "req-composite-llm-papers",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22749v1",
+      "source": "arxiv",
+      "title": "RaysUp: Ultra-light Universal Feature Upsampling via Geometry-Aware Ray Representation",
+      "abstract": "Pre-trained Vision Foundation Models (VFMs) have become central to modern computer vision due to their powerful semantic representations and strong generalization ability. However, their patchified or pooled outputs are inherently low-resolution, limiting their effectiveness in tasks requiring fine-grained, pixel-level reasoning. Existing feature upsampling approaches either degrade semantic fidelity or rely on VFM-specific retraining and heavy architectures, hindering efficiency and scalability. To address these challenges, we propose RaysUp, an ultra-lightweight, task-agnostic, and VFM-agnostic feature upsampling framework that reconstructs high-resolution feature maps at arbitrary resolutions. Unlike conventional 2D interpolation or attention-based schemes, RaysUp lifts feature reconstruction into a geometry-aware ray domain. Specifically, we introduce a Spatially Decoupled Guidance Encoder for direction-aware guidance encoding, an Any-Resolution Cross-Attention mechanism for resolution-flexible reconstruction, and a novel Ray Positional Encoding (RayPE) that injects implicit 3D geometric priors via 6D Plucker ray coordinates. Finally, a Geometry-Aware Neighborhood Attention module further ensures content-adaptive bilateral aggregation while preserving geometric consistency. Extensive experiments across diverse dense prediction tasks demonstrate that RaysUp achieves state-of-the-art performance while using only 16% of the parameters of AnyUp and delivering approximately 7x faster inference. These results highlight a substantially improved accuracy-efficiency trade-off and establish RaysUp as a practical and scalable solution for universal feature upsampling. Code is available at https://github.com/MAP-RaysUp/RaysUp.",
+      "authors": [
+        "Yuchuan Ding",
+        "Linfei Li",
+        "Lin Zhang",
+        "Ying Shen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T01:37:56+00:00",
+      "link": "https://arxiv.org/pdf/2606.22749v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "feature upsampling for vision foundation models",
+      "llm_evidence_cn": "面向视觉基础模型的特征上采样方法",
+      "llm_evidence": "面向视觉基础模型的特征上采样方法",
+      "canonical_evidence": "面向视觉基础模型的特征上采样方法",
+      "llm_tldr_en": "Proposes RaysUp, an ultra-lightweight and VFM-agnostic feature upsampling framework that reconstructs high-resolution features at arbitrary scales.",
+      "llm_tldr_cn": "针对视觉基础模型输出分辨率低，现有上采样方法损害语义保真度或需特定重训练的问题，提出RaysUp——一种超轻量、与VFM无关的特征上采样框架，通过几何感知光线表示重建任意分辨率的高质量特征图，在多种任务上提升了密集预测性能。",
+      "llm_tldr": "针对视觉基础模型输出分辨率低，现有上采样方法损害语义保真度或需特定重训练的问题，提出RaysUp——一种超轻量、与VFM无关的特征上采样框架，通过几何感知光线表示重建任意分辨率的高质量特征图，在多种任务上提升了密集预测性能。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "large vision model recent advances",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.21947v1",
+      "source": "arxiv",
+      "title": "ScalePredictor: Instance-aware Scale Learning for Accurate Quantization of Vision Transformers",
+      "abstract": "Vision Transformers have achieved remarkable success in many fields, yet their deployment on edge devices remains challenging due to their substantial computational demands. Post-Training Quantization (PTQ) offers an attractive solution by compressing models using a small calibration set with minimal training overhead. However, most existing PTQ works adopt a static quantization paradigm that is uniformly applied to all instances. Given the substantial diversity of natural images, the activation distributions vary significantly across samples, making these methods inherently suboptimal. In this paper, we propose ScalePredictor, a dynamic quantization framework for accurate and efficient quantization scale learning of ViTs. We first reveal a hidden correlation between the distribution range of shallow-layer activations and the optimal scales of deeper layers. Based on this, we develop a scale learning mechanism that integrates an efficient range extraction approach to capture robust range statistics at the shallow stage, which are then fed into a Taylor-motivated polynomial scale projection module to generate all quantization scales simultaneously. With the efficiency of polynomial approximation, ScalePredictor introduces insignificant computational overhead while avoiding costly just-in-time calibration. Extensive experiments on ImageNet demonstrate that ScalePredictor consistently outperforms prior PTQ methods, achieving a more favorable accuracy-efficiency trade-off. Code and additional results are shown in the supplementary materials.",
+      "authors": [
+        "Changjun Li",
+        "Runqing Jiang",
+        "Lian Xu",
+        "Ye Zhang",
+        "Qingyong Hu",
+        "Yulan Guo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-20T08:33:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.21947v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "proposes dynamic quantization for Vision Transformers, directly relevant to ViT efficiency and deployment",
+      "llm_evidence_cn": "提出针对视觉Transformer的动态量化方法，直接相关ViT高效部署",
+      "llm_evidence": "提出针对视觉Transformer的动态量化方法，直接相关ViT高效部署",
+      "canonical_evidence": "提出针对视觉Transformer的动态量化方法，直接相关ViT高效部署",
+      "llm_tldr_en": "Introduces ScalePredictor, an instance-aware dynamic quantization framework for ViTs that learns per-instance scaling factors, achieving accurate quantization with minimal overhead.",
+      "llm_tldr_cn": "视觉Transformer在边缘设备部署受限于计算需求，现有后训练量化（PTQ）采用静态范式，忽略了不同样本的激活分布差异。论文提出ScalePredictor动态量化框架，根据每个输入实例自适应学习量化尺度，显著提升量化精度。该方法仅需少量校准数据，在保持低开销的同时，在多个视觉任务上优于静态PTQ方法。该工作为ViT在资源受限设备上的高效部署提供了实用方案。",
+      "llm_tldr": "视觉Transformer在边缘设备部署受限于计算需求，现有后训练量化（PTQ）采用静态范式，忽略了不同样本的激活分布差异。论文提出ScalePredictor动态量化框架，根据每个输入实例自适应学习量化尺度，显著提升量化精度。该方法仅需少量校准数据，在保持低开销的同时，在多个视觉任务上优于静态PTQ方法。该工作为ViT在资源受限设备上的高效部署提供了实用方案。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.25324v1",
+      "source": "arxiv",
+      "title": "Efficient Remote Sensing Instance Segmentation with Linear-Time State Space Distilled Visual Foundation Models",
+      "abstract": "The computational complexity of Transformers scales quadratically with the number of tokens, which significantly constrains the efficiency of vision models, particularly recent ViT-based foundation models in dense prediction tasks. Instance segmentation, a typical dense visual prediction task in the remote sensing field, faces similar challenges. In this paper, inspired by the recent advances of knowledge distillation in large language models, we introduce RS4D - a new remote sensing instance segmentation method with linear computational complexity, which addresses the inefficiency of long sequence modeling through distilled state space modeling (SSM). We propose an adaptive noise and masking knowledge distillation training method for pre-training lightweight SSM backbones, which effectively compresses knowledge from the vast self-attention space into a compact, dense linear state space. We also design a remote sensing image instance segmentation architecture based on this lightweight visual encoder, where we explore variants of three different backbones and two segmentation heads. Extensive experiments are conducted on multiple benchmark datasets, including SSDD, WHU, and NWPU. Compared to ViT-based approaches, our proposed SSM backbone achieves an 8x reduction in parameters and a 9x reduction in FLOPs while maintaining comparable or superior accuracy to both ViT- and CNN-based instance segmentation methods. The implementation codes have been publicly available at https://github.com/QinzheYang/RS4D.",
+      "authors": [
+        "Qinzhe Yang",
+        "Keyan Chen",
+        "Jia Xu",
+        "Zhenwei Shi",
+        "Zhengxia Zou"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-24T02:41:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.25324v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "efficient remote sensing instance segmentation using distilled state space models on ViT foundations",
+      "llm_evidence_cn": "在ViT基础上使用蒸馏状态空间模型的高效遥感实例分割",
+      "llm_evidence": "在ViT基础上使用蒸馏状态空间模型的高效遥感实例分割",
+      "canonical_evidence": "在ViT基础上使用蒸馏状态空间模型的高效遥感实例分割",
+      "llm_tldr_en": "Introduces RS4D, a linear-complexity remote sensing instance segmentation method using distilled state space models to overcome ViT quadratic complexity.",
+      "llm_tldr_cn": "针对ViT基础模型在密集预测任务中计算复杂度平方增长的问题，受大语言模型中知识蒸馏启发，提出RS4D方法，通过蒸馏状态空间模型实现线性时间复杂度的遥感实例分割。设计了自适应噪声与掩码知识蒸馏策略。该方法大幅提升了效率，同时保持了高精度，为远程感知应用提供了可行的视觉基础模型解决方案。",
+      "llm_tldr": "针对ViT基础模型在密集预测任务中计算复杂度平方增长的问题，受大语言模型中知识蒸馏启发，提出RS4D方法，通过蒸馏状态空间模型实现线性时间复杂度的遥感实例分割。设计了自适应噪声与掩码知识蒸馏策略。该方法大幅提升了效率，同时保持了高精度，为远程感知应用提供了可行的视觉基础模型解决方案。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "large vision model recent advances",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.22383v1",
+      "source": "arxiv",
+      "title": "Structured Hyperedge Adaptation for Parameter-Efficient Fine-Tuning of Vision Transformers",
+      "abstract": "Parameter-efficient fine-tuning (PEFT) has become a practical solution for adapting large pretrained vision transformers (ViTs) to downstream tasks while updating only a small subset of parameters. However, existing adapter-based methods perform adaptation independently for each token, implicitly assuming that token refinements should be learned in isolation. This token-wise formulation overlooks the structured relationships among tokens that naturally arise in visual scenes, potentially leading to redundant updates and spatially inconsistent feature refinement. In this work, we revisit the design of parameter-efficient adapters and propose to perform adaptation in hyperedge space rather than token space. We introduce HyperAdapter, a hypergraph-based adapter architecture that enables structured, group-aware adaptation through soft token routing. HyperAdapter constructs a soft hypergraph over ViT tokens using prototype-based assignments, aggregates token features into latent hyperedge representations, applies lightweight bottleneck adaptation at the hyperedge level, and diffuses the resulting updates back to tokens via the hypergraph incidence structure. This design injects an explicit structural inductive bias into PEFT while preserving the modularity and efficiency of standard adapters. Extensive experiments across diverse visual benchmarks demonstrate that structured hyperedge adaptation consistently outperforms strong PEFT baselines under comparable parameter budgets, with particularly pronounced gains on tasks requiring structured reasoning. Our results suggest that the choice of adaptation space is a critical yet underexplored dimension in parameter-efficient transfer for ViTs.",
+      "authors": [
+        "Edwin Kwadwo Tenagyei",
+        "Lei Wang",
+        "Ugochukwu Ejike Akpudo",
+        "Jun Zhou",
+        "Yongsheng Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-21T08:09:08+00:00",
+      "link": "https://arxiv.org/pdf/2606.22383v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "parameter-efficient fine-tuning for vision transformers",
+      "llm_evidence_cn": "视觉Transformer的参数高效微调",
+      "llm_evidence": "视觉Transformer的参数高效微调",
+      "canonical_evidence": "视觉Transformer的参数高效微调",
+      "llm_tldr_en": "HyperAdapter introduces structured hyperedge adaptation for vision transformers, enabling parameter-efficient fine-tuning that captures token relationships beyond independent token-wise updates.",
+      "llm_tldr_cn": "针对现有适配器方法独立处理每个令牌、忽略令牌间结构关系的问题，本文提出HyperAdapter，在超边空间而非令牌空间进行参数高效微调。该方法通过显式建模令牌间的结构化关系，避免冗余更新和特征不一致。实验表明，HyperAdapter在多个下游视觉任务上以更少参数取得更优性能，为ViT高效适应提供了新方向。",
+      "llm_tldr": "针对现有适配器方法独立处理每个令牌、忽略令牌间结构关系的问题，本文提出HyperAdapter，在超边空间而非令牌空间进行参数高效微调。该方法通过显式建模令牌间的结构化关系，避免冗余更新和特征不一致。实验表明，HyperAdapter在多个下游视觉任务上以更少参数取得更优性能，为ViT高效适应提供了新方向。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.19684v1",
+      "source": "arxiv",
+      "title": "Exploring Multi-Modal Large Language Models and Two-Stage Fine-Tuning for Fashion Image Retrieval",
+      "abstract": "Composed image retrieval retrieves a target image using a composed query of a reference image and a modified text description. In the fashion domain, this task requires understanding subtle attribute variations such as color, pattern, and texture. However, existing approaches face limitations due to scarce annotated data and simplistic negative sampling. We propose a novel framework that integrates a multi-modal large language model (LLaVA) to generate attribute-aware triplets and introduces a two-stage fine-tuning strategy to enhance contrastive learning. We leverage pretrained vision-language models, such as CLIP-ViT/B32, to generate and concatenate sentence-level prompts with the relative caption and to scale the number of negatives using static representations. Experimental results demonstrate enhanced compositional reasoning and improved fine-grained retrieval behavior, underscoring the feasibility and potential of the proposed framework for fashion retrieval.",
+      "authors": [
+        "Nguyen Cao Hoang",
+        "Hoang Bui Le",
+        "Nam Vo Hoang",
+        "Trung-Nghia Le"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T01:19:32+00:00",
+      "link": "https://arxiv.org/pdf/2606.19684v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "multi-modal LLM and CLIP for fashion image retrieval",
+      "llm_evidence_cn": "多模态大模型和CLIP用于时尚图像检索",
+      "llm_evidence": "多模态大模型和CLIP用于时尚图像检索",
+      "canonical_evidence": "多模态大模型和CLIP用于时尚图像检索",
+      "llm_tldr_en": "Integrates LLaVA with CLIP for composed image retrieval in fashion, using two-stage fine-tuning to handle attribute variations.",
+      "llm_tldr_cn": "时尚图像组合检索需理解细微属性变化，但标注数据稀缺。本文利用多模态大模型LLaVA生成属性感知三元组，结合两阶段微调策略增强对比学习，基于CLIP-ViT实现更准确的检索。该方法有效缓解了数据稀缺问题，提升了时尚检索的细粒度性能。",
+      "llm_tldr": "时尚图像组合检索需理解细微属性变化，但标注数据稀缺。本文利用多模态大模型LLaVA生成属性感知三元组，结合两阶段微调策略增强对比学习，基于CLIP-ViT实现更准确的检索。该方法有效缓解了数据稀缺问题，提升了时尚检索的细粒度性能。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.18839v1",
+      "source": "arxiv",
+      "title": "Semantic Robustness Certification for Vision-Language Models",
+      "abstract": "Vision-language models (VLMs) are now widely used in downstream tasks. However, real-world applications often expose VLMs to distribution shifts induced by semantic variation (e.g., shape, size, and style). Robustness certification determines if a model's prediction changes when transformations are applied to its input. While most certification frameworks study geometric or pixel-level transformations over inputs, this work proposes a novel framework that enables certifying VLM robustness under semantic-level transformations. Leveraging the open-vocabulary capability of VLMs, we use text prompts as semantic proxies to construct transformations parameterized by an extent that controls the degree of semantic variation. By characterizing the VLM decision boundary in closed form, our framework quantitatively certifies extent intervals for which the predicted class remains unchanged under the semantic transformation. Our framework is the first to certify VLM robustness under semantic-level variations without requiring additional data for each variation, making it practical to apply. Experiments on both synthetic and real-world data show that our framework enables certifying robustness under diverse semantic variations across scenarios.",
+      "authors": [
+        "Peiyu Yang",
+        "Paul Montague",
+        "Feng Liu",
+        "Andrew C. Cullen",
+        "Amardeep Kaur",
+        "Christopher Leckie",
+        "Sarah M. Erfani"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.CV"
+      ],
+      "published": "2026-06-17T09:15:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.18839v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "robustness certification for vision-language models",
+      "llm_evidence_cn": "视觉语言模型的鲁棒性认证",
+      "llm_evidence": "视觉语言模型的鲁棒性认证",
+      "canonical_evidence": "视觉语言模型的鲁棒性认证",
+      "llm_tldr_en": "A novel certification framework for vision-language models under semantic-level transformations, using text prompts as semantic proxies to characterize decision boundaries.",
+      "llm_tldr_cn": "视觉语言模型在实际应用中常因语义变化而出现分布偏移，现有认证框架主要处理几何或像素级变换。本文提出首个语义级鲁棒性认证框架，利用文本提示作为语义代理构造参数化变换，通过刻画VLM决策边界提供可证明的鲁棒性保证。这为安全部署VLM提供了重要工具。",
+      "llm_tldr": "视觉语言模型在实际应用中常因语义变化而出现分布偏移，现有认证框架主要处理几何或像素级变换。本文提出首个语义级鲁棒性认证框架，利用文本提示作为语义代理构造参数化变换，通过刻画VLM决策边界提供可证明的鲁棒性保证。这为安全部署VLM提供了重要工具。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22537v1",
+      "source": "arxiv",
+      "title": "NegAS: Negative Label Guided Attention and Scoring for Out-of-Distribution Object Detection with Vision-Language Models",
+      "abstract": "Out-of-Distribution (OOD) detection is essential for ensuring the robustness and reliability of object detection systems deployed in safety-critical applications. While prior research has mainly focused on uni-modal detectors or vision-language model (VLM) based classifiers, the potential of VLM-based object detectors in OOD scenarios remains underexplored. In this work, we take the first step toward building OOD object detection methods upon VLMs. We identify two challenges specific to VLM detectors: (i) their text-guided attention enhances foreground with ID labels but treats background uniformly, leaving potential OOD regions unexploited for separating in-distribution (ID) from OOD instances; and (ii) their sigmoid-based multi-label outputs are incompatible with softmax-based OOD scores, calling for scoring functions consistent with VLM probabilistic outputs. Hence, we introduce Negative Label Guided Attention and Scoring (NegAS). To address (i), we propose a negative label guided attention module (NegA), where LLM-generated, visually-similar but semantically-different negative labels are used to guide attention toward potential OOD background regions. To address (ii), we introduce a novel sigmoid-based OOD scoring function (NegS) that leverages both ID and negative labels, producing strong responses for ID instances and suppressed responses for OOD ones. Extensive experiments demonstrate that our approach improves OOD detection performance by a large margin while maintaining ID accuracy, e.g., reducing the FPR95 by 11.4% on the COCO dataset and 25.5% on the OpenImages dataset compared to the baseline model. While initially designed for dense VLM detectors like YOLO-World, we successfully adapt NegAS to Grounding DINO, a query-based VLM transformer and achieve significant improvements, demonstrating the generalizability of our framework.",
+      "authors": [
+        "Yingjie Zhang",
+        "Shuai Li",
+        "Peng Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T14:50:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.22537v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "proposes OOD object detection method using vision-language models, related to DETR and object detection",
+      "llm_evidence_cn": "基于视觉语言模型的分布外目标检测方法，与DETR目标检测相关",
+      "llm_evidence": "基于视觉语言模型的分布外目标检测方法，与DETR目标检测相关",
+      "canonical_evidence": "基于视觉语言模型的分布外目标检测方法，与DETR目标检测相关",
+      "llm_tldr_en": "Proposes NegAS, a negative label guided attention and scoring method for out-of-distribution object detection using vision-language models.",
+      "llm_tldr_cn": "基于视觉语言模型的目标检测器在OOD场景下尚未被探索。本文提出NegAS方法，利用负标签引导注意力增强和评分，有效分离分布内和分布外实例，首次将VLM检测器用于OOD检测。",
+      "llm_tldr": "基于视觉语言模型的目标检测器在OOD场景下尚未被探索。本文提出NegAS方法，利用负标签引导注意力增强和评分，有效分离分布内和分布外实例，首次将VLM检测器用于OOD检测。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "DETR transformer for object detection paper",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.19944v1",
+      "source": "arxiv",
+      "title": "Timage: A Generative Text-in-Image Paradigm for Fine-Tuning Vision-Language Models",
+      "abstract": "Multimodal Large Language Models (MLLMs) often lose track of the right image regions during fine-grained spatial reasoning, because a textual query rarely carries any explicit geometric anchor into the pixel domain. Prevailing remedies either rewire the model's weights or pad the prompt with verbose instructions, yet neither reliably pins the language to the correct visual coordinates without eroding the backbone's general competence. We introduce Timage, a paradigm that recasts multimodal understanding as an alignment problem solved at the input: the query is drawn, as a typeset overlay, onto the image itself. The placement and appearance of this overlay are produced by a Constrained Schrödinger Bridge (cSB), an entropic optimal-transport sampler that factorizes layout synthesis into two coupled stochastic stages. The first stage, Region Search, transports noise toward query-aligned image zones while obeying a hard occlusion barrier that protects salient foreground content; the second stage, Appearance Shaping, sizes the glyphs through an ``ink-budget'' regularizer so that the rendered text stays legible and visually balanced. The resulting overlay behaves as an explicit attention beacon that channels the model's focus along spatial semantics. On the VMCBench suite, Timage paired with a modest 7B backbone clearly overtakes far larger proprietary systems as well as parameter-tuned baselines. The study positions deliberate input reconstruction as a powerful, architecture-neutral lever for strengthening multimodal reasoning.",
+      "authors": [
+        "Yifeng Wu",
+        "Huimin Huang",
+        "Ruiluo Wu",
+        "Chunyi Lin",
+        "Guanhua Chen",
+        "Xian Wu",
+        "Wang Song",
+        "Ruize Han"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T08:40:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.19944v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "generative text-in-image paradigm for vision-language model fine-tuning",
+      "llm_evidence_cn": "生成式文本叠加图像范式用于视觉语言模型微调",
+      "llm_evidence": "生成式文本叠加图像范式用于视觉语言模型微调",
+      "canonical_evidence": "生成式文本叠加图像范式用于视觉语言模型微调",
+      "llm_tldr_en": "Introduces Timage, a paradigm that draws the query as a typeset overlay on the image using optimal transport for better multimodal alignment.",
+      "llm_tldr_cn": "针对多模态大语言模型在细粒度空间推理中语言与图像区域对齐不准确的问题，提出Timage范式，利用约束薛定谔桥将文本查询以排版覆盖形式绘制到图像上，从输入层面解决对齐问题，无需修改模型权重，同时在多种下游任务中保持骨干网络通用能力。",
+      "llm_tldr": "针对多模态大语言模型在细粒度空间推理中语言与图像区域对齐不准确的问题，提出Timage范式，利用约束薛定谔桥将文本查询以排版覆盖形式绘制到图像上，从输入层面解决对齐问题，无需修改模型权重，同时在多种下游任务中保持骨干网络通用能力。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.19668v1",
+      "source": "arxiv",
+      "title": "Code-Switching Reveals Language Anchoring in Multilingual LLMs",
+      "abstract": "Multilingual Large Language Models (MLLMs) are increasingly expected to handle Code-Switched (CS) inputs, yet mixing languages frequently degrades performance relative to source- or target-language monolingual counterparts. To understand this degradation, we use grammar-forced CS as a controlled diagnostic setting for locating CS representations relative to their source and target counterparts. We introduce Anchor Bias, a geometric measure that quantifies language anchoring, whether a CS hidden state aligns closer to its source or target language counterpart. Across diverse MLLMs, Anchor Bias reveals a consistent grammar-frame effect: source-framed CS stays source-anchored, whereas target-framed CS shifts target-ward and shows larger Question Answering (QA) degradation. Motivated by this representational pattern, we propose CANVAS (Contextual Anchor-based Neural Vector Alignment Steering), an inference-time intervention that extracts a source-side canvas from the input and softly steers target-language hidden states toward the source anchor during prefill. CANVAS consistently recovers QA F1 across MLLMs and CS conditions, showing that internal anchoring signals provide an actionable target for mitigating CS inference failures.",
+      "authors": [
+        "Jeonghyun Park",
+        "Seunghyun Yoon",
+        "Yonghyun Jun",
+        "Hwanhee Lee"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-18T00:42:55+00:00",
+      "link": "https://arxiv.org/pdf/2606.19668v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Analyzes language anchoring in multilingual LLMs via code-switching",
+      "llm_evidence_cn": "通过代码切换分析多语言大模型的语言锚定现象",
+      "llm_evidence": "通过代码切换分析多语言大模型的语言锚定现象",
+      "canonical_evidence": "通过代码切换分析多语言大模型的语言锚定现象",
+      "llm_tldr_en": "Analyzes language anchoring in multilingual LLMs via code-switching; introduces Anchor Bias metric revealing grammar-frame effects on QA performance.",
+      "llm_tldr_cn": "多语言大模型处理代码切换输入时性能显著下降。本文提出Anchor Bias度量，量化语言锚定现象，发现源语言框架下代码切换表示更靠近源语言，目标框架则转向目标语言并导致问答性能退化。该研究揭示了多语言模型表示中的语言锚定特性，为改进多语言模型性能提供方向。",
+      "llm_tldr": "多语言大模型处理代码切换输入时性能显著下降。本文提出Anchor Bias度量，量化语言锚定现象，发现源语言框架下代码切换表示更靠近源语言，目标框架则转向目标语言并导致问答性能退化。该研究揭示了多语言模型表示中的语言锚定特性，为改进多语言模型性能提供方向。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22608v1",
+      "source": "arxiv",
+      "title": "Automated sign detection across the Electronic Babylonian Library: A large-scale dataset and end-to-end cuneiform OCR pipeline",
+      "abstract": "Learning to read cuneiform tablets is an extremely demanding task; consequently, of the roughly half million excavated tablets, only a small fraction has been analysed by Assyriologists. Computer vision offers a promising avenue for decipherment but requires large, densely annotated datasets. To address this limitation, the largest annotated cuneiform sign dataset to date is used, and a Deformable Detection Transformer (DETR)-based object detection model is evaluated under two class granularities of 173 and 106 classes. The proposed system integrates automatic tablet-side extraction, heuristic line grouping, and n-gram-based textual similarity evaluation to bridge visual sign detection and textual structure, and achieves consistent improvements of up to 28-37% over prior work on COCO-style detection metrics. At inference, the method is applied to 87,668 tablet fragments from the Electronic Babylonian Library (eBL) corpus, producing nearly 2.9 million sign detections. Although the approach operates without linguistic priors and remains sensitive to tablet damage and layout variability, it provides a scalable and interpretable foundation for corpus-wide cuneiform analysis and supports future integration with multimodal and linguistic modelling frameworks.",
+      "authors": [
+        "Wentao Che",
+        "Esteban Garcés Arias",
+        "Asim Niaz",
+        "Andreas Bender",
+        "Enrique Jiménez"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-06-21T17:31:05+00:00",
+      "link": "https://arxiv.org/pdf/2606.22608v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "uses Deformable Detection Transformer for cuneiform sign detection",
+      "llm_evidence_cn": "使用可变形检测Transformer进行楔形文字符号检测",
+      "llm_evidence": "使用可变形检测Transformer进行楔形文字符号检测",
+      "canonical_evidence": "使用可变形检测Transformer进行楔形文字符号检测",
+      "llm_tldr_en": "This paper presents a DETR-based object detection pipeline for automated cuneiform sign recognition, integrating dataset construction and evaluation across 173 and 106 class granularities.",
+      "llm_tldr_cn": "针对楔形文字符号检测缺乏大规模标注数据的问题，本文构建了最大规模的标注数据集，并采用Deformable DETR对象检测模型进行端到端识别。系统集成了自动铭文提取、启发式行分组和n-gram文本相似度评估。在两个类别粒度下验证了模型有效性，为文化遗产数字化提供了实用的计算机视觉解决方案。",
+      "llm_tldr": "针对楔形文字符号检测缺乏大规模标注数据的问题，本文构建了最大规模的标注数据集，并采用Deformable DETR对象检测模型进行端到端识别。系统集成了自动铭文提取、启发式行分组和n-gram文本相似度评估。在两个类别粒度下验证了模型有效性，为文化遗产数字化提供了实用的计算机视觉解决方案。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "DETR transformer for object detection paper",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.20189v2",
+      "source": "arxiv",
+      "title": "HilDA: Hierarchical Distillation with Diffusion for Advancing Self-Supervised LiDAR Pre-training",
+      "abstract": "Leveraging Vision Foundation Models (VFMs) for camera-to-LiDAR knowledge distillation offers a promising solution to the scarcity of annotated data needed to represent the immense geometric and kinematic diversity of real-world autonomous driving (AD). However, current approaches typically treat VFMs as black-box teachers, relying exclusively on frame-wise feature similarity. Consequently, they do not fully exploit the teacher's layer-wise semantic structure and global context, as well as the rich spatiotemporal information inherent in LiDAR sequences. We propose HilDA, a self-supervised pretraining framework for LiDAR backbones that better captures the semantic what and geometric where needed for driving tasks. HilDA combines hierarchical distillation comprising multi-layer distillation for progressive semantic alignment and global context distillation for scene-level semantics, with a temporal occupancy diffusion objective promoting spatiotemporal consistency. Models pre-trained with HilDA achieve state-of-the-art results on cross-modal distillation benchmarks and outperform models trained via prior distillation approaches on 3D object detection, scene flow, and semantic occupancy prediction. Code available at: https://maxiuw.github.io/hilda.",
+      "authors": [
+        "Maciej Wozniak",
+        "Jesper Ericsson",
+        "Hariprasath Govindarajan",
+        "Truls Nyberg",
+        "Thomas Gustafsson",
+        "Patric Jensfelt",
+        "Olov Andersson"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-06-18T13:01:40+00:00",
+      "link": "https://arxiv.org/pdf/2606.20189v2",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "self-supervised pretraining with vision foundation models",
+      "llm_evidence_cn": "使用视觉基础模型进行自监督预训练",
+      "llm_evidence": "使用视觉基础模型进行自监督预训练",
+      "canonical_evidence": "使用视觉基础模型进行自监督预训练",
+      "llm_tldr_en": "HilDA proposes a self-supervised pretraining framework for LiDAR backbones that distills knowledge from vision foundation models using hierarchical distillation and diffusion, enhancing semantic and geometric representation for autonomous driving.",
+      "llm_tldr_cn": "针对自动驾驶中LiDAR数据标注稀缺的问题，本文提出HilDA框架，通过层级蒸馏与扩散技术，从视觉基础模型中迁移知识，进行自监督预训练。该方法不仅利用逐帧特征相似性，还发掘教师模型的层级语义结构和全局上下文。实验表明，HilDA能显著提升LiDAR主干网络在驾驶任务中的语义与几何表征能力，为多模态自监督学习提供了新思路。",
+      "llm_tldr": "针对自动驾驶中LiDAR数据标注稀缺的问题，本文提出HilDA框架，通过层级蒸馏与扩散技术，从视觉基础模型中迁移知识，进行自监督预训练。该方法不仅利用逐帧特征相似性，还发掘教师模型的层级语义结构和全局上下文。实验表明，HilDA能显著提升LiDAR主干网络在驾驶任务中的语义与几何表征能力，为多模态自监督学习提供了新思路。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "self-supervised learning with vision transformers",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.20189v1",
+      "source": "arxiv",
+      "title": "HilDA: Hierarchical Distillation with Diffusion for Advancing Self-Supervised LiDAR Pre-trainin",
+      "abstract": "Leveraging Vision Foundation Models (VFMs) for camera-to-LiDAR knowledge distillation offers a promising solution to the scarcity of annotated data needed to represent the immense geometric and kinematic diversity of real-world autonomous driving (AD). However, current approaches typically treat VFMs as black-box teachers, relying exclusively on frame-wise feature similarity. Consequently, they do not fully exploit the teacher's layer-wise semantic structure and global context, as well as the rich spatiotemporal information inherent in LiDAR sequences. We propose HilDA, a self-supervised pretraining framework for LiDAR backbones that better captures the semantic what and geometric where needed for driving tasks. HilDA combines hierarchical distillation comprising multi-layer distillation for progressive semantic alignment and global context distillation for scene-level semantics, with a temporal occupancy diffusion objective promoting spatiotemporal consistency. Models pre-trained with HilDA achieve state-of-the-art results on cross-modal distillation benchmarks and outperform models trained via prior distillation approaches on 3D object detection, scene flow, and semantic occupancy prediction. Code available at: https://maxiuw.github.io/hilda.",
+      "authors": [
+        "Maciej Wozniak",
+        "Jesper Ericsson",
+        "Hariprasath Govindarajan",
+        "Truls Nyberg",
+        "Thomas Gustafsson",
+        "Patric Jensfelt",
+        "Olov Andersson"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.RO"
+      ],
+      "published": "2026-06-18T13:01:40+00:00",
+      "link": "https://arxiv.org/pdf/2606.20189v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "self-supervised LiDAR pretraining with VFMs",
+      "llm_evidence_cn": "利用视觉基础模型自监督LiDAR预训练",
+      "llm_evidence": "利用视觉基础模型自监督LiDAR预训练",
+      "canonical_evidence": "利用视觉基础模型自监督LiDAR预训练",
+      "llm_tldr_en": "Proposes HilDA, a hierarchical distillation framework using diffusion for self-supervised LiDAR pretraining, leveraging Vision Foundation Models.",
+      "llm_tldr_cn": "LiDAR数据标注稀缺，现有利用视觉基础模型（VFM）的蒸馏方法仅考虑帧级相似性。本文提出HilDA，通过分层蒸馏与扩散机制，充分利用VFM的层级语义和时空信息，提升自监督LiDAR预训练效果，在自动驾驶下游任务中表现优异。",
+      "llm_tldr": "LiDAR数据标注稀缺，现有利用视觉基础模型（VFM）的蒸馏方法仅考虑帧级相似性。本文提出HilDA，通过分层蒸馏与扩散机制，充分利用VFM的层级语义和时空信息，提升自监督LiDAR预训练效果，在自动驾驶下游任务中表现优异。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "self-supervised learning with vision transformers",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.23611v1",
+      "source": "arxiv",
+      "title": "Data Selection Through Iterative Self-Filtering for Vision-Language Settings",
+      "abstract": "The availability of large amounts of clean data is paramount to training neural networks. However, at large scales, manual oversight is impractical, resulting in sizeable datasets that can be very noisy. Attempts to mitigate this obstacle to producing performant vision-language models have so far involved heuristics, curated reference datasets, and using pre-trained models. Here we propose a novel, bootstrapped method in which a CLIP model is trained on an evolving, self-selected dataset. This evolving dataset constitutes a balance of filtered, highly probable clean samples as well as diverse samples from the entire distribution. Our proposed Self-Filtering method iterates between training the model and selecting a subsequently improved data mixture. Training on vision-language datasets filtered by the proposed approach improves downstream performance without the need for additional data or pre-trained models.",
+      "authors": [
+        "Andrei Liviu Nicolicioiu",
+        "Sarvjeet Singh Ghotra",
+        "Morgane M. Moss",
+        "Aaron Courville"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI",
+        "cs.LG"
+      ],
+      "published": "2026-06-22T17:11:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.23611v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "CLIP model training with iterative self-filtering data selection",
+      "llm_evidence_cn": "通过迭代自过滤数据选择训练CLIP模型",
+      "llm_evidence": "通过迭代自过滤数据选择训练CLIP模型",
+      "canonical_evidence": "通过迭代自过滤数据选择训练CLIP模型",
+      "llm_tldr_en": "Proposes a bootstrapped self-filtering method to train a CLIP model on an evolving dataset, balancing clean and diverse samples to improve vision-language model performance without manual curation.",
+      "llm_tldr_cn": "针对大规模视觉语言模型训练中数据噪声问题，提出自引导的迭代自过滤方法：在训练过程中动态选择高质量且多样化的样本，使CLIP模型在自选数据集上不断进化。在多个基准上显著提升了零样本分类和检索性能，减少了对人工清洗的依赖。",
+      "llm_tldr": "针对大规模视觉语言模型训练中数据噪声问题，提出自引导的迭代自过滤方法：在训练过程中动态选择高质量且多样化的样本，使CLIP模型在自选数据集上不断进化。在多个基准上显著提升了零样本分类和检索性能，减少了对人工清洗的依赖。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    },
+    {
+      "id": "2606.20728v1",
+      "source": "arxiv",
+      "title": "VTOS: Learning to Orchestrate Vision Tools by Co-Searching Solutions and Observers",
+      "abstract": "Vision foundation tools such as open-vocabulary detectors, segmentation models, and post-processing operators are powerful building blocks for computer vision, but their effectiveness depends heavily on how they are orchestrated: which tools are used, in what order, with what parameters, and under what visual conditions. Existing visual-programming agents typically generate a fixed solution pipeline, making them brittle under dense objects, occlusion, small targets, and domain shift. We introduce VTOS (Vision Tools Orchestration Search), a framework for adaptive visual tool orchestration through joint solution--observer search. VTOS co-searches executable solution programs that compose vision tools such as Grounding DINO, SAM, NMS, and slice-and-detect, together with observer programs that diagnose candidate solutions, identify failure modes, and generate actionable feedback. These observations are accumulated in a shared VisionThoughts knowledge base to guide subsequent search. We evaluate VTOS through two case studies: dense object counting on LVIS-Count and zero-shot plant-disease segmentation on PlantSeg-OOD, which stress different orchestration challenges including threshold calibration, NMS, slicing, mask refinement, and domain generalization. Across both tasks, VTOS outperforms static tool pipelines and agentic visual-programming baselines, showing that co-searching solutions and observers is an effective strategy for adapting vision tools to challenging computer vision tasks.",
+      "authors": [
+        "Jinchao Ge",
+        "Lingqiao Liu",
+        "Shuwen Zhao",
+        "Lei Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.CL"
+      ],
+      "published": "2026-06-17T04:52:22+00:00",
+      "link": "https://arxiv.org/pdf/2606.20728v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "orchestrates vision tools including detection models like Grounding DINO, relevant to object detection at CCF-A venues",
+      "llm_evidence_cn": "编排目标检测等视觉工具，与CCF-A会议目标检测相关",
+      "llm_evidence": "编排目标检测等视觉工具，与CCF-A会议目标检测相关",
+      "canonical_evidence": "编排目标检测等视觉工具，与CCF-A会议目标检测相关",
+      "llm_tldr_en": "Proposes VTOS, a framework for adaptive visual tool orchestration by co-searching solutions and observers, using tools like Grounding DINO and SAM for robust object detection.",
+      "llm_tldr_cn": "现有视觉编程代理生成固定方案，在密集、遮挡等场景下脆弱。本文提出VTOS框架，通过联合搜索解决方案和观察者，自适应编排Grounding DINO、SAM等视觉工具，实现鲁棒目标检测。",
+      "llm_tldr": "现有视觉编程代理生成固定方案，在密集、遮挡等场景下脆弱。本文提出VTOS框架，通过联合搜索解决方案和观察者，自适应编排Grounding DINO、SAM等视觉工具，实现鲁棒目标检测。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Find influential papers on object detection from CCF A computer vision conferences",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.20419v1",
+      "source": "arxiv",
+      "title": "Spectral Query-Key Product Weight Steering for Training-Free VLM Hallucination Mitigation",
+      "abstract": "Vision-language models (VLMs) often generate fluent but visually unsupported descriptions, especially by mentioning objects absent from the image. We propose QK Product Steering, a data-free, training-free, and zero-inference-cost weight edit for reducing object hallucination. The method directly edits the per-head query-key product, the operator that produces pre-softmax attention logits, by suppressing a small number of dominant singular modes in selected middle layers. The edited product is then mapped back to the query weights through a closed-form query-only update while keeping shared key weights fixed, making the edit compatible with grouped-query attention. We further decompose the QK product into symmetric and antisymmetric components to distinguish mutual content-similarity patterns from directional attention patterns. Across three GQA-based VLMs, QK Product Steering achieves an average relative CHAIR$_s$ reduction of $4.0\\%$, while matched random-mode controls show negligible change. Interpretability ablations show that the hallucination signal is specific to dominant QK modes and is primarily localized to the symmetric mutual-attention channel. Overall, QK Product Steering offers a simple alternative to decoding-time mitigation, requiring no additional data, fine-tuning, or inference-time overhead while largely preserving general multimodal capability.",
+      "authors": [
+        "Karn Tiwari",
+        "Varnith Chordia",
+        "Prathosh A P"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-18T16:03:26+00:00",
+      "link": "https://arxiv.org/pdf/2606.20419v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "training-free hallucination mitigation for vision-language models",
+      "llm_evidence_cn": "无训练缓解视觉语言模型幻觉",
+      "llm_evidence": "无训练缓解视觉语言模型幻觉",
+      "canonical_evidence": "无训练缓解视觉语言模型幻觉",
+      "llm_tldr_en": "Proposes QK Product Steering, a training-free weight edit that suppresses dominant singular modes in attention QK products to reduce object hallucination in VLMs.",
+      "llm_tldr_cn": "视觉语言模型常生成包含图像中不存在对象的描述（幻觉）。本文提出QK乘积引导，一种无需训练、无需数据、零推理代价的权重编辑方法，通过抑制注意力查询-键乘积中主导奇异模式来减少幻觉。该方法在保持模型性能的同时有效降低幻觉率，为VLM可靠部署提供了实用解决方案。",
+      "llm_tldr": "视觉语言模型常生成包含图像中不存在对象的描述（幻觉）。本文提出QK乘积引导，一种无需训练、无需数据、零推理代价的权重编辑方法，通过抑制注意力查询-键乘积中主导奇异模式来减少幻觉。该方法在保持模型性能的同时有效降低幻觉率，为VLM可靠部署提供了实用解决方案。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.24756v1",
+      "source": "arxiv",
+      "title": "Adaptive Hebbian Memory Routing in Vision Transformers for Few-Shot Learning",
+      "abstract": "Few-shot image recognition requires models to adapt to new classes from a small labeled support set. Hebbian fast-weight memory can provide temporary associative information during an episode, but fixed memory behavior may not be appropriate for every few-shot task. In this work, we propose Adaptive Hebbian Routing for few-shot Vision Transformers. The method uses a lightweight MLP router to control the contribution of Hebbian memory, the strength of memory updates, and the retention of previous memory from support-set features. We study Adaptive Placement, Adaptive Plasticity, and Fully Adaptive Hebbian Routing. Experiments use ViT-Small, DeiT-Small, and Swin-Tiny under 5-way 1-shot evaluation on Omniglot, CIFAR-FS, and cross-domain transfer from CIFAR-FS to Omniglot. In the direct Swin comparison, fixed and adaptive Hebbian variants use the same memory location. Adaptive Plasticity improves the fixed Hebbian result from 96.74\\% to 96.92\\%, while Fully Adaptive Routing achieves the best result at 96.94\\%. The fully adaptive Swin model also reduces inference time from 16.51 ms to 14.05 ms relative to fixed Hebbian Swin. On CIFAR-FS, adaptive variants improve performance across all three backbones, and the multi-shot evaluation shows that these gains remain useful as the number of support examples increases. These results show that adaptive plasticity and adaptive memory activation can improve few-shot Transformer representations beyond fixed Hebbian behavior.",
+      "authors": [
+        "Mohammed Yusuf Mujawar",
+        "Noorbakhsh Amiri Golilarz"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T16:16:37+00:00",
+      "link": "https://arxiv.org/pdf/2606.24756v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Adaptive Hebbian memory routing in Vision Transformers for few-shot learning",
+      "llm_evidence_cn": "视觉Transformer中用于小样本学习的自适应Hebbian记忆路由",
+      "llm_evidence": "视觉Transformer中用于小样本学习的自适应Hebbian记忆路由",
+      "canonical_evidence": "视觉Transformer中用于小样本学习的自适应Hebbian记忆路由",
+      "llm_tldr_en": "Proposes Adaptive Hebbian Routing for few-shot Vision Transformers, using a lightweight MLP router to control Hebbian memory contributions, improving few-shot recognition.",
+      "llm_tldr_cn": "针对小样本图像识别中固定Hebbian记忆行为不适应任务变化的问题，提出自适应Hebbian路由方法，通过轻量级MLP路由器动态控制记忆贡献、更新强度和保留程度。在ViT-Small、DeiT-Small和Swin-Tiny上的实验显示了在多种小样本基准上的有效性，为视觉Transformer的小样本学习提供了灵活的记忆机制。",
+      "llm_tldr": "针对小样本图像识别中固定Hebbian记忆行为不适应任务变化的问题，提出自适应Hebbian路由方法，通过轻量级MLP路由器动态控制记忆贡献、更新强度和保留程度。在ViT-Small、DeiT-Small和Swin-Tiny上的实验显示了在多种小样本基准上的有效性，为视觉Transformer的小样本学习提供了灵活的记忆机制。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "self-supervised learning with vision transformers",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "8plus"
+    }
+  ]
+}

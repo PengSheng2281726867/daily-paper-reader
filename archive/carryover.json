@@ -1,20 +1,63 @@
 {
-  "generated_at": "2026-06-22T21:29:36.533456+00:00",
-  "updated_date": "20260622",
+  "generated_at": "2026-06-25T21:31:48.360226+00:00",
+  "updated_date": "20260625",
   "carryover_days": 9,
   "tag_states": {
     "vit": {
-      "updated_date": "20260622",
+      "updated_date": "20260625",
       "carryover_days": 9,
-      "items": []
+      "items": [
+        {
+          "id": "2606.25318v1",
+          "source": "arxiv",
+          "title": "REViT: Roto-reflection Equivariant Convolutional Vision Transformer",
+          "abstract": "In this paper, we propose a discrete roto-reflection group equivariant vision transformer with convolutional attention. Roto-reflection equivariant networks preserve the rotational, flip and positional symmetry in feature maps, making them useful for tasks where orientation of the inputs is relevant to the model outputs. In image classification and object detection, most of the studies on roto-reflection equivariant models have focused on using convolutional neural networks rather than vision transformers. In this paper, we examine the challenges involved in achieving equivariance in vision transformers, and we propose a simpler way to implement a discretized roto-reflection group equivariant vision transformer. The experimental results demonstrate that our approach outperforms the existing approaches for developing discrete roto-reflection group equivariant neural networks for image classification.",
+          "authors": [
+            "Sheir A. Zaheer",
+            "Alexander C. Holston",
+            "Chan Y. Park"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV",
+            "cs.LG"
+          ],
+          "published": "2026-06-24T02:32:11+00:00",
+          "link": "https://arxiv.org/pdf/2606.25318v1",
+          "tags": [
+            "keyword:cv-lm",
+            "keyword:vit",
+            "query:cv-lm",
+            "query:llm-papers",
+            "query:vit"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "roto-reflection equivariant vision transformer",
+          "llm_evidence_cn": "旋转反射等变视觉Transformer",
+          "llm_evidence": "旋转反射等变视觉Transformer",
+          "canonical_evidence": "旋转反射等变视觉Transformer",
+          "llm_tldr_en": "REViT introduces a discrete roto-reflection group equivariant vision transformer with convolutional attention, achieving orientation-aware features for classification and detection.",
+          "llm_tldr_cn": "针对视觉Transformer缺乏旋转和翻转等变性的问题，本文提出REViT，将卷积注意力与离散旋转反射群等变机制结合。该方法在保持位置信息的同时，使模型能够感知输入方向。实验表明，REViT在图像分类和对象检测任务上优于传统等变CNN和普通ViT，拓展了ViT在方向敏感任务中的应用。",
+          "llm_tldr": "针对视觉Transformer缺乏旋转和翻转等变性的问题，本文提出REViT，将卷积注意力与离散旋转反射群等变机制结合。该方法在保持位置信息的同时，使模型能够感知输入方向。实验表明，REViT在图像分类和对象检测任务上优于传统等变CNN和普通ViT，拓展了ViT在方向敏感任务中的应用。",
+          "llm_tags": [
+            "query:vit"
+          ],
+          "matched_query_tag": "query:vit",
+          "matched_query_text": "Vision Transformer ViT important paper computer vision",
+          "matched_requirement_id": "req-1",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.25318v1",
+          "carry_days": 1
+        }
+      ]
     },
     "cv-lm": {
-      "updated_date": "20260622",
+      "updated_date": "20260625",
       "carryover_days": 9,
       "items": []
     },
     "llm-papers": {
-      "updated_date": "20260622",
+      "updated_date": "20260625",
       "carryover_days": 9,
       "items": []
     }
