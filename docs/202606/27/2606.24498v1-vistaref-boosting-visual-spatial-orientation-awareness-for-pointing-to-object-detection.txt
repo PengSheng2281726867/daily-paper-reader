@@ -1,0 +1,676 @@
+Title: VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection
+
+URL Source: https://arxiv.org/pdf/2606.24498v1
+
+Published Time: Wed, 24 Jun 2026 01:05:36 GMT
+
+Number of Pages: 17
+
+Markdown Content:
+# VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection 
+
+# Ling Li 
+
+Tsinghua University Beijing Shi, China liling25@mails.tsinghua.edu.cn 
+
+# Zhizhen Cai 
+
+Beijing University of Posts and Telecommunications Beijing Shi, China Chua_ZH2@outlook.com 
+
+# Xinkun Wu 
+
+Tsinghua Shenzhen International Graduate School Shenzhen, Guangdong, China wuxk25@mails.tsinghua.edu.cn 
+
+# Ziyu Zhu 
+
+Tsinghua University Beijing Shi, China zhuziyu.edward@gmail.com 
+
+# Jiaqing Lyu 
+
+Tsinghua University Beijing, China lyujq25@mails.tsinghua.edu.cn 
+
+# Bowen Liu 
+
+Dalian University of Technology Dalian Shi, China liubw20050702@mail.dlut.edu.cn 
+
+# Zhidong Deng 
+
+Dalian University of Technology Dalian Shi, China michael@tsinghua.edu.cn 
+
+## Abstract 
+
+Grounding deictic gestures in natural images is fundamental to AR and human-robot collaboration, providing a basis for seam-less spatial interaction. While Transformer-based visual models have achieved significant progress in general object detection, their global attention mechanisms often neglect micro-geometric rela-tionships, degrading orientation accuracy. In pointing tasks, this deficiency manifests as an inability to accurately capture the point-ing ray implied by finger poses, which results in pointing drift and localization ambiguity when dealing with distant or densely packed objects. To address this, we propose VistaRef , a framework designed to explicitly enhance spatial orientation awareness. First, we develop the Local Hand Entity Modeling (LHEM) module, which incorporates hand-pose embeddings to strengthen the model’s ca-pability to capture subtle finger deviations. Second, drawing in-spiration from multi-view geometry, we construct the Geometric Ray Modeling (GRM) module to transform implicit orientation in-formation into explicit spatial geometric features, guiding feature aggregation and deep fusion via attention mechanisms. Further-more, we introduce a novel Orientation-Consistent Alignment Loss (OCAL) to synergistically supervise hand presence and pointing consistency, ensuring that all architectural improvements collec-tively serve the core objective of spatial localization. Experimental results demonstrate that VistaRef significantly outperforms the baseline, achieving a 14 -point absolute gain in grounding accu-racy. Qualitative analysis further confirms that VistaRef effectively models the geometric correlation from hand to target, bridging the spatial perception gap inherent in traditional Transformers for complex scenarios. Code: https://github.com/lingli1724/VistaRef. 
+
+## CCS Concepts 
+
+• Computing methodologies → Object detection ; Interest point and salient region detections ; Spatial and physical reasoning ; Infor-mation extraction. 
+
+> Code:https://github.com/lingli1724/VistaRef .
+
+## Keywords 
+
+Visual Grounding, Spatial orientation awareness, Pointing-to-Object Detection 
+
+## 1 Introduction 
+
+Within the workflow of Visual Grounding (VG) [ 7 , 15 , 38 ], Refer-ring Expression Comprehension (REC) [ 10 , 41 , 59 , 63 ] and Referring Expression Segmentation (RES) [ 27 , 51 , 52 ] establish the correspon-dence between linguistic semantics and visual entities through the prediction of bounding boxes and instance masks, respectively, serving as the logical foundation for agent environment percep-tion. However, conventional methods are often constrained by the inherent scarcity of referential information in text-only queries, failing to accommodate the physical deictic cues of interlocutors in 
+
+Figure 1: Examples of pointing-to-object detection. The tar-get object varies relative to the finger’s orientation; even subtle shifts in pointing direction lead to different targets, necessitating robust spatial awareness from the model.  
+
+> arXiv:2606.24498v1 [cs.CV] 23 Jun 2026 Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. t
+> 𝐀 𝐀 𝐀 𝐀 𝐀 𝐀
+> 𝐀𓀀𝐀 𝐀 𝐀 𝐀 𝐀
+> 𝐀 𝐀 𝐀 𝐀
+> 𝐀 𝐀 𝐀
+
+④ Ray-Guided 
+
+Target Grounding 
+
+> Cross
+> Attention
+> 𝐀 𝐀 ℎ𝐀𓀀𝐀 𝐀 𝐀 𝐀 𝐀
+> 𝐀 𝐀 𝐀
+> 𝐀 𝐀 𝐀
+> Ray Encoder  𝐀 𝐀 𝐀 𝐀
+> 𝐀 𝐀𴰀𝐀
+> 𝐀 𝐀 𝐀 𝐀 𝐀
+> 𝐀 𝐀 𝐀 𝐀
+> 𝐀
+> 𝐀
+> ∆
+> x
+> lℎ𝐀 𝐀 𝐀
+> lℎ𝐀 𝐀 𝐀
+> [CLS]
+> 𝐀 1
+> 𝐀 2
+> 𝐀 M
+> …
+
+𝐀 𝐀 
+
+𝐀 𝐀 
+
+𝐀 𴰀𰠀𰠀𵐀 
+
+⊙
+
+BEiT3 backone Text 
+
+> “Please frame the
+> bbox where a
+> finger points to
+> the item.”
+
+Image 
+
+② Geometric Ray Modeling ① Text-Guided Visual Aggregation 
+
+𝐀 𝐀 
+
+𝐀 𝐀 𝐀  
+
+> l𝐀 𝐀 l𝐀 𝐀 𝐀
+> True
+> False
+> 𝐀𝐀𝐀𗠀 𝐀 𝐀 𝐀 𝐀
+
+Attention-
+
+based Pooling 
+
+③ Local Hand Entity Modeling 
+
+> 𝐀 𝐀
+> Loacl
+> Pooling
+
+f𝐀𝐀𝐀𗠀 Local Hand Patch 
+
+> 𝐀 ℎ𝐀 𝐀 𝐀
+> ∩
+> 𝐀𝐀𝐀𗠀 𝐀 𝐀
+> y
+
+Figure 2: Overview of the VistaRef framework. Our model consists of four hierarchical modules: (1) Text-Guided Visual Aggre-gation extracts target-aware semantic representations via asymmetric masking; (2) Geometric Ray Modeling (GRM) regresses directional primitives to encapsulate hand pointing orientation; (3) Local Hand Entity Modeling (LHEM) purifies gestural features from a dynamically proposed region Ωℎ𝑎𝑛𝑑 ; (4) Ray-Aware Target Grounding performs precise object localization through ray-guided interaction modeling. 
+
+real-world spaces. For example, in scenarios containing multiple objects with similar characteristics, agents struggle to accurately resolve the user’s referential intent without deictic cues (e.g., body language) [ 26 ]. To transcend these limitations, Embodied Refer-ence Understanding (ERU) [ 3, 12 , 17 , 32 , 34 , 37 , 37 , 43 ] requires models to interpret physical intentions through spatial perception such as pointing gestures [ 11 , 26 ], body orientation [ 37 ], and gaze projection [ 18 , 40 ], emphasizing the embodied nature of interaction. Under this framework, pointing-to-object detection serves as a key sub-task [ 3, 11 , 24 ]. This task aims to overcome the limita-tions of ambiguous semantic alignment by explicitly formulating a hierarchical physical modeling chain, progressing from body key-point estimation to pointing vector construction and culminating in target object projection, thereby achieving deterministic ray alignment, as shown in Fig. 1. By empowering models with pre-cise physical spatial awareness for high-frequency collaboration in cluttered environments, pointing-to-object detection plays a vital role in the fields of augmented reality (AR) [ 20 , 23 , 45 , 57 ], human-robot collaboration [ 29 , 39 , 50 , 61 ], and human–computer interface [13, 33, 56, 58]. In recent years, single-stage Transformer-based frameworks [ 25 ,30 , 30 , 54 ] have significantly enhanced the efficiency of VG through end-to-end attention mechanisms. However, applying such models to pointing-to-object detection tasks remains challenging, as the global attention mechanism of Transformers tends to prioritize coarse-grained semantic associations at the expense of fine-grained micro-scale spatial geometric constraints [ 4, 8, 21 ]. This leads to a significant orientation insensitivity, where the model fails to generate corresponding variations in physical features in response to subtle deviations in finger pose [ 1, 46 , 47 ]. In complex scenarios involving distant targets or cluttered environments, this lack of spatial awareness directly leads to severe localization drift and predictive ambiguity [11, 26]. We contend that the key to resolving pointing ambiguity lies in transforming implicit geometric priors into explicit feature con-straints. A successful pointing system must possess two core ca-pabilities: high-precision pose perception of the pointing origin (i.e., the hand entity) [ 2, 64 ]and robust modeling of the geomet-ric path from the hand to the target [ 11 , 26 ]. To this end, we aim to introduce a spatial geometric alignment mechanism upon the model of OneRef [ 54 ]. This allows the model to perform feature aggregation along a deterministic geometric ray—much like the human visual system—thereby overcoming the inherent limitations of pure attention mechanisms in spatial reasoning. Based on these insights, we propose the VistaRef framework. To accurately capture the pointing ray, we introduce the Local Hand Entity Modeling (LHEM) module, which strengthens the percep-tion of subtle fingertip movements through hand-pose embeddings. For pointing-path modeling, we design the Geometric Ray Model-ing (GRM) module, which utilizes attention mechanisms to deeply fuse orientation information with visual features, explicitly guid-ing the model to focus on the spatial regions covered by the ray. Furthermore, to ensure synergy between modules, we propose the Orientation-Consistent Alignment Loss (OCAL), which employs geometric supervision to force the model to learn physically self-consistent spatial mappings. The core advantage of VistaRef lies in its dual focus: it considers not only "where the object is" but also "how the hand points to it," fundamentally enhancing the robustness of spatial perception. Our main contributions are summarized as follows: VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY 
+
+(1) Identification of Orientation Insensitivity: We reveal the inherent spatial orientation insensitivity of traditional Trans-formers in pointing tasks and emphasize the foundational role of pointing ray modeling. (2) The VistaRef Framework: We propose VistaRef, a novel framework that implements a hierarchical geometric modeling strat-egy—bridging micro-level gestural cues with macro-level spatial trajectories—enabled by the LHEM and GRM modules. (3) Orientation-Consistent Supervision: We introduce the OCAL loss function, which incorporates explicit geometric con-straints into the end-to-end Transformer learning process to ensure physically self-consistent spatial alignment. (4) Systematic Validation: Extensive experiments demonstrate that VistaRef significantly outperforms state-of-the-art baselines, exhibiting superior localization robustness and orientation accu-racy, particularly in cluttered and distant pointing scenarios. 
+
+## 2 Related Work 2.1 Visual Grounding and Referring Expression Comprehension 
+
+In the realm of VG [ 38 , 48 , 55 ], REC [ 14 , 31 , 41 , 62 ] focuses on mapping complex linguistic references onto spatial bounding boxes in images. Early two-stage frameworks, such as MAttNet [ 59 ] and NMTREE [ 28 ], decomposed expressions into modular components or dependency trees to achieve interpretable reasoning. To en-hance computational efficiency, one-stage models like RealGIN [ 63 ]and TransVG [ 7] shifted the workflow toward direct coordinate regression. Following this trend, subsequent research has further deepened the multimodal modeling capabilities of Transformers, pursuing higher-dimensional task unification [ 5 , 16 , 53 , 65 ] and deep modal alignment [ 30 , 54 ]. Task unification not only covers the integration of multiple referring tasks but also includes adap-tation to referring requirements at different granularities, while deep alignment focuses on achieving more efficient synchroniza-tion between textual and visual semantics, thereby significantly improving localization accuracy. Specifically, the unified network proposed by SeqTR completes phrase grounding, REC, and RES in a one-stop manner via discrete coordinate point sequence prediction [65 ]. Additionally, HiVG [ 53 ] and PropVG [ 5 ]introduce hierarchical or multi-granularity modeling mechanisms, significantly enhancing the dimension of perception. GREC [ 16 ] addresses the limitations of traditional REC, which only supports single targets, by providing generalized support for multi-target and no-target expressions. As a typical representative of multimodal deep alignment, Grounding DINO [ 30 ] implements full-stage cross-modal fusion. To deepen modal integration, OneRef [ 54 ] adopts a single-tower architecture coupled with Masked Referring Expression Modeling to capture complex referential relationships. Despite the progress made by previous work in high-dimensional task unification and seman-tic alignment, such models still treat coordinates as static indices, failing to perceive physical space and human pointing intentions. 
+
+## 2.2 Embodied Reference Understanding and Hand Pointing Detection 
+
+Human communication is multimodal and embodied, with users frequently leveraging multimodal deictic cues to convey intent [ 9, 11 , 19 , 34 , 37 ]. This necessitates a transition from heuristic se-mantic alignment toward task-specific geometric modeling within the scope of ERU [ 3, 12 , 17 , 32 , 34 , 37 , 37 , 43 ]. To address spatial perspective-taking and parallax, REP [ 44 ] employs view rotation to simulate the sender’s egocentric perception. To further refine pointing precision, AD-DINO [ 11 ] integrates distance-aware mecha-nisms with dynamic attention source prediction. Touch-Line Trans-former [ 26 ] introduces the virtual touch line, utilizing geometric consistency loss to mathematically constrain the gesture-target alignment. In the 3D domain, DeePoint [ 37 ] attempts to jointly model holistic spatio-temporal features for end-to-end pointing recognition and 3D direction estimation. However, the model’s 2D pose estimator, OpenPifPaf [ 22 ], needs to detect 17 human joint key-points per frame. This undoubtedly escalates prediction complexity, while various body keypoints remain susceptible to occlusions. To resolve these problems, we propose VistaRef, which explicitly formulates a hierarchical physical modeling process progressing from hand reference points through pointing vectors to spatial rays. This geometric-driven workflow significantly streamlines the keypoint prediction pipeline while accurately capturing the underlying physical mechanics of pointing, thereby facilitating robust ray alignment in cluttered scenarios. 
+
+## 3 Method 
+
+In this section, we present VistaRef , a task-specific framework engineered to mitigate referential ambiguity by explicitly model-ing the “point-to-line” physical progression of pointing gestures. VistaRef maps abstract multimodal intent onto deterministic geo-metric rays, which serve as structural priors to guide fine-grained VG. As illustrated in Fig. 2, given a linguistic query such as “Please frame the bbox where a finger points to the item” the model regresses the coordinates of the hand’s root and tip, extracts distilled gestural features from the localized hand region, and effectively traverses the synthesized ray to precisely localize the target entity. As show in Fig. 2, VistaRef adopts a cascaded architecture consisting of Text-Guided Visual Aggregation (Sec. 3.1), Geometric Ray Modeling (GRM) (Sec. 3.2), Local Hand Entity Modeling (LHEM) (Sec. 3.3), and Ray-Aware Target Grounding (Sec. 3.4). For each image-text pair, we utilize a BEiT3-based backbone to encode the joint vision-language input into a target-aware semantic representation h𝑣𝑙 . Building upon this context, the GRM module regresses hand coordinates to formulate a directional prior eray ,while the LHEM module extracts purified gestural features fhand 
+
+from a dynamically proposed local region Ωhand (Fig. 3). These com-ponents are synthesized into a ray-aware hand query Qrh , which interacts with global visual features via a cross-attention to capture the spatial associations between the hand and the potential target. Subsequently, the resulting interaction features t are non-linearly fused with the global context to predict the final object bounding box. Finally, the framework is optimized via a Conditional Super-vision Strategy (Sec. 3.5), which gates regression branches based on gesture presence to ensure robust geometric alignment. 
+
+## 3.1 Cross-modal Feature Representation and Interaction 
+
+We employ the highly versatile and unified BEiT-3 [ 49 ] architecture as our backbone. To fully leverage the robust and diverse multi-modal representations acquired during the pre-training phase, its Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. 𝐀𑰀𝐀𗠀 𝐀 𝐀 
+
+𑰀 𝐀 𝐀 𝐀 
+
+Local Hand Region( 𝐀 ℎ𝐀 𝐀 𝐀 )
+
+Pointing Direction Vector( ∆) 𝐀 ℎ𝐀 𝐀 𝐀 ∩ 𝐀 𝐀 
+
+Geometric Ray Modeling 
+
+Local Hand Entity Modeling 
+
+Average 
+
+Pooling 
+
+𝐀 ℎ f𝐀𝐀𝐀𗠀 
+
+𝐀 𝐀𴰀𝐀 
+
+𝐀 𝐀 𝐀 𝐀 (t𝐀 , t𝐀 )
+
+𝐀 𝐀 𝐀 𝐀 𝐀 (𝐀 𝐀 , 𝐀 𝐀 )
+
+𝐀 
+
+𝐀 
+
+𝐀 𝐀 𝐀 
+
+𝐀 𝐀 
+
+> x
+
+y MLP 
+
+> x
+
+y MLP 
+
+x
+
+y MLP 
+
+Ray Encoder 
+
+> MLP
+> MLP
+
+MLP 
+
+𝐀 𝐀 𝐀 𝐀 𝐀 
+
+𝐀 𝐀 𝐀 𝐀 
+
+𝐀 𝐀 𝐀 
+
+∆
+
+① Keypoint Localization ② Attribute Derivation ③ Geometric Encoding 
+
+① Adaptive Spatial Anchoring ② Regional Feature Sampling 
+
+> 𝐀
+
+𝐀 𝐀 ℎ
+
+③ Latent Query Aggregation 
+
+Figure 3: Illustration of the Geometric Ray Modeling (GRM) and Local Hand Entity Modeling (LHEM). 
+
+parameters are kept entirely frozen throughout the training pro-cess. The system directly processes raw images and text prompts, utilizing multimodal features extracted from the frozen backbone to provide precise semantic guidance for the subsequent spatial orientation awareness tasks. The backbone initially encodes the input into a unified embed-ding space, yielding a visual feature sequence F𝑣 and a linguistic sequence F𝑙 . To effectively capture cross-modal semantic consis-tency, we retain the original Text-guided Visual Aggregation 
+
+mechanism. Specifically, a cross-modal affinity matrix A𝑎𝑡𝑡𝑛 is de-rived by computing the cosine similarity—implemented via dot-product interaction—between the global linguistic representation ([CLS] token) and discrete visual patches, where A𝑎𝑡𝑡𝑛 ∈ R𝑁 , 𝑁 is the number of patches. Each entry in A𝑎𝑡𝑡𝑛 reflects the matching degree between the corresponding spatial patch and the linguistic query. Subsequently, we perform weighted information aggrega-tion across visual patches based on A𝑎𝑡𝑡𝑛 to synthesize a holistic vision-language feature h𝑣𝑙 , which encapsulates highly condensed target semantic information and serves as a robust foundation for subsequent fine-grained localization: 
+
+h𝑣𝑙 =
+
+> 𝑁
+
+∑︁ 
+
+> 𝑖 =1
+
+ 𝜎 (A𝑎𝑡𝑡𝑛,𝑖 ) · F𝑣,𝑖 
+
+ (1) where 𝜎 (·) denotes the Softmax normalization operation, ensuring that the distribution weights of spatial attention sum to unity. 
+
+## 3.2 Geometric Ray Modeling 
+
+To bridge the gap between abstract linguistic instructions and con-crete spatial orientations, we propose a GRM module, as illustrated in Fig. 3. This module transforms global semantic context into an explicit directional representation—the ray—to capture the geomet-ric essence of the pointing gesture. 
+
+Keypoint Localization. We employ a dedicated keypoint detec-tion head Head 𝑘𝑝 , consisting of a three-layer Multilayer Perceptron (MLP) stack. Leveraging the text-guided holistic visual feature h𝑣𝑙 ,this head explicitly maps the normalized coordinates of the hand root p𝑟 and the fingertip p𝑡 :
+
+{p𝑟 , p𝑡 } = 𝜎 (𝑀𝐿𝑃 𝑘𝑝 (h𝑣𝑙 )) , p𝑟 , p𝑡 ∈ [ 0, 1]2 (2) By utilizing h𝑣𝑙 as the input, the localized keypoints are inherently aligned with the linguistic query. 
+
+Geometric Modeling. Based on the predicted coordinates, we de-rive a set of explicit geometric attributes to characterize the pointing vector. Specifically, the magnitude 𝑙 = ∥Δ∥2 captures the gesture’s scale, while the unit vector u = Δ/𝑙 isolates its orientation. 
+
+Geometric Encoding. To project these low-dimensional geometric priors into a high-dimensional latent space, we concatenate them into a 7-dimensional geometric vector g𝑟𝑎𝑦 = [p𝑟 ; p𝑡 ; u; 𝑙 ]. Subse-quently, a three-layer MLP serves as the Ray Encoder to transform 
+
+g𝑟𝑎𝑦 into the ray embedding e𝑟𝑎𝑦 ∈ R𝑑 :
+
+e𝑟𝑎𝑦 = 𝑀𝐿𝑃 𝑟𝑎𝑦 (g𝑟𝑎𝑦 ) (3) VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY 
+
+Table 1: Quantitative comparison with state-of-the-art methods in EgoPoint-Ground[ 24 ]. We evaluate performance across three settings: Zero-shot, Train on Hybrid, and Train-Real Data Test. Precision at various IoU thresholds (P@0.3, 0.5, 0.7) and mean IoU (mIoU) are reported. The best results are highlighted in bold, and the second best (non-Ours methods) are underlined. Method Backbone Zero-shot Train on Hybrid Train-Real Data Test                                                                                                                                                          
+
+> P@0.3 ↑P@0.5 ↑P@0.7 ↑mIoU ↑P@0.3 ↑P@0.5 ↑P@0.7 ↑mIoU ↑P@0.3 ↑P@0.5 ↑P@0.7 ↑mIoU ↑
+> VLM-based methods
+> PropVG BEiT-3-Base 0.1469 0.0307 0.0044 0.1553 0.7471 0.6865 0.5785 0.6105 0.7095 0.6165 0.4822 0.5585 PropVG BEiT-3-Large 0.1352 0.0249 0.0015 0.1470 0.7653 0.7191 0.6299 0.6441 0.8414 0.8244 0.7848 0.7745
+> Grounding-based methods
+> HiVG CLIP-B 0.3704 0.2616 0.1835 0.2929 0.7386 0.6442 0.4606 0.5458 0.8050 0.7031 0.4838 0.5794 HiVG CLIP-L 0.2513 0.1586 0.1035 0.2078 0.7308 0.6042 0.3727 0.5096 0.7743 0.6278 0.3519 0.5223 SimVG BEiT-3-L 0.3616 0.2665 0.2094 0.3184 0.5596 0.3844 0.1862 0.3789 0.6537 0.4822 0.2977 0.4520 LGR-NET Swin-B 0.3582 0.0883 0.0068 0.2480 0.5283 0.2308 0.0514 0.3181 0.5235 0.2419 0.0429 0.3186
+> Baselines
+> OneRef BEiT-3-B 0.2684 0.1620 0.0976 0.2266 0.7575 0.6982 0.5524 0.5930 0.8333 0.7896 0.6448 0.6610 OneRef BEiT-3-L 0.1323 0.0381 0.0073 0.1353 0.7594 0.7113 0.5947 0.6131 0.8366 0.8018 0.6942 0.6815
+> VistaRef (Ours) BEiT-3-B ————0.8965 0.8190 0.6445 0.7077 0.9652 0.8875 0.6804 0.7518 VistaRef (Ours) BEiT-3-L ————0.8836 0.8221 0.6842 0.7113 0.9701 0.9393 0.8261 0.8201
+
+## 3.3 Local Hand Entity Modeling 
+
+To capture fine-grained visual cues of the pointing source, the 
+
+LHEM module extracts pure gesture representations from features by constructing the Local Hand Region Ωℎ𝑎𝑛𝑑 .
+
+Adaptive Hand Anchor. Ωℎ𝑎𝑛𝑑 is an axis-aligned rectangular region centered at c. The localization of c follows a geometric prior: 
+
+c = p𝑟 + 𝜆 𝑐𝑒𝑛𝑡𝑒𝑟 · Δ (4) where 𝜆 𝑐𝑒𝑛𝑡𝑒𝑟 = 0.3. In the normalized coordinate system [0, 1], the width of a single image patch is defined as 1/𝐺𝑟𝑖𝑑𝑆𝑖𝑧𝑒 . To ensure sufficient patch coverage even at extreme scales, we introduce a Minimum Spatial Prior 𝜖 𝑚𝑖𝑛 = 2.0/𝐺𝑟𝑖𝑑𝑆𝑖𝑧𝑒 . The dimensions of the region are dynamically scaled based on the ray length 𝑙 :
+
+ℎ𝑙𝑜𝑛𝑔 = max (𝜆 𝑙𝑜𝑛𝑔 · 𝑙, 𝜖 𝑚𝑖𝑛 ), ℎ𝑠ℎ𝑜𝑟𝑡 = max (𝜆 𝑠ℎ𝑜𝑟𝑡 · 𝑙, 𝜖 𝑚𝑖𝑛 ) (5) In our experiments, we set 𝜆 𝑙𝑜𝑛𝑔 = 2.2 and 𝜆 𝑠ℎ𝑜𝑟𝑡 = 1.0.
+
+Fine-grained Visual Sampling. Let the raw visual feature se-quence output by the backbone be F𝑣 ∈ R𝑁 ×𝑑 . For each patch 𝑖 
+
+located at g𝑖 , we construct a binary mask 𝑀 𝑖 ∈ { 0, 1} to anchor the hand region according to whether it falls within Ωℎ𝑎𝑛𝑑 :
+
+M𝑖 = 1(g𝑖 ∈ Ωℎ𝑎𝑛𝑑 ) (6) If M𝑖 = 0 (i.e., no valid patches exist within the region), a Fallback Mechanism is employed to select the patch closest to the center c
+
+as the sampling result. 
+
+Localized Query Synthesis. To extract a pure gesture repre-sentation from complex visual scenes, we perform Masked Average Pooling on the features within the adaptive hand anchor. This pro-cess calculates the local hand feature vector fℎ𝑎𝑛𝑑 ∈ R𝑑 as follows: 
+
+fℎ𝑎𝑛𝑑 =
+
+Í𝑁 𝑖 =1 M𝑖 · F𝑣,𝑖 
+
+Í𝑁 𝑖 =1 M𝑖 + 𝛿 (7) where M𝑖 · F𝑣,𝑖 utilizes the binary mask to accurately determine if the 𝑖 -th patch resides within the anchor, thereby isolating pure hand patches. We introduce a minimal constant 𝛿 = 10 −6 in the denominator to ensure numerical stability and further prevent computational collapse due to a zero denominator in extreme cases. Through this operation, the model compresses redundant regional information into a highly condensed semantic vector, providing a core gesture prior for subsequent query enhancement. 
+
+## 3.4 Ray-guided Interaction Modeling and Box Regression 
+
+To establish the semantic association between the pointing gesture and the target entity, we design a ray-guided interaction modeling module. First, a query fusion layer 𝑀𝐿𝑃 𝑓 𝑢𝑠𝑒 aggregates the finger-pointing ray prior e𝑟𝑎𝑦 and the local hand representation fℎ𝑎𝑛𝑑 to synthesize an explicit query vector Q𝑟ℎ :
+
+Q𝑟ℎ = 𝑀𝐿𝑃 𝑓 𝑢𝑠𝑒 ([ fℎ𝑎𝑛𝑑 ; e𝑟𝑎𝑦 ]) (8) This query vector Q𝑟ℎ encapsulates both the geometric orientation and the visual appearance attributes of the hand. Subsequently, we employ a cross-attention mechanism to model the interaction between the gesture and the target.Taking Q𝑟ℎ as the query and the global visual features F𝑣 as both the key vector K𝐹 𝑣 and value vector V𝐹 𝑣 , we compute the interaction feature t:
+
+t = CrossAttn (Q𝑟ℎ , V𝐹 𝑣 , K𝐹 𝑣 ) (9) The resulting target-aware feature t inherently captures the spatial association between the finger-pointing and the target object. We construct the decision feature F𝑓 𝑖𝑛𝑎𝑙 for bounding box regression. To leverage multi-scale information, we perform a non-linear fusion of the global semantic features h𝑣𝑙 , the geometric prior e𝑟𝑎𝑦 , and the interaction features t through concatenation: 
+
+F𝑓 𝑖𝑛𝑎𝑙 = [h𝑣𝑙 ;𝛾 · e𝑟𝑎𝑦 ; t] (10) where h𝑣𝑙 provides the vision-language global context, 𝛾 · e𝑟𝑎𝑦 of-fers gated geometric guidance, and t focuses on the filtered target candidate regions. Finally, F𝑓 𝑖𝑛𝑎𝑙 is fed into the bounding box re-gression head 𝑀𝐿𝑃 𝑏𝑏𝑜𝑥 to predict the precise target coordinates 
+
+b = [𝑥 𝑐𝑒𝑛𝑡𝑒𝑟 , 𝑦 𝑐𝑒𝑛𝑡𝑒𝑟 , 𝑤, ℎ ] ∈ [ 0, 1]4:
+
+b = 𝜎 (𝑀𝐿𝑃 𝑏𝑏𝑜𝑥 (F𝑓 𝑖𝑛𝑎𝑙 )) (11) Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. VistaRef 
+
+(Ours) 
+
+HiVG 
+
+SimVG 
+
+LGRNet 
+
+OneRef 
+
+PropVG 
+
+Figure 4: Visualization of grounding results. We visualize the results of VistaRef (top row) against several state-of-the-art baselines. VistaRef consistently achieves the most precise localization (Red boxes) across diverse indoor and outdoor scenarios, closely aligning with the ground truth (green boxes). Notably, in cluttered environments where baselines (e.g., SimVG, PropVG) suffer from severe orientation drift or predictive ambiguity, VistaRef effectively leverages explicit geometric rays to bridge the spatial perception gap, demonstrating superior orientation awareness. 
+
+Here, 𝛾 acts as a gated scaling factor (empirically set to 6.0) to modulate the geometric prior, while 𝑥 𝑐𝑒𝑛𝑡𝑒𝑟 and 𝑦 𝑐𝑒𝑛𝑡𝑒𝑟 denote the normalized center coordinates, and 𝑤 and ℎ represent the normal-ized width and height relative to the image dimensions. This design cascades reasoning from geometric priors to local interactions and global semantic fusion, enhancing localization robustness. 
+
+## 3.5 Training Objectives and Conditional Supervision 
+
+During the training phase, we employ a multi-task joint optimiza-tion scheme to synergistically supervise the proposed architecture. The final total loss function L𝑡𝑜𝑡𝑎𝑙 is defined as a weighted sum of the base detection loss and our proposed OCAL: 
+
+L𝑡𝑜𝑡𝑎𝑙 = 𝜆 𝑏𝑎𝑠𝑒 L𝑏𝑎𝑠𝑒 + 𝜆 𝑜𝑐𝑎𝑙 L𝑜𝑐𝑎𝑙 (12) The base loss L𝑏𝑎𝑠𝑒 follows the standard object detection frame-work to supervise target localization, which is formulated as: 
+
+L𝑏𝑎𝑠𝑒 = L𝑏𝑏𝑜𝑥 + L 𝑔𝑖𝑜𝑢 (13) where L𝑏𝑏𝑜𝑥 and L𝑔𝑖𝑜𝑢 denote the bounding box regression loss and the Generalized Intersection over Union loss (GIoU) [ 42 ], respectively. To explicitly model the "point-to-line" physical process, the OCAL L𝑜𝑐𝑎𝑙 is introduced to supervise hand entity perception and geometric consistency. For positive samples containing valid pointing gestures, L𝑜𝑐𝑎𝑙 is defined as: 
+
+L𝑜𝑐𝑎𝑙 = 𝜆 ℎ𝑎𝑛𝑑 Lℎ𝑎𝑛𝑑 + 𝜆 𝑘𝑝 L𝑘𝑝 + 𝜆 𝑟𝑎𝑦 L𝑟𝑎𝑦 (14) Specifically, Lℎ𝑎𝑛𝑑 is responsible for monitoring the presence of the hand entity, L𝑘𝑝 enables fine-grained geometric perception of the hand keypoints, and L𝑟𝑎𝑦 serves as the core orientation ray constraint. To ensure the purity of the ray-aware interaction logic, we implement an asymmetric supervision mechanism based on the results from the hand detection head Head 𝑝𝑟𝑒𝑑 . Specifically, if Head 𝑝𝑟𝑒𝑑 determines that no pointing gesture is present in the image, we only retain the hand classification loss Lℎ𝑎𝑛𝑑 to supervise the presence of the entity, while the coefficients for the geometric components, 𝜆 𝑘𝑝 and 𝜆 𝑟𝑎𝑦 , are set to zero. 
+
+## 4 Experiments 4.1 Experimental Settings 
+
+We evaluate our framework on the EgoPoint-Ground dataset [ 24 ], a benchmark specifically designed for egocentric pointing-based tar-get localization. Diverging from conventional visual grounding, this task emphasizes gesture-based disambiguation, requiring the model to localize the object indicated by a pointing finger given a fixed tex-tual prompt. Each image provides annotations for hand instances, target objects, and finger keypoints (root and fingertip). During VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY 
+
+Table 2: Ablation study of VistaRef components. We investigate the impact of Geometric Ray Modeling (GRM), Local Hand Entity Modeling (LHEM), and Cross-Attention on the final performance. All experiments are conducted using the BEiT-3-Base backbone. Exp. Baseline GRM LHEM Cross-Attention P@0.3 ↑ P@0.5 ↑ P@0.7 ↑ mIoU ↑
+
+(a) ✓ 0.7578 0.6973 0.5557 0.5939 (b) ✓ ✓ 0.7568 0.6768 0.5241 0.5754 (c) ✓ ✓ 0.8838 0.7891 0.5892 0.6839 (d) ✓ ✓ ✓ 0.8887 0.7816 0.5918 0.6824 (e) ✓ ✓ ✓ ✓ 0.8920 0.7975 0.6097 0.6919 Table 3: Ablation study on OCAL components. Lℎ𝑎𝑛𝑑 , L𝑘𝑝 ,and L𝑟𝑎𝑦 represent hand presence, keypoint, and orientation ray losses, respectively. ↑ indicates higher values are better.                                        
+
+> Exp. Lℎ𝑎𝑛𝑑 L𝑘𝑝 L𝑟𝑎𝑦 P@0.3 P@0.5 P@0.7 mIoU
+> Baseline 0.5924 0.5479 0.4339 0.4611 (a) ✓0.8441 0.7077 0.4352 0.6165 (b) ✓0.7490 0.6579 0.4548 0.5483 (c) ✓0.7513 0.6755 0.5055 0.5673 (d) ✓✓0.8776 0.7718 0.5485 0.6663
+> Full ✓✓✓0.8920 0.7975 0.6097 0.6919
+
+Table 4: Sensitivity analysis of loss weights. We evaluate the impact of weight variations for L𝑘𝑝 , L𝑟𝑎𝑦 , and Lℎ𝑎𝑛𝑑 . ↑
+
+denotes higher values are better. 
+
+Comp. Weight P@0.3 P@0.5 P@0.7 mIoU 
+
+L𝑘𝑝 
+
+0.2 0.8880 0.8043 0.6259 0.6988 
+
+0.4 0.8920 0.7975 0.6097 0.6919 0.6 0.8857 0.7848 0.5647 0.6726 
+
+L𝑟𝑎𝑦 
+
+0.2 0.8896 0.8014 0.6074 0.6919 
+
+0.4 0.8920 0.7975 0.6097 0.6919 
+
+0.6 0.8912 0.8046 0.6308 0.7004 
+
+Lℎ𝑎𝑛𝑑 
+
+0.1 0.8916 0.8102 0.6471 0.7050 
+
+0.2 0.8920 0.7975 0.6097 0.6919 0.3 0.8750 0.7487 0.4847 0.6445 
+
+preprocessing, the hand instance is isolated from other object an-notations, which serve as candidate targets. Negative samples are assigned a null bounding box and a binary is_positive label. The textual query is standardized as: “Please frame the bbox where a finger points to the item.” Performance is quantified using mean In-tersection over Union (mIoU) and Precision@ 𝑘 (𝑘 ∈ { 0.3, 0.5, 0.7}). Specifically, Precision@0.5 serves as the primary metric, while Preci-sion@0.3 and Precision@0.7 characterize coarse and high-precision localization, respectively. All results are reported on the test set. VistaRef optimized via a 10-epoch warm-up ( 𝐿𝑅 = 2.5 × 10 −4) fol-lowed by a 20-epoch fine-tuning stage ( 𝐿𝑅 = 3 × 10 −5). The training objective is balanced by weights 𝜆 𝑏𝑎𝑠𝑒 = 0.7 and 𝜆 𝑜𝑐𝑎𝑙 = 0.3, further stabilized using an EMA-based loss normalization strategy with 
+
+0.99 momentum. Refer to the Appendix for more details. 
+
+## 4.2 Main Results 
+
+As illustrated in Table 1, we conducted comparative experiments on the pointing-to-object detection task under three distinct evaluation protocols: Zero-shot transfer, Training on Hybrid, and Training-Real Data Test. Qualitatively, VistaRef demonstrates superior per-formance in resolving complex spatial ambiguities compared to state-of-the-art baselines. As illustrated in Fig. 4, while traditional attention-based models (e.g., SimVG, PropVG) often suffer from sig-nificant localization drift—particularly in cluttered environments or when dealing with distant targets—VistaRef maintains deterministic ray alignment by explicitly modeling the geometric correlation from hand to target. By leveraging its Geometric Ray Modeling (GRM) and Local Hand Entity Modeling (LHEM) modules, our framework effectively bridges the "spatial perception gap" and overcomes "ori-entation insensitivity." This allows for high-precision grounding even when faced with subtle finger pose variations or dense distrac-tors, ensuring robust and stable target localization across diverse and challenging interaction scenarios. 
+
+Zero-shot Analysis. Without the pointing-to-object detection task training, conventional VG models exhibit substandard perfor-mance. The best-performing model, SimVG [ 6 ] (BEiT-3-L), achieves only 26.65% (P@0.5), 20.94% (P@0.7), and 31.84% (mIoU). These models are primarily trained on purely linguistic referential expres-sions that exclude deictic signals, such as " A baseball player in the middle of a throwing motion ”. When directly transferred to tasks necessitating gesture-based guidance, such as " A finger pointing at a baseball player in the middle of a throwing motion ” (as shown in Fig. 2), these models effectively recognize object semantics but fail to comprehend the directional cues linking the finger to the target object. This inability to interpret deictic signals hinders the model’s capacity to distinguish between multiple targets sharing identical or similar features within a scene (as shown in Fig. 4). 
+
+Hybrid Data Performance. Training on the hybrid dataset in-corporating the RefCOCO series [ 35 , 36 , 60 ] and generative sam-ples—yields consistent gains across all models. Among REC base-lines, PropVG [ 5] (BEiT-3-L) performs best, yet VistaRef (Ours) establishes a new state-of-the-art across all metrics. Notably, even our base variant (BEiT-3-B) significantly outperforms PropVG (BEiT-3-L) by 9.99% in P@0.5 and 6.36% in mIoU, with the large variant further pushing P@0.5 to 82.21%. This superior efficacy stems from our LHEM and GRM modules (Fig. 3), which explicitly encode gestural geometry, and the Ray-Aware Target Grounding module Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. 
+
+that enables precise localization along physical pointing rays. In contrast, traditional VG models [ 6, 53 , 54 ] struggle to resolve the physical implications of gestures due to their reliance on implicit semantic matching rather than explicit geometric parsing. 
+
+Real-world Data Evaluation. In the Train-Real Data Test task, characterized by higher precision in real-world finger pointing, the mIoU of VistaRef (BEiT-3-B) increases from its Hybrid environment baseline of 70.77% to 75.18%, yielding a gain of approximately 4.41%. Similarly, the mIoU for VistaRef (BEiT-3-L) escalates from 71.13% to 82.01%, marking an increase of approximately 10.88%. On the pivotal mIoU metric, both versions of VistaRef maintain a 4.7% lead over the strongest conventional baseline, PropVG [ 5] (BEiT-3-L) (77.45%). These results demonstrate that VistaRef maintains supe-rior localization accuracy through its robust geometric reasoning, even in complex real-world scenes populated by multiple objects with similar visual characteristics. 
+
+## 4.3 Ablation Study 
+
+To evaluate the effectiveness of the core modules in VistaRef and the effect of each individual loss in OCAL, we conducted a series of ablation studies using OneRef [ 54 ] as the baseline. The experimental results are show in Table 2 and Table 3. Table 2 quantifies the performance contribution of each core component, including GRM, LHEM, and the Cross-Attention mech-anism. The baseline model (exp. a) achieves an mIoU of only 59 .39% ,underscoring the inherent difficulty of resolving pointing intent without explicit spatial constraints. The introduction of either GRM (exp. c, 68 .39% ) or LHEM (exp. d, 68 .24% ) yields a substantial per-formance leap of approximately 9% in mIoU, demonstrating that explicit geometric modeling of the pointing ray and gestural cues is fundamental to spatial disambiguation. The progression to ex-periment (e) ( 69 .19% mIoU) further validates the synergy achieved via the Cross-Attention mechanism. By effectively fusing hand-pose embeddings with geometric orientation, the model generates a high-fidelity joint query that retrieves spatially relevant entities from global features. This integration ensures that the final decision process is guided by physically consistent spatial reasoning, thereby eliminating localization drift in complex, cluttered scenarios. Table 3 evaluates the individual contribution of each supervisory loss term in OCAL: hand classification loss ( Lℎ𝑎𝑛𝑑 ), keypoint regres-sion loss ( L𝑘𝑝 ), and orientation ray loss ( L𝑟𝑎𝑦 ). Compared to the baseline (46.11% mIoU), adding Lℎ𝑎𝑛𝑑 in Exp. (a) yields a substan-tial surge to 61.65%, confirming that hand presence detection is a fundamental prerequisite for accurate localization. Without Lℎ𝑎𝑛𝑑 ,experiment (b) and (c) show limited gains (54.83% and 56.73% mIoU) as the model becomes susceptible to interference from negative sam-ples lacking pointing gestures. Finally, the full OCAL framework, integrating all losses, achieves optimal 69.19% mIoU, demonstrating comprehensive supervision enables more robust structural gesture feature extraction. 
+
+## 4.4 Hyperparameter Sensitivity Analysis 
+
+The sensitivity analysis in Table 4 validates the remarkable robust-ness of VistaRef against variations in loss weights. Experimental data indicate that as the weight of L𝑘𝑝 increases from 0.2 to 0.6, the P@0.3 metric exhibits only a marginal fluctuation between 
+
+0.8880 and 0.8857 (a negligible decline of less than 0.3%). Further-more, within the tested range for L𝑟𝑎𝑦 , P@0.3 steadily improves from 0.8896 to 0.8920 , while the mIoU remains remarkably stable at 0.6919, demonstrating the high predictive stability of the inter-nal geometric alignment mechanism across varying supervision intensities. Although a slight performance convergence is observed when Lℎ𝑎𝑛𝑑 increases to 0.3—likely due to an imbalance in supervi-sion—the mIoU consistently stays above the 0.69 threshold within the core interval of 0.1 to 0.2. This characteristic of low parameter sensitivity underscores the framework’s superior performance con-sistency and significantly alleviates the burden of hyperparameter tuning in practical deployments. 
+
+## 4.5 Model Complexity and Efficiency Analysis 
+
+Table 5 illustrates the comparison of model complexity and effi-ciency among various models on the BEiT-3-Base [ 49 ] backbone. In terms of model scale, the total parameter count of VistaRef (Ours) is 226.01M, which is comparable to the lightweight baseline OneRef [54 ] (224.82M) and significantly lower than LGRNet (335.07M). This demonstrates that the geometric modeling modules introduced in this study are highly concise and do not impose a substantial stor-age burden on the system. Regarding inference efficiency, VistaRef achieves a throughput of 22.92 fps when processing 3,072 samples. Compared to PropVG [ 5] (7.12 fps), its execution speed is improved by approximately 3.2 ×, exhibiting a distinct advantage in real-time performance. Although its speed is slightly lower than that of the baseline OneRef [ 54 ], this marginal increase in computational over-head is entirely acceptable given the precision improvements of VistaRef in pointing tasks within complex multi-object scenarios. In summary, without a significant increase in parameter count, VistaRef balances high-precision localization with superior compu-tational efficiency, achieving an optimal trade-off between model performance and Inference efficiency. 
+
+## 5 Conclusion 
+
+This paper presents VistaRef, a framework specifically designed to address the inherent deficiencies of Transformer-based models in spatial orientation awareness. We enhance system performance through three core architectural innovations: LHEM to capture subtle finger articulations, GRM to represent the spatial trajectory from the hand to the target, and the Orientation-Consistent Align-ment Loss to ensure physical self-consistency. Experimental results demonstrate that VistaRef effectively mitigates localization drift and significantly improves pointing accuracy in cluttered or distant scenarios. 
+
+Limitations: Despite its performance, VistaRef has several core limitations. First is the precision bottleneck under physical con-straints: when targets are extremely distant, or the hand region suffers from low pixel resolution, minute pose estimation errors are magnified over the distance, leading to substantial ray devia-tion. Second is the relative lack of semantic reasoning; currently, the model prioritizes the geometric ray path over intrinsic object attributes. Consequently, in scenarios where the ray intersects mul-tiple overlapping objects, the system may select incorrect targets due to insufficient class-specific understanding. Addressing these challenges remains a primary focus for our future research. VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY 
+
+Table 5: Comparison of model efficiency and parameters. All experiments are conducted on the BEiT-3-Base backbone with a total of 3,072 samples. Method Total Params (M) Trainable Params (M) Total Time (s) Throughput (fps) 
+
+PropVG[5] 246.82 246.82 431.70 7.12 SimVG[6] 230.16 230.16 130.22 23.59 HiVG[53] 213.24 63.62 119.01 25.81 LGRNet[31] 335.07 225.59 112.77 27.24 OneRef[54] 224.82 224.82 92.31 33.28 
+
+VistaRef (Ours) 226.01 226.01 134.01 22.92 
+
+## A Dataset and Evaluation Metrics 
+
+A.0.1 Dataset Introduction. We conduct experiments on an egocen-tric pointing-based visual grounding dataset constructed from pub-licly available image sources. Unlike conventional grounding bench-marks that primarily rely on linguistic descriptions, this dataset emphasizes gesture-driven disambiguation , where the referent is specified implicitly via a pointing action. Each image captures a natural interaction scenario in which a human hand points to a target object. The dataset provides annota-tions including hand and object bounding boxes, as well as fingertip keypoints (e.g., root and fingertip), enabling fine-grained modeling of spatial and geometric relationships. During preprocessing, the hand instance is separated from other annotated objects, which are treated as candidate targets. For sam-ples without valid pointing targets, we introduce a binary indicator 
+
+is_positive and set the target bounding box to zero. Following standard practice, we use a fixed textual query: 
+
+Please frame the bbox where a finger points to the item. 
+
+(15) This setting removes linguistic variability and focuses the task on spatial reasoning induced by pointing gestures. The dataset contains 15,455 images, split into 10,837/1,546/3,072 for training, validation, and testing, respectively. covering 345 object categories with diverse scene complexity. 
+
+A.0.2 Evaluation Metrics. We adopt standard localization metrics based on Intersection over Union (IoU). 
+
+Intersection over Union (IoU). Given a predicted bounding box 𝐵 𝑝 and the ground-truth bounding box 𝐵 𝑔𝑡 , IoU is defined as: IoU (𝐵 𝑝 , 𝐵 𝑔𝑡 ) = |𝐵 𝑝 ∩ 𝐵 𝑔𝑡 ||𝐵 𝑝 ∪ 𝐵 𝑔𝑡 | . (16) 
+
+Precision@ 𝜏 . We report Precision@ 𝜏 , defined as the proportion of predictions whose IoU exceeds a threshold 𝜏 :Precision@ 𝜏 = 1
+
+𝑁 
+
+> 𝑁
+
+∑︁ 
+
+> 𝑖 =1
+
+I (IoU 𝑖 ≥ 𝜏 ) , (17) where 𝑁 is the total number of samples and I(·) denotes the indica-tor function. We evaluate at 𝜏 ∈ { 0.3, 0.5, 0.7}.
+
+Mean IoU (mIoU). We further report the mean IoU over all samples: mIoU = 1
+
+𝑁 
+
+> 𝑁
+
+∑︁ 
+
+> 𝑖 =1
+
+IoU 𝑖 . (18) 
+
+## B Model Details B.1 Architectural Configurations 
+
+We provide an exhaustive description of the dimensional config-urations for each component within VistaRef . All Multi-Layer Perceptron (MLP) modules follow a consistent three-layer archi-tecture, consisting of two hidden layers with dimension 𝑑 (where 
+
+𝑑 = 768 for the Base model and 𝑑 = 1024 for Large) and ReLU activation functions, followed by a linear output projection. 
+
+Keypoint Detection Head ( Head 𝑘𝑝 ): Keypoint detection head receives the text-guided visual feature h𝑣𝑙 ∈ R𝑑 as input with di-mension of 𝑑 . It outputs a 4-dimensional vector which, through Sigmoid activation, represents the specific coordinates for the root 
+
+p𝑟 and tip p𝑡 of the finger. 
+
+Ray Encoder: The ray encoder serves as a bridge between explicit geometric reasoning and high-dimensional feature alignment. It takes a 7-dimensional geometric primitive vector g𝑟𝑎𝑦 ∈ R7 as in-put, which is explicitly constructed by concatenating the predicted hand root p𝑟 , fingertip p𝑡 , the normalized unit direction vector u,and the scalar ray length 𝑙 (i.e., g𝑟𝑎𝑦 = [p𝑟 ; p𝑡 ; u; 𝑙 ]). Utilizing a three-layer MLP, the encoder projects these low-level geometric priors into the 𝑑 -dimensional latent space, yielding the ray embed-ding e𝑟𝑎𝑦 ∈ R𝑑 that can be seamlessly integrated with visual and linguistic representations. 
+
+Local Hand Query Fusion: This layer utilizes a three-layer MLP to fuse the 𝑑 -dimensional local hand feature fℎ𝑎𝑛𝑑 with the 𝑑 -dimensional e𝑟𝑎𝑦 through concatenation, resulting in an input di-mension of 2𝑑 . This 2𝑑 vector is then processed by a three-layer MLP, where the initial linear layer performs a dimensionality re-duction from 2𝑑 to 𝑑 , followed by a ReLU activation and subsequent hidden layers that maintain the 𝑑 -dimensional space. The output is the 𝑑 -dimensional explicit query vector Q𝑟ℎ .
+
+Cross-Attention Mechanism: We employ a multi-head cross-attention mechanism with 8 heads. Q𝑟ℎ serves as the Query , while the global visual patch features F𝑣 serve as the Key (KF𝑣 ) and Value 
+
+(VF𝑣 ), resulting in the interaction feature t.
+
+## B.2 Training and Optimization 
+
+Warm-up Phase: To prevent large gradient fluctuations caused by random weight initialization during the early stages of training, we implement a 10-epoch warm-up period. During this phase, the learning rate increases linearly from a near-zero value to the target base learning rate, ensuring the model enters a stable optimization trajectory. Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. 𝐀 𝐀𴰀𴰀𴀀 (𝐀 𝐀 , 𝐀 𝐀 )
+
+𝐀 𴀀𴰀𝐀 (𝐀 𴀀 , 𝐀 𴀀 )
+
+∆ = 𝐀 𴀀𴰀𝐀 − 𝐀 𝐀𴰀𴰀𴀀 
+
+> ∆
+
+x
+
+y
+
+𝐀𑰀𝐀𗠀 𝐀 𝐀 
+
+𝐀 = 𝐀 𝐀𴰀𴰀𴀀 + 𝐀 . 𝐀 (𝐀 𴀀𴰀𝐀 − 𝐀 𝐀𴰀𴰀𴀀 )
+
+𝐀 (𝐀 𝐀 , 𝐀 𝐀 )
+
+𝐀 𴀀𴰀𝐀 (𝐀 𴀀 , 𝐀 𴀀 )
+
+𝐀 𝐀𴰀𴰀𴀀 (𝐀 𝐀 , 𝐀 𝐀 )
+
+(𝐀 𝐀𱀀𝐀𴀀𱀀𝐀 , 𝐀 𝐀𱀀𝐀𴀀𱀀𝐀𴀀 )
+
+> 𝐀
+
+ℎ
+
+𝐀 
+
+𝐀 ℎ𝐀 𝐀 𝐀 ∩ 𝐀 𝐀 
+
+𝐀𓀀𝐀 𝐀 𝐀 𝐀 𝐀 𝐀 ℎ𝐀 𝐀 𝐀 ∩ 𝐀 𝐀 
+
+Figure 5: More detailed visualization of fingertip localization. Optimization Schedule: Following the warm-up phase, the model undergoes 20 epochs of fine-tuning. The learning rate is adjusted according to a decay strategy, complemented by Exponential Mov-ing Average (EMA) with a momentum of 0.99 to smooth the learned weights. 
+
+Loss Balancing: The total loss is composed of 𝐿 𝑏𝑎𝑠𝑒 with a weight of 0.7 and 𝐿 𝑜𝑐𝑎𝑙 with a weight of 0.3. Within the Orientation-Consistent Alignment Loss (OCAL) framework, the internal weights are dis-tributed as 𝜆 ℎ𝑎𝑛𝑑 = 0.2, 𝜆 𝑘𝑝 = 0.4, and 𝜆 𝑟𝑎𝑦 = 0.4.
+
+## B.3 Data and Prompting 
+
+Prompt Engineering: All experiments utilize a unified and stan-dardized textual instruction: “Please frame the bbox where a finger points to the item” This rigorous and methodological consistency effectively ensures that performance variations are attributable to architectural improvements rather than linguistic variance across evaluations.Geometric Pre-processing: Input images are automati-cally resized to spatial resolutions of 384 × 384 or 480 × 480. Cor-responding hand keypoint annotations are extracted to compute the proposed OCAL supervision signals during the entire training phase. 
+
+Geometric Pre-processing: Input images are resized to 384 × 384 
+
+or 480 × 480 . Corresponding hand keypoint annotations are ex-tracted to compute the OCAL supervision signals during the train-ing phase. Prompt Engineering: 
+
+## C Technical Remarks C.1 GRM Implementation 
+
+Keypoint Localization via Head 𝑘𝑝 : The process of geometric modeling begins with the text-guided holistic visual feature h𝑣𝑙 ∈
+
+R𝑑 , which encapsulates the semantic alignment between the lin-guistic query and the global visual context. We feed this feature into a dedicated keypoint detection head, Head 𝑘𝑝 , comprising a three-layer MLP stack. This head regresses four raw logits that are subsequently transformed via a Sigmoid activation into normalized 2D coordinates within the unit interval [0, 1]2. To ensure precise geometric consistency with the physical pointing gesture, we define 
+
+Table 6: Summary of Hyper-parameters in VistaRef. Category Parameter Value Architecture Embedding dimension ( 𝑑 ) 768 (Base) / 1024 (Large) MLP hidden layers 𝑑                          
+
+> MLP layer count 3Multi-head attention heads 8Image input size 384 ×384 / 480 ×480
+> LHEM Module Center offset ratio 0.3 Long-axis scaling ratio 2.2 Short-axis scaling ratio 1.0 Minimum region size 2.0/GridSize
+> Feature Fusion Fixed gated scaling ( 𝛾 )6.0
+> Loss Weights Base loss weight ( L𝑏𝑎𝑠𝑒 )0.7 OCAL loss weight ( L𝑜𝑐𝑎𝑙 )0.3 Hand classification ( 𝜆 ℎ𝑎𝑛𝑑 )0.2 Keypoint regression ( 𝜆 𝑘𝑝 )0.4 Ray alignment ( 𝜆 𝑟𝑎𝑦 )0.4
+> Optimization Warm-up epochs 10 Fine-tuning epochs 20 EMA momentum 0.99
+
+these coordinates as the hand root p𝑟𝑜𝑜𝑡 (𝑟 𝑥 , 𝑟 𝑦 ) and the fingertip 
+
+p𝑡𝑜𝑝 (𝑡 𝑥 , 𝑡 𝑦 ). Based on these localized points, we explicitly derive the directed pointing vector ®Δ = p𝑡𝑜𝑝 − p𝑟𝑜𝑜𝑡 , which serves as a geometric primitive representing the orientation and spatial extent of the pointing gesture. By conditioning the localization on h𝑣𝑙 ,the model inherently filters out irrelevant hand instances, ensuring that the predicted keypoints and the resulting vector ®Δ strictly cor-respond to the referential intent of the user. 
+
+Geometric Encoding and Ray Synthesis: Following the deriva-tion of the displacement magnitude 𝑙 = ∥p𝑡𝑜𝑝 − p𝑟𝑜𝑜𝑡 ∥2 and the unit direction vector ®𝑢 , the module performs a latent projection to align these physical attributes with the Transformer’s high-dimensional space. We first construct a 7-dimensional geometric primitive vec-tor g𝑟𝑎𝑦 by explicitly concatenating the predicted coordinates and their derived attributes: g𝑟𝑎𝑦 = [p𝑟𝑜𝑜𝑡 (𝑟 𝑥 , 𝑟 𝑦 ); p𝑡𝑜𝑝 (𝑡 𝑥 , 𝑡 𝑦 ); ®𝑢 ; 𝑙 ]. This vector is then processed by the Ray Encoder, a three-layer MLP VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY VistaRef 
+
+(Ours) 
+
+HiVG 
+
+SimVG 
+
+LGRNet 
+
+OneRef 
+
+PropVG 
+
+Figure 6: Comparison results in salient-object scenarios. Our model remains robust to salient distractors and accurately localizes the target indicated by the pointing gesture. 
+
+that performs a non-linear mapping from the 7D physical space into the 𝑑 -dimensional latent space, resulting in the ray embedding 
+
+e𝑟𝑎𝑦 ∈ R𝑑 . This encoding step is fundamental as it translates raw coordinate-based geometry into a high-dimensional feature format, enabling the subsequent cross-attention mechanism to utilize the geometric ray as a deterministic spatial prior for target grounding. 
+
+## C.2 LHEM Implementation 
+
+In the engineering implementation of the LHEM module, Ωℎ𝑎𝑛𝑑 is defined as a dynamic local hand region adaptively generated from the predicted keypoints to facilitate grounding. 
+
+Region Construction: For computational efficiency, the module calculates a logical rectangle aligned with the hand’s principal axis and then extracts its axis-aligned bounding box as the final Ωℎ𝑎𝑛𝑑 .
+
+Geometric Priors: The region center is fixed at p𝑟𝑜𝑜𝑡 + 0.3 · ( p𝑡𝑜𝑝 −
+
+p𝑟𝑜𝑜𝑡 ). The long and short axes are dynamically scaled at 2.2 × and 1.0 × the ray length 𝑙 , respectively. As shown in Fig. 5, we present a more detailed process of fingertip coordinate localization. 
+
+Robust Sampling and Boundary Handling: To prevent sam-pling failure for small hand instances, we enforce a minimum region size of 2.0/𝐺𝑟𝑖𝑑𝑆𝑖𝑧𝑒 , ensuring Ωℎ𝑎𝑛𝑑 covers at least a 2 × 2 patch area. 𝐺𝑟𝑖𝑑𝑆𝑖𝑧𝑒 represents the spatial resolution of visual tokens, cal-culated as the input image size divided by the patch size—resulting in a 𝐺𝑟𝑖𝑑𝑆𝑖𝑧𝑒 of 24 for 384 × 384 and 30 for 480 × 480 resolutions. This spatial discretization ensures that the size constraint consis-tently encompasses a local patch neighborhood to facilitate robust gestural feature sampling and stable geometric alignment. If the sampling mask remains empty due to boundary conditions, a fall-back mechanism selects the patch feature closest to the center. 
+
+## C.3 Ray-guided Target Grounding 
+
+Cross-Attention Mechanism: To capture the intricate spatial relationship between the pointing gesture and the potential tar-get objects in the scene, we employ a multi-head cross-attention mechanism configured with 8 attention heads. In this architecture, the explicit gestural query Q𝑟ℎ ∈ R𝑑 serves as the Query, which inherently carries the fused information of the local hand features and the geometric ray embedding. The global visual patch features 
+
+F𝑣 serve as the source of information, where the [CLS] token is specifically excluded to maintain a pure representation of the spa-tial environment. These patches are linearly projected to form the Key ( K𝐹 𝑣 ) and Value ( V𝐹 𝑣 ) matrices. By calculating the attention scores between the gestural query and all available image patches, the model is able to selectively attend to the most relevant visual regions that align with the pointing direction. This mechanism yields the interaction feature t ∈ R𝑑 , which effectively encodes the refined cross-modal consensus between the user’s physical gesture Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. VistaRef 
+
+(Ours) 
+
+HiVG 
+
+SimVG 
+
+LGRNet 
+
+OneRef 
+
+PropVG 
+
+Figure 7: Comparison results in cluttered multi-object scenarios. Our model maintains reliable and accurate localization performance even in the presence of multiple objects and substantial visual interference. 
+
+and the surrounding visual context. 
+
+Synthesis of Integrated Representation F𝑓 𝑖𝑛𝑎𝑙 : In the final stage, the model constructs a comprehensive joint representation F𝑓 𝑖𝑛𝑎𝑙 ∈
+
+R3𝑑 by directly concatenating three distinct 𝑑 -dimensional feature vectors along the channel dimension: the text-guided visual feature 
+
+h𝑣𝑙 , the scaled ray embedding 𝛾 · e𝑟𝑎𝑦 , and the interaction features 
+
+t. This multi-source synthesis effectively expands the feature space to accommodate global semantic context, explicit geometric priors, and local gestural interactions within a single unified vector. We set the scaling factor 𝛾 to 6.0 to calibrate the numerical magnitude of the geometric ray prior, ensuring it is commensurate with the high-dimensional semantic features. This calibration prevents the deterministic geometric guidance from being overshadowed by the global context during the fusion process, thereby maintaining the structural integrity of the spatial reasoning chain. 
+
+Target Localization via MLP 𝑏𝑏𝑜𝑥 : The integrated representation 
+
+F𝑓 𝑖𝑛𝑎𝑙 serves as the input to the bounding box regression head 
+
+MLP 𝑏𝑏𝑜𝑥 , which decodes the fused multimodal information into explicit spatial parameters. This head consists of a three-layer MLP stack that performs a non-linear mapping from the 3𝑑 -dimensional fused space to the 4-dimensional target space. The model regresses the target coordinates b = [𝑥 𝑐𝑒𝑛𝑡𝑒𝑟 , 𝑦 𝑐𝑒𝑛𝑡𝑒𝑟 , 𝑤, ℎ ] ∈ [ 0, 1]4, which are subsequently normalized via a Sigmoid activation to the unit interval [0, 1] relative to the image dimensions. By leveraging the geometric and semantic path encapsulated in F𝑓 𝑖𝑛𝑎𝑙 , the regression head effectively translates the latent directional cues into a precise bounding area, enabling robust object grounding even in cluttered or distant scenarios. 
+
+## D Experimental Details 
+
+We conduct experiments on the EgoPoint-Ground dataset, which is designed for egocentric pointing-based target localization. Unlike conventional visual grounding tasks, this setting emphasizes dis-ambiguation via pointing gestures, in which the model is required to predict the bounding box of the object indicated by a pointing finger, given an input image and a fixed textual query. Each im-age is annotated with a hand instance, target objects, and finger keypoints, including the root and fingertip. During preprocessing, the hand annotation is identified and separated from the remain-ing object annotations, which are treated as candidate targets. For negative samples, the target box is set to zero and a binary label 
+
+is_positive is introduced. The textual query is fixed as “Please frame the bbox where a finger points to the item.” We adopt stan-dard grounding metrics including Precision@0.3, Precision@0.5, Precision@0.7, and mIoU, where Precision@0.3 reflects coarse lo-calization, Precision@0.5 is the primary metric, and Precision@0.7 evaluates high-precision localization. All results are reported on the test set. VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY 
+
+Our method is built upon the OneRef framework with two back-bone variants, BEiT-3 Base ( beit3_base_patch16_384 ) and BEiT-3 Large ( beit3_large_patch16_384 ), both initialized from MRefM pre-trained weights, and text inputs are tokenized using the official SentencePiece tokenizer. All input images are resized to 384 × 384 
+
+and the maximum query length is set to 64, with data augmenta-tion including random cropping, scaling, and translation. During evaluation, the batch size is set to 128. We adopt a standard single-dataset fine-tuning strategy with two training stages. In the warm-up stage, the backbone is frozen and the model is trained for 10 epochs with a batch size of 64 and a learning rate of 2.5 × 10 −4 using a cosine scheduler. In the fine-tuning stage, we load the best checkpoint from warm-up and continue training for 20 epochs with a batch size of 8 and a learning rate of 3 × 10 −5, while enabling box-mask constraints to improve localization accuracy. The overall loss function follows the formulation described in Sec. 3.5. Specifically, it consists of the base detection loss L𝑏𝑎𝑠𝑒 and the orientation-consistent alignment loss L𝑜𝑐𝑎𝑙 .In our experiments, the loss weights are empirically set as 𝜆 𝑏𝑎𝑠𝑒 = 0.7 and 𝜆 𝑜𝑐𝑎𝑙 = 0.3.Within L𝑜𝑐𝑎𝑙 , the component weights are configured as 𝜆 ℎ𝑎𝑛𝑑 = 0.2,
+
+𝜆 𝑘𝑝 = 0.4, and 𝜆 𝑟𝑎𝑦 = 0.4. Following the asymmetric supervision mechanism described in Sec. 3.5, the keypoint loss L𝑘𝑝 and ray loss L𝑟𝑎𝑦 are only applied to positive samples with valid pointing gestures, while the hand classification loss Lℎ𝑎𝑛𝑑 is applied to all samples. To stabilize optimization, we adopt an EMA-based loss normaliza-tion strategy with momentum 0.99 , 𝜖 = 1 × 10 −6, and 100 warm-up iterations, which dynamically balances the contribution of different loss terms. To evaluate the contributions of different components and su-pervision signals, we conduct ablation studies based on OneRef under a unified training setting, using BEiT-3 Base as the backbone. For core modules, we progressively introduce the GRM, LHEM, and the Cross-Attention mechanism into the baseline, while keep-ing training configurations unchanged, to analyze both individual contributions and their synergistic effects. For ablation on individual loss terms, we study the impact of each supervisory signal in the OCAL framework by selectively en-abling or disabling Lℎ𝑎𝑛𝑑 , L𝑘𝑝 , and L𝑟𝑎𝑦 , while retaining the full model architecture. We adopt an incremental activation strategy, starting from the baseline with L𝑏𝑎𝑠𝑒 only, and progressively incor-porating additional loss terms. All settings share identical training configurations, allowing us to isolate the contribution of each loss and its combinations. We further conduct hyperparameter sensitivity analysis using a one-factor-at-a-time strategy, where the remaining parameters are fixed to isolate the effect of each variable. 
+
+## E Visualization Results E.1 Qualitative Comparison 
+
+As shown in Fig. 6 and Fig. 7, our method consistently achieves more accurate and stable localization compared to existing approaches. In relatively simple scenarios (Fig. 6), baseline methods often exhibit noticeable deviations, such as bounding box drift toward salient but irrelevant regions or incomplete coverage of the target object. In contrast, our model produces tighter and more precise predictions aligned with the pointing direction. In more challenging, cluttered multi-object scenarios (Fig. 7), the performance gap becomes more evident. Existing methods are more susceptible to visual distractions and tend to mislocalize toward nearby objects or larger salient regions. Benefiting from gesture-guided spatial constraints, our approach remains robust and can reliably identify the correct referent even under heavy clutter and ambiguity. 
+
+## E.2 Attention Map 
+
+To further understand how VistaRef enhances spatial orientation awareness, we visualize attention maps from representative sam-ples in Fig. 8. These visualizations provide direct evidence that the proposed geometric modeling reshapes the attention distribution compared with conventional Transformer-based grounding models. 
+
+Alignment with Geometric Ray. A key observation is that the attention distribution in VistaRef exhibits a clear anisotropic pattern aligned with the pointing direction. Instead of spreading uniformly across semantically relevant regions, the attention progressively concentrates along the implicit geometric ray from the hand root to the fingertip, and further extends toward the target object. This behavior directly reflects the effect of the Geometric Ray Modeling (GRM) module, which transforms the implicit pointing cue into an explicit directional prior. By encoding the ray as a structured feature and injecting it into the attention mechanism, the model performs direction-aware feature aggregation rather than purely semantic matching. 
+
+Suppression of Irrelevant Regions. Compared with baseline attention patterns, which often highlight multiple semantically similar objects, VistaRef shows significantly reduced activation on distractors, even when they share similar appearance or category with the target. This behavior can be attributed to the combined effect of two mechanisms: the ray constraint ensures that only regions consistent with the pointing direction receive high attention weights, while the ray-aware cross-attention selectively retrieves spatially aligned features from the global visual representation. As a result, the model effectively suppresses irrelevant regions and avoids the common failure mode of semantic ambiguity, where multiple objects compete for attention. 
+
+Localized Hand-Centric Attention Initialization. The attention maps consistently show strong activation around the hand region, especially near the fingertip. This demonstrates the effectiveness of the Local Hand Entity Modeling (LHEM) module, which extracts a purified gesture representation from a dynamically constructed local region Ωhand .Instead of relying on global features, the model first anchors attention to the gesture origin and then propagates it along the ray. This “hand → ray → target” progression matches the physical pointing process and forms a causal attention chain. 
+
+Progressive Attention Transition (Hand → Target). Across multiple samples, we observe a consistent attention transition pat-tern, where the attention initially concentrates around the hand region, then gradually elongates along the pointing direction, and finally aggregates on the target object. This structured transition Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. 
+
+Figure 8: Visualization of attention maps for representative samples. VistaRef produces spatially aligned and direction-aware attention distributions, concentrating along the pointing ray from the hand to the target object. Compared with conventional Transformer-based grounding models, the attention is more focused and less affected by distractors, demonstrating improved spatial reasoning ability. 
+
+Figure 9: More Visualization of attention maps for representative samples. 
+
+indicates that the model no longer treats grounding as a static matching problem, but instead performs a geometric reasoning process over spatial trajectories. Such behavior is absent in conven-tional Transformer attention, which lacks explicit mechanisms to model directional continuity. 
+
+Robustness in Cluttered and Long-Range Scenarios. In chal-lenging cases involving densely packed objects, small targets, or long pointing distances, the attention maps of VistaRef remain highly directional and stable, without diffusing into irrelevant re-gions. VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY 
+
+This observation confirms that explicit geometric modeling helps mitigate orientation insensitivity and localization drift, particularly in complex real-world scenes. 
+
+## References 
+
+[1] Tijn Bertens, Brandon Caasenbrood, Alessandro Saccon, and Andrei Jalba. 2025. Symmetry-Induced Ambiguity in Orientation Estimation From RGB Images. 
+
+Machine Vision and Applications 36, 2 (2025), 40. [2] Zhe Cao, Gines Hidalgo, Tomas Simon, Shih-En Wei, and Yaser Sheikh. 2019. OpenPose: Realtime Multi-Person 2D Pose Estimation Using Part Affinity Fields. 
+
+IEEE Transactions on Pattern Analysis and Machine Intelligence 43, 1 (2019), 172– 186. [3] Yixin Chen, Qing Li, Deqian Kong, Yik Lun Kei, Song-Chun Zhu, Tao Gao, Yixin Zhu, and Siyuan Huang. 2021. YouRefIt: Embodied Reference Understanding With Language and Gesture. arXiv preprint arXiv:2109.03413 (2021). [4] X. Chu, Z. Tian, B. Zhang, X. Wang, X. Wei, H. Xia, and C. Shen. 2021. Conditional Positional Encodings for Vision Transformers. arXiv preprint arXiv:2102.10882 
+
+(2021). [5] Ming Dai, Wenxuan Cheng, Jiedong Zhuang, Jiang jiang Liu, Hongshen Zhao, Zhenhua Feng, and Wankou Yang. 2025. PropVG: End-to-End Proposal-Driven Visual Grounding With Multi-Granularity Discrimination. In In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV ’25) . 7058–7068. [6] Ming Dai, Lingfeng Yang, Yihao Xu, Zhenhua Feng, and Wankou Yang. 2024. SimVG: A Simple Framework for Visual Grounding With Decoupled Multi-Modal Fusion. Advances in Neural Information Processing Systems 37 (2024), 121670– 121698. [7] Jiajun Deng, Zhengyuan Yang, Tianlang Chen, Wengang Zhou, and Houqiang Li. 2021. TransVG: End-to-End Visual Grounding With Transformers. In In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV ’21) . 1769–1779. [8] Xiaoyi Dong, Jianmin Bao, Dongdong Chen, Zhang Weiming, Nenghai Yu, Lu Yuan, Dong Chen, and Baining Guo. 2022. CSWin Transformer: A General Vision Transformer Backbone With Cross-Shaped Windows. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’22) .12124–12134. [9] Fevziye Irem Eyiokur, Dogucan Yaman, Hazım Kemal Ekenel, and Alexander Waibel. 2026. CAPE: A CLIP-Aware Pointing Ensemble of Complementary Heatmap Cues for Embodied Reference Understanding. In In Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV ’26) .3939–3950. [10] Kanoko Goto, Takumi Hirose, Mahiro Ukai, Shuhei Kurita, and Nakamasa Inoue. 2025. Referring Expression Comprehension for Small Objects. In In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV ’25) . 21231– 21242. [11] Hao Guo, Wei Fan, Baichun Wei, Jianfei Zhu, Jin Tian, Chunzhi Yi, and Feng Jiang. 2025. AD-DINO: Attention-Dynamic DINO for Distance-Aware Embodied Reference Understanding. IEEE Transactions on Circuits and Systems for Video Technology (2025), 1–11. [12] Hao Guo, Jianfei Zhu, Wei Fan, Chunzhi Yi, and Feng Jiang. 2025. Beyond Object Categories: Multi-Attribute Reference Understanding for Visual Grounding. arXiv preprint arXiv:2503.19240 (2025). [13] Sandeep Gupta, Carsten Maple, Bruno Crispo, Kiran Raja, Artsiom Yautsiukhin, and Fabio Martinelli. 2023. A Survey of Human-Computer Interaction (HCI) & Natural Habits-Based Behavioural Biometric Modalities for User Recognition Schemes. Pattern Recognition 139 (2023), 109453. [14] Zeyu Han, Fangrui Zhu, Qianru Lao, and Huaizu Jiang. 2024. Zero-Shot Refer-ring Expression Comprehension via Structural Similarity Between Images and Captions. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’24) . 14364–14374. [15] Ruozhen He, Paola Cascante-Bonilla, Ziyan Yang, Alexander C. Berg, and Vicente Ordonez. 2024. Improved Visual Grounding Through Self-Consistent Explana-tions. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’24) . 13095–13105. [16] Shuting He, Henghui Ding, Chang Liu, and Xudong Jiang. 2023. GREC: Gen-eralized Referring Expression Comprehension. arXiv preprint arXiv:2308.16182 
+
+(2023). [17] Md Mofijul Islam, Alexi Gladstone, Sujan Sarker, Ganesh Nanduru, Md Fahim, Keyan Du, Aman Chadha, and Tariq Iqbal. 2025. Embodied Referring Expression Comprehension in Human-Robot Interaction. arXiv preprint arXiv:2512.06558 
+
+(2025). [18] Kritika Johari, Christopher Tay Zi Tong, Vigneshwaran Subbaraju, Jung-Jae Kim, and U-Xuan Tan. 2021. Gaze Assisted Visual Grounding. In In Proceedings of the International Conference on Social Robotics (ICSR ’21) . 191–202. [19] Mark Johnson. 2015. Embodied Understanding. Frontiers in Psychology 6 (2015), 875. [20] Gloria Yi-Ming Kao and Cheng-An Ruan. 2022. Designing and Evaluating a High Interactive Augmented Reality System for Programming Learning. Computers in Human Behavior 132 (2022), 107245. [21] Bum Jun Kim, Hyeyeon Choi, Hyeonah Jang, and Sang Woo Kim. 2023. Un-derstanding Gaussian Attention Bias of Vision Transformers Using Effective Receptive Fields. arXiv preprint arXiv:2305.04722 (2023). Conference acronym ’XX, June 03–05, 2018, Woodstock, NY Trovato et al. 
+
+[22] Sven Kreiss, Lorenzo Bertoni, and Alexandre Alahi. 2021. OpenPifPaf: Composite Fields for Semantic Keypoint Detection and Spatio-Temporal Association. IEEE Transactions on Intelligent Transportation Systems 23, 8 (2021), 13498–13511. [23] Georgios Lampropoulos. 2025. Intelligent Virtual Reality and Augmented Reality Technologies: An Overview. Future Internet 17, 2 (2025), 58. [24] Ling Li, Bowen Liu, Zinuo Zhan, Peng Jie, Jianhui Zhong, Kenglun Chang, and Zhidong Deng. 2026. Beyond Language: Grounding Referring Expressions With Hand Pointing in Egocentric Vision. arXiv preprint arXiv:2603.26646 (2026). [25] Liunian Harold Li, Pengchuan Zhang, Haotian Zhang, Jianwei Yang, Chunyuan Li, Yiwu Zhong, Lijuan Wang, Lu Yuan, Lei Zhang, Jenq-Neng Hwang, et al .2022. Grounded Language-Image Pre-Training. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’22) . 10965–10975. [26] Yang Li, Xiaoxue Chen, Hao Zhao, Jiangtao Gong, Guyue Zhou, Federico Rossano, and Yixin Zhu. 2023. Understanding Embodied Reference With Touch-Line Transformer. In In Proceedings of the 11th International Conference on Learning Representations (ICLR ’23) . 1–15. [27] Chang Liu, Henghui Ding, and Xudong Jiang. 2023. GRES: Generalized Refer-ring Expression Segmentation. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’23) . 23592–23601. [28] Daqing Liu, Hanwang Zhang, Feng Wu, and Zheng-Jun Zha. 2019. Learning to Assemble Neural Module Tree Networks for Visual Grounding. arXiv preprint arXiv:1812.03299 (2019). [29] Haokun Liu, Yaonan Zhu, Kenji Kato, Atsushi Tsukahara, Izumi Kondo, Tadayoshi Aoyama, and Yasuhisa Hasegawa. 2024. Enhancing the LLM-Based Robot Ma-nipulation Through Human-Robot Collaboration. IEEE Robotics and Automation Letters 9, 8 (2024), 6904–6911. [30] Shilong Liu, Zhaoyang Zeng, Tianhe Ren, Feng Li, Hao Zhang, Yang Jie, Qing Jiang, Chunyuan Li, Jianwei Yang, Hang Su, et al . 2024. Grounding DINO: Mar-rying DINO With Grounded Pre-Training for Open-Set Object Detection. In 
+
+In Proceedings of the 18th European Conference on Computer Vision (ECCV ’24) .38–55. [31] Mingcong Lu, Ruifan Li, Fangxiang Feng, Zhanyu Ma, and Xiaojie Wang. 2024. LGR-NET: Language Guided Reasoning Network for Referring Expression Com-prehension. IEEE Transactions on Circuits and Systems for Video Technology 34, 8 (2024), 7771–7784. [32] Ziyang Lu, Yunqiang Pei, Guoqing Wang, Peiwei Li, Yang Yang, Yinjie Lei, and Heng Tao Shen. 2024. Scaneru: Interactive 3D Visual Grounding Based on Embodied Reference Understanding. In In Proceedings of the 38th AAAI Conference on Artificial Intelligence (AAAI ’24) . 3936–3944. [33] Zhihan Lv, Fabio Poiesi, Qi Dong, Jaime Lloret, and Houbing Song. 2022. Deep Learning for Intelligent Human-Computer Interaction. Applied Sciences 12, 22 (2022), 11457. [34] Atharv Mahesh Mane, Dulanga Weerakoon, Vigneshwaran Subbaraju, Sougata Sen, Sanjay E. Sarma, and Archan Misra. 2025. Ges3ViG: Incorporating Pointing Gestures Into Language-Based 3D Visual Grounding for Embodied Reference Understanding. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’25) . 9017–9026. [35] Junhua Mao, Jonathan Huang, Alexander Toshev, Oana Camburu, Alan L. Yuille, and Kevin Murphy. 2016. Generation and Comprehension of Unambiguous Object Descriptions. In In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR ’16) . 11–20. [36] Varun K. Nagaraja, Vlad I. Morariu, and Larry S. Davis. 2016. Modeling Context Between Objects for Referring Expression Understanding. In In Proceedings of the European Conference on Computer Vision (ECCV ’16) . 792–807. [37] Shu Nakamura, Yasutomo Kawanishi, Shohei Nobuhara, and Ko Nishino. 2023. DeePoint: Visual Pointing Recognition and Direction Estimation. In In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV ’23) . 20577– 20587. [38] Georgios Pantazopoulos and Eda B. Özyiğit. 2025. Towards Understanding Visual Grounding in Visual Language Models. arXiv preprint arXiv:2509.10345 (2025). [39] Atharva Paralikar, Pavan Mantripragada, Trong Nguyen, Youness Arjoune, Raj Shekhar, and Reza Monfaredi. 2025. Robot-Assisted Ultrasound Probe Calibration for Image-Guided Interventions. International Journal of Computer Assisted Radiology and Surgery 20, 5 (2025), 859–868. [40] Kun Qian, Zhuoyang Zhang, Wei Song, and Jianfeng Liao. 2023. GVGNet: Gaze-Directed Visual Grounding for Learning Under-Specified Object Referring Inten-tion. IEEE Robotics and Automation Letters 8, 9 (2023), 5990–5997. [41] Yanyuan Qiao, Chaorui Deng, and Qi Wu. 2021. Referring Expression Compre-hension: A Survey of Methods and Datasets. IEEE Transactions on Multimedia 23 (2021), 4426–4440. [42] Hamid Rezatofighi, Nathan Tsoi, JunYoung Gwak, Amir Sadeghian, Ian Reid, and Silvio Savarese. 2019. Generalized Intersection Over Union: A Metric and a Loss for Bounding Box Regression. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’19) . 658–666. [43] Cheng Shi and Sibei Yang. 2022. Spatial and Visual Perspective-Taking via View Rotation and Relation Reasoning for Embodied Reference Understanding. In In Proceedings of the European Conference on Computer Vision (ECCV ’22) . 201–218. [44] Cheng Shi and Sibei Yang. 2023. Spatial and Visual Perspective-Taking via View Rotation and Relation Reasoning for Embodied Reference Understanding. arXiv preprint arXiv:2309.01073 (2023). [45] Tianyu Song, Felix Pabst, Feng Li, Yordanka Velikova, Miruna-Alexandra Gafencu, Yuan Bi, Ulrich Eck, and Nassir Navab. 2026. Feasibility of Augmented Reality-Guided Robotic Ultrasound With Cone-Beam CT Integration for Spine Procedures. 
+
+arXiv preprint arXiv:2603.22174 (2026). [46] Martin Sundermeyer, Zoltan-Csaba Marton, Maximilian Durner, Manuel Brucker, and Rudolph Triebel. 2018. Implicit 3D Orientation Learning for 6D Object Detection From RGB Images. In In Proceedings of the European Conference on Computer Vision (ECCV ’18) . 699–715. [47] Jinguang Tong, Jinbo Wu, Kaisiyuan Wang, Zhelun Shen, Xuan Huang, Mochu Xiang, Xuesong Li, Yingying Li, Haocheng Feng, Chen Zhao, Hang Zhou, Wei He, Chuong Nguyen, Jingdong Wang, and Hongdong Li. 2026. MVHOI: Bridge Multi-View Condition to Complex Human-Object Interaction Video Reenactment via 3D Foundation Model. arXiv preprint arXiv:2603.14686 (2026). [48] Shijie Wang, Dahun Kim, Ali Taalimi, Chen Sun, and Weicheng Kuo. 2025. Learn-ing Visual Grounding From Generative Vision and Language Model. In In Pro-ceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV ’25) . 8057–8067. [49] Wenhui Wang, Hangbo Bao, Li Dong, Johan Bjorck, Zhiliang Peng, Qiang Liu, Kriti Aggarwal, Owais Khan Mohammed, Saksham Singhal, Subhojit Som, et al .2023. Image as a Foreign Language: BEiT Pretraining for Vision and Vision-Language Tasks. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’23) . 19175–19186. [50] Dulanga Weerakoon, Vigneshwaran Subbaraju, Nipuni Karumpulli, Tuan Tran, Qianli Xu, U-Xuan Tan, Joo Hwee Lim, and Archan Misra. 2020. Gesture Enhanced Comprehension of Ambiguous Human-to-Robot Instructions. In In Proceedings of the 2020 International Conference on Multimodal Interaction (ICMI ’20) . 251–259. [51] Changli Wu, Qi Chen, Jiayi Ji, Haowei Wang, Yiwei Ma, You Huang, Hao Fei, Xiaoshuai Sun, and Rongrong Ji. 2024. RG-SAN: Rule-Guided Spatial Awareness Network for End-to-End 3D Referring Expression Segmentation. Advances in Neural Information Processing Systems 37 (2024), 110972–110999. [52] Yixuan Wu, Zhao Zhang, Chi Xie, Feng Zhu, and Rui Zhao. 2023. Advancing Referring Expression Segmentation Beyond Single Image. In In Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV ’23) . 2628–2638. [53] Linhui Xiao, Xiaoshan Yang, Fang Peng, Yaowei Wang, and Changsheng Xu. 2024. HiVG: Hierarchical Multimodal Fine-Grained Modulation for Visual Grounding. In In Proceedings of the 32nd ACM International Conference on Multimedia (MM ’24) . 5460–5469. [54] Linhui Xiao, Xiaoshan Yang, Fang Peng, Yaowei Wang, and Changsheng Xu. 2024. OneRef: Unified One-Tower Expression Grounding and Segmentation With Mask Referring Modeling. Advances in Neural Information Processing Systems 37 (2024), 139854–139885. [55] Linhui Xiao, Xiaoshan Yang, Lan Xiangyuan, Yaowei Wang, and Changsheng Xu. 2026. Toward Visual Grounding: A Survey. IEEE Transactions on Pattern Analysis and Machine Intelligence 48, 3 (2026), 2749–2771. [56] Jun Xu, Hanchen Wang, Jianrong Zhang, and Linqin Cai. 2022. Robust Hand Ges-ture Recognition Based on RGB-D Data for Natural Human-Computer Interaction. 
+
+IEEE Access 10 (2022), 54549–54562. [57] Yue Yang, Christoph Leuze, Brian Hargreaves, Bruce Daniel, and Fred Baik. 2025. EasyREG: Easy Depth-Based Markerless Registration and Tracking Using Augmented Reality Device for Surgical Guidance. arXiv preprint arXiv:2504.09498 
+
+(2025). [58] Jiawen Yi, Jiaojiao Liu, Chuanlong Zhang, and Xiong Lu. 2022. Magnetic Motion Tracking for Natural Human-Computer Interaction: A Review. IEEE Sensors Journal 22, 23 (2022), 22356–22367. [59] Licheng Yu, Zhe Lin, Xiaohui Shen, Jimei Yang, Xin Lu, Mohit Bansal, and Tamara L. Berg. 2018. MAttNet: Modular Attention Network for Referring Expression Comprehension. In In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’18) . 1307–1315. [60] Licheng Yu, Patrick Poirson, Shan Yang, Alexander C. Berg, and Tamara L. Berg. 2016. Modeling Context in Referring Expressions. In In Proceedings of the European Conference on Computer Vision (ECCV ’16) . 69–85. [61] Jiabao Zhao, Jonghan Lim, Hongliang Li, and Ilya Kovalenko. 2026. CoViLLM: An Adaptive Human-Robot Collaborative Assembly Framework Using Large Language Models. arXiv preprint arXiv:2603.11461 (2026). [62] Peizhi Zhao, Shiyi Zheng, Wenye Zhao, Dongsheng Xu, Pijian Li, Yi Cai, and Huang Qingbao. 2024. Rethinking Two-Stage Referring Expression Compre-hension: A Novel Grounding and Segmentation Method Modulated by Point. In 
+
+In Proceedings of the 38th AAAI Conference on Artificial Intelligence (AAAI ’24) .7487–7495. [63] Yiyi Zhou, Rongrong Ji, Gen Luo, Xiaoshuai Sun, Jinsong Su, Xinghao Ding, Chia-Wen Lin, and Qi Tian. 2023. A Real-Time Global Inference Network for One-Stage Referring Expression Comprehension. IEEE Transactions on Neural Networks and Learning Systems 34, 1 (2023), 134–143. [64] Zhishan Zhou, Shihao Zhou, Lv Zhi, Minqiang Zou, Yao Tang, and Jiajun Liang. 2024. A Simple Baseline for Efficient Hand Mesh Reconstruction. In In Proceedings VistaRef: Boosting Visual Spatial Orientation Awareness for Pointing-to-Object Detection Conference acronym ’XX, June 03–05, 2018, Woodstock, NY 
+
+of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR ’24) . 1367–1376. [65] Chaoyang Zhu, Yiyi Zhou, Yunhang Shen, Gen Luo, Xingjia Pan, Mingbao Lin, Chao Chen, Liujuan Cao, Xiaoshuai Sun, and Rongrong Ji. 2022. SeqTR: A Simple Yet Universal Network for Visual Grounding. In In Proceedings of the 17th European Conference on Computer Vision (ECCV ’22) . 598–615. 
+
+Received 20 February 2007; revised 12 March 2009; accepted 5 June 2009
