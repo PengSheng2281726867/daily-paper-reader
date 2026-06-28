@@ -1,0 +1,754 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-28T21:25:03.139678+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 5,
+    "deep_cap": 8,
+    "deep_selected": 5,
+    "quick_candidates": 37,
+    "quick_skim_target": 13,
+    "quick_selected": 13
+  },
+  "deep_dive": [
+    {
+      "id": "2606.26287v1",
+      "source": "arxiv",
+      "title": "GeMoE: Gating Entropy is All You Need for Uncertainty-aware Adaptive Routing in MoE-based Large Vision-Language Models",
+      "abstract": "With the increase in model parameters and training data, the instruction following and generalization capabilities of Large VisionLanguage Models (LVLMs) have been significantly improved. Based on the Mixture of Experts (MoE) architecture, LVLMs expand their parameter capacity while maintaining the inference cost. However, traditional MoE methods employ a Top-k static routing strategy, which fails to account for variations in the input and adaptively select the number of experts, resulting in suboptimal resource utilization. In this paper, we propose viewing token routing as an information encoding task, framing dynamic routing as a Minimum Description Length (MDL) problem in encoding By validating the connection between MDL and gating entropy in the MoE scenario, we introduce Gating Entropy-based Uncertainty-aware Adaptive Routing (GeMoE) for MoE. Unlike traditional static or heuristic-based dynamic routing methods, GeMoE explicitly models the trade-off between model complexity and performance. By using gating entropy to assess the complexity of tokens, GeMoE adaptively determines the number of experts each token should engage. On a wide range of backbones and benchmarks, our method achieves 99.5% average performance retention compared to the original static routing, while improving average expert activation sparsity by 36.5%.",
+      "authors": [
+        "Chaoxiang Cai",
+        "Minghe Weng",
+        "Jie Li",
+        "Yibo Jiang",
+        "Longrong Yang",
+        "Zequn Qin",
+        "Xi Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-24T18:34:00+00:00",
+      "link": "https://arxiv.org/pdf/2606.26287v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "uncertainty-aware adaptive routing in MoE-based Large Vision-Language Models",
+      "llm_evidence_cn": "基于MoE的大型视觉-语言模型中的不确定性感知自适应路由",
+      "llm_evidence": "基于MoE的大型视觉-语言模型中的不确定性感知自适应路由",
+      "canonical_evidence": "基于MoE的大型视觉-语言模型中的不确定性感知自适应路由",
+      "llm_tldr_en": "GeMoE proposes gating entropy for dynamic expert routing in LVLMs, improving resource utilization and model capacity.",
+      "llm_tldr_cn": "大型视觉语言模型使用MoE架构扩展容量但静态路由效率低。本文提出GeMoE，将令牌路由视为信息编码任务，基于门控熵和最小描述长度原则实现自适应专家选择。实验表明，动态路由在保持低推理成本的同时提升了指令跟随和泛化能力。",
+      "llm_tldr": "大型视觉语言模型使用MoE架构扩展容量但静态路由效率低。本文提出GeMoE，将令牌路由视为信息编码任务，基于门控熵和最小描述长度原则实现自适应专家选择。实验表明，动态路由在保持低推理成本的同时提升了指令跟随和泛化能力。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22361v1",
+      "source": "arxiv",
+      "title": "First-Token Broadcasters: Mechanistic Origins of Language Identity and Distributed Robustness in Transformers",
+      "abstract": "Why do multilingual language models sometimes generate in the wrong language, and why is this so hard to fix? We introduce Language Identity Head Ablation (LIHA), a causal intervention that zeros each attention head individually and measures the resulting language switch rate across a parallel dataset of 2,700 prompt-language pairs spanning seven languages. Applied to GPT-2, LIHA identifies a small set of first-token broadcaster heads - led by L6H1 (switch rate 0.32, 3.23 $σ$ above the population mean) - that attend persistently to the first prompt token, propagating its language signal throughout generation. Compensatory redistribution when heads are ablated is statistically significant (p < $10^{-5}$) and follows a directional, hierarchical pattern: compensation always recruits heads in layers above the ablated head, suggesting a feedforward cascade rather than global diffusion. To probe how training regime shapes these circuits, we apply LIHA to a controlled pair - Qwen2.5-1.5B-Base and Qwen2.5-1.5B-Instruct - identical in architecture and size, differing only in training. The base model is nearly flat (max SR=0.016, 200/336 heads at SR=0.0); the instruct model concentrates causal influence sharply at layer 0, led by L0H5 (SR=0.224, 8.93 $σ$ above mean), with all other layers near zero. This controlled comparison provides direct causal evidence that instruction tuning reorganizes language identity circuits toward early-layer localization. Extended experiments with Chinese and Russian confirm that first-token broadcasting is script-specific in GPT-2, with non-Latin languages handled at layer 0 - the same locus as the instruction-tuned model. Code and data will be released upon publication.",
+      "authors": [
+        "Arjun Pillai",
+        "Christian Hoang",
+        "Anjelo Jann Laroza"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-21T07:13:52+00:00",
+      "link": "https://arxiv.org/pdf/2606.22361v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "mechanistic analysis of Transformer attention heads for language identity in multilingual models",
+      "llm_evidence_cn": "对多语言Transformer中注意力头关于语言身份的机制分析",
+      "llm_evidence": "对多语言Transformer中注意力头关于语言身份的机制分析",
+      "canonical_evidence": "对多语言Transformer中注意力头关于语言身份的机制分析",
+      "llm_tldr_en": "First-Token Broadcasters identifies attention heads in GPT-2 that persistently attend to the first token, propagating language identity, and reveals distributed robustness through compensatory redistribution.",
+      "llm_tldr_cn": "多语言语言模型有时会生成错误语言，且难以修复。本文通过语言身份头消融方法，在GPT-2中发现了一小部分“首个令牌广播者”注意力头，它们持续关注首个令牌并传递语言信号。当这些头被消融时，其他头会进行补偿性重分布，表现出分布式鲁棒性。该工作深入揭示了语言身份在Transformer中的机制性起源，为多语言模型的调试和改进提供了新见解。",
+      "llm_tldr": "多语言语言模型有时会生成错误语言，且难以修复。本文通过语言身份头消融方法，在GPT-2中发现了一小部分“首个令牌广播者”注意力头，它们持续关注首个令牌并传递语言信号。当这些头被消融时，其他头会进行补偿性重分布，表现出分布式鲁棒性。该工作深入揭示了语言身份在Transformer中的机制性起源，为多语言模型的调试和改进提供了新见解。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.23897v1",
+      "source": "arxiv",
+      "title": "The Professor: Multi-Teacher Unsupervised Prompt Distillation for Vision-Language Models",
+      "abstract": "Prompt distillation compresses large vision-language models (VLMs) such as CLIP into lightweight student models by matching teacher predictions on unlabeled domain images. PromptKD (CVPR 2024) established this paradigm with a single PromptSRC-finetuned ViT-L/14 teacher and a ViT-B/16 student. We propose TheProfessor, a multi-teacher extension that distills from a fixed two-teacher ensemble: a domain-finetuned PromptSRC ViT-L/14 teacher and a zero-shot EVA-CLIP-L/14 teacher whose logits are pre-computed per dataset. We evaluate single-teacher PromptKD, equal-probability ensembling, and confidence-weighted ensembling on four base-to-novel datasets: Caltech-101, DTD, UCF101, and EuroSAT. In a 12-run single-seed sweep, confidence-weighted ensembling improves average HM from 87.52 to 89.28 (+1.77 points), while equal averaging improves average HM to 88.88 (+1.37 points). Gains are dataset dependent: they are negligible on Caltech-101 (+0.16 HM for confidence weighting), modest on UCF101 (+0.62), and largest on domain-shifted EuroSAT (+5.78). These results update our earlier Caltech-only analysis and show that multi-teacher prompt distillation is most useful when the second teacher contributes complementary supervision under domain shift.",
+      "authors": [
+        "Ahmad Algadhi",
+        "Ahmed Alzuhair",
+        "Omar Alkhulaif",
+        "Muzammil Behzad"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.AI"
+      ],
+      "published": "2026-06-22T19:53:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.23897v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Multi-teacher prompt distillation for vision-language models like CLIP",
+      "llm_evidence_cn": "面向CLIP等视觉语言模型的多教师提示蒸馏",
+      "llm_evidence": "面向CLIP等视觉语言模型的多教师提示蒸馏",
+      "canonical_evidence": "面向CLIP等视觉语言模型的多教师提示蒸馏",
+      "llm_tldr_en": "TheProfessor extends PromptKD with a multi-teacher ensemble (PromptSRC ViT-L/14 and EVA-CLIP-L/14) for unsupervised prompt distillation, evaluated on 4 datasets.",
+      "llm_tldr_cn": "针对单教师提示蒸馏的局限，提出多教师扩展TheProfessor。固定集成两个教师：领域微调的PromptSRC ViT-L/14和零样本EVA-CLIP-L/14。在Caltech-101等四个数据集上，置信度加权集成优于单教师基线。",
+      "llm_tldr": "针对单教师提示蒸馏的局限，提出多教师扩展TheProfessor。固定集成两个教师：领域微调的PromptSRC ViT-L/14和零样本EVA-CLIP-L/14。在Caltech-101等四个数据集上，置信度加权集成优于单教师基线。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.22874v1",
+      "source": "arxiv",
+      "title": "SpotAttention: Plug-In Block-Sparse Routing for Pretrained Long-Context Transformers",
+      "abstract": "Long contexts have become standard in pretrained LLMs, yet they remain expensive to run: prefill compute grows quadratically with sequence length, and every decode step re-reads a key-value cache that grows linearly with it. Sparse attention cuts these costs by attending only to a relevant subset of past tokens, but selecting that subset is itself expensive. We present SpotAttention, a lightweight selector that attaches to a frozen pretrained transformer and learns by KL distillation to estimate its attention distribution. The selector picks the top-K keys each query attends to, and because its estimate is a calibrated distribution, a dual top-p rule reads the per-query, per-layer budget directly from it. Across Qwen3 (dense, 4B-32B) and Qwen3.5 (hybrid linear/full attention, 4B-9B), SpotAttention matches dense accuracy at contexts up to 128K tokens, eight times the training length. Decode at L=128K runs 3.9x faster than FlashAttention and 1.8x faster than Twilight, the strongest training-free baseline. Quantizing the selector's K-cache to INT4 or FP4 microscale shrinks it 3.5x at no accuracy cost.",
+      "authors": [
+        "Huzama Ahmad",
+        "Se-Young Yun"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI"
+      ],
+      "published": "2026-06-22T05:39:12+00:00",
+      "link": "https://arxiv.org/pdf/2606.22874v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "efficient attention mechanism for transformer-based LMs",
+      "llm_evidence_cn": "基于Transformer的语言模型的高效注意力机制",
+      "llm_evidence": "基于Transformer的语言模型的高效注意力机制",
+      "canonical_evidence": "基于Transformer的语言模型的高效注意力机制",
+      "llm_tldr_en": "SpotAttention learns a lightweight selector via KL distillation to estimate attention and apply block-sparse routing, reducing long-context cost.",
+      "llm_tldr_cn": "长上下文Transformer推理成本高，稀疏注意力虽能降低成本但选择子集本身昂贵。SpotAttention通过KL蒸馏学习一个轻量级选择器来估计注意力分布，并采用双top-p规则自动分配预算。在Qwen3等模型上实现了高效的长上下文处理。",
+      "llm_tldr": "长上下文Transformer推理成本高，稀疏注意力虽能降低成本但选择子集本身昂贵。SpotAttention通过KL蒸馏学习一个轻量级选择器来估计注意力分布，并采用双top-p规则自动分配预算。在Qwen3等模型上实现了高效的长上下文处理。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.27313v1",
+      "source": "arxiv",
+      "title": "ViQ: Text-Aligned Visual Quantized Representations at Any Resolution",
+      "abstract": "A unified representation for text and vision is a natural pursuit, as it enables simpler multimodal modeling and more efficient training. However, representing images as discrete signals in the same way as text inevitably introduces severe information loss. Existing work struggles to balance low-level details and high-level semantics in discrete representations: reconstruction-oriented representations often lack semantic information, whereas semantically stronger features typically suffer from severe loss of detail. We present ViQ, a Visual Quantized Representations framework, which is designed to balance semantics and details in discrete representations while supporting inputs at native resolutions, thereby enabling it to serve as a unified and general discrete representation for arbitrary visual inputs. Our approach structures quantization learning into two stages: text-aligned pre-training and feature discretization. With text-aligned pre-training, we enhance the visual encoder semantic-rich supervision from the pretrained language model and enable it to process native-resolution visual inputs. During discretization, we propose a proximal representation learning strategy to progressively compact the feature space, along with a position-aware head-wise quantization mechanism that enables flexible processing of arbitrary resolutions. Extensive experiments on multimodal tasks demonstrate that ViQ achieves competitive performance compared to state-of-the-art multimodal vision encoders with continuous and high-dimensional visual features, while maintaining high precision in low-level reconstruction. We also show that multimodal training with visual quantized representations largely improves efficiency, yielding up to 20\\%-70\\% acceleration with different base LLMs and training recipes.",
+      "authors": [
+        "Xumin Yu",
+        "Zuyan Liu",
+        "Zhenyu Yang",
+        "Yuhao Dong",
+        "Shengsheng Qian",
+        "Jiwen Lu",
+        "Han Hu",
+        "Yongming Rao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-25T17:29:27+00:00",
+      "link": "https://arxiv.org/pdf/2606.27313v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "text-aligned visual quantized representations, similar to CLIP in connecting text and images",
+      "llm_evidence_cn": "文本对齐的视觉量化表示，类似于CLIP连接文本和图像",
+      "llm_evidence": "文本对齐的视觉量化表示，类似于CLIP连接文本和图像",
+      "canonical_evidence": "文本对齐的视觉量化表示，类似于CLIP连接文本和图像",
+      "llm_tldr_en": "Presents ViQ, a framework for visual quantized representations that balances semantics and details, supporting native-resolution inputs.",
+      "llm_tldr_cn": "统一文本与视觉的表示是多模态建模的目标，但离散表示常损失细节或语义。本文提出ViQ框架，通过平衡低层细节和高层语义，支持任意分辨率输入，生成对齐文本的视觉量化表示，在多个下游任务中达到优异性能，可作为统一多模态表示的基础。",
+      "llm_tldr": "统一文本与视觉的表示是多模态建模的目标，但离散表示常损失细节或语义。本文提出ViQ框架，通过平衡低层细节和高层语义，支持任意分辨率输入，生成对齐文本的视觉量化表示，在多个下游任务中达到优异性能，可作为统一多模态表示的基础。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.22076v1",
+      "source": "arxiv",
+      "title": "Learning Cross-View Semantic Priors for Single-Reference Unseen Object Pose Estimation",
+      "abstract": "Single-reference unseen object 6D pose estimation reduces object onboarding by estimating poses of arbitrary novel objects from only one reference view. Recent correspondence-based pipelines have achieved robust performance with vision foundation model (VFM) features. However, they typically treat these features as intra-view descriptors, leaving dense visual-semantic cues, including appearance, structure, and context, insufficiently exchanged across views before geometric decoding. Consequently, the decoded point features may lack joint semantic and geometric discriminability, making correspondence estimation still difficult in challenging cases. Instead of processing features independently, we build the correspondence pipeline around an early cross-view semantic prior. Specifically, cross-view semantic interaction (CVSI) enables dense query and reference VFM tokens to exchange semantic context and form a cross-view prior. Nevertheless, direct CVSI may disturb the VFM token structure, while the resulting semantic prior still needs 3D representation consistency for rigid correspondence. To make this CVSI prior reliable for 3D correspondence learning, we introduce two complementary training-time constraints: the intra-view structure preservation (IVSP) loss preserves the original intra-view token affinity structure during interaction, while the reference-anchored geometric consistency (RAGC) loss enforces spatial representation consistency of decoded point features. The final pose is recovered from learned correspondences through weighted SVD. We further construct a challenging view-pair protocol from the BOP Challenge datasets YCB-V and TUD-L to evaluate robustness in difficult matching scenarios. Extensive experiments on six benchmarks under different view-pair settings show that our method achieves state-of-the-art performance while maintaining comparable inference speed.",
+      "authors": [
+        "Jiahong Chen",
+        "Jinghao Wang",
+        "Ziwen Wang",
+        "Zi Wang",
+        "Banglei Guan",
+        "Qifeng Yu"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-20T14:50:51+00:00",
+      "link": "https://arxiv.org/pdf/2606.22076v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "vision foundation model for object pose estimation",
+      "llm_evidence_cn": "视觉基础模型在物体姿态估计中的应用",
+      "llm_evidence": "视觉基础模型在物体姿态估计中的应用",
+      "canonical_evidence": "视觉基础模型在物体姿态估计中的应用",
+      "llm_tldr_en": "Learning cross-view semantic priors with VFMs improves single-reference unseen object pose estimation.",
+      "llm_tldr_cn": "单参考无训练物体6D姿态估计依赖视觉基础模型特征，但现有方法未充分交换跨视图语义线索。该文构建基于交叉视图语义先验的对应流，增强联合语义与几何可区分性，在挑战性场景中显著提升姿态估计精度。",
+      "llm_tldr": "单参考无训练物体6D姿态估计依赖视觉基础模型特征，但现有方法未充分交换跨视图语义线索。该文构建基于交叉视图语义先验的对应流，增强联合语义与几何可区分性，在挑战性场景中显著提升姿态估计精度。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "large vision model recent advances",
+      "matched_requirement_id": "req-10",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.21851v1",
+      "source": "arxiv",
+      "title": "TALAS: Teacher-Anchored Layer Alignment with Adaptive Sharpness-Aware Minimization for Embedding Distillation",
+      "abstract": "Knowledge Distillation (KD) has established itself as a pivotal technique for compressing large pre-trained language models. However, existing methods that force a student to strictly mimic the teacher's sentence embeddings or internal features often incur prohibitive computational costs and yield suboptimal performance due to the inherent capacity gap. To address these challenges, we propose TALAS (Teacher-Anchored Layer Alignment with Sharpness-aware minimization), a unified framework that synergizes hierarchical (multi-layer) alignment with robust optimization. First, we introduce a Teacher-Anchored mechanism that selectively distills final sentence embeddings only into the student's upper layers, thereby reducing overhead while respecting capacity constraints. Second, we bridge the semantic gap in lower layers via Layer-Aligned Self-Distillation, which propagates knowledge top-down using internal geometric relational constraints in the embedding space. Finally, to prevent the student from memorizing point-wise teacher noise, we integrate Adaptive Sharpness-Aware Minimization (ASAM) into the training objective, guiding the model towards flat minima for enhanced generalization. Empirical results on standard sentence embedding benchmarks demonstrate that TALAS consistently outperforms strong distillation baselines while achieving superior training efficiency in terms of computational cost and memory footprint.",
+      "authors": [
+        "Quoc Phong Dao",
+        "Hoang Son Nguyen",
+        "Pham Khanh Chi",
+        "Linh Ngo Van",
+        "Nguyen Thi Ngoc Diep",
+        "Thien Huu Nguyen",
+        "Trung Le"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-20T03:17:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.21851v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Knowledge distillation for compressing large pretrained language models",
+      "llm_evidence_cn": "用于压缩大型预训练语言模型的知识蒸馏方法",
+      "llm_evidence": "用于压缩大型预训练语言模型的知识蒸馏方法",
+      "canonical_evidence": "用于压缩大型预训练语言模型的知识蒸馏方法",
+      "llm_tldr_en": "Proposes TALAS, a unified framework for embedding distillation that uses teacher-anchored layer alignment and sharpness-aware minimization to improve compression of large LMs.",
+      "llm_tldr_cn": "针对知识蒸馏中学生模型与教师模型容量不匹配的问题，提出TALAS框架，采用教师锚定机制仅在上层蒸馏句子嵌入，并结合自适应锐度感知最小化进行鲁棒优化。实验表明，该方法在压缩语言模型时保持嵌入质量，计算成本更低。这项研究为高效部署大型语言模型提供了一种有效的蒸馏策略。",
+      "llm_tldr": "针对知识蒸馏中学生模型与教师模型容量不匹配的问题，提出TALAS框架，采用教师锚定机制仅在上层蒸馏句子嵌入，并结合自适应锐度感知最小化进行鲁棒优化。实验表明，该方法在压缩语言模型时保持嵌入质量，计算成本更低。这项研究为高效部署大型语言模型提供了一种有效的蒸馏策略。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22079v1",
+      "source": "arxiv",
+      "title": "Where Does the Signal Live? A Web Data Recipe for Medical Encoder Pretraining",
+      "abstract": "Web data curation has been widely studied for decoder Large Language Model (LLM) pretraining. Encoders for dense-terminology domains such as medicine, by contrast, are pretrained on small, manually-curated corpora that limit scalability and writing style diversity, a bottleneck even more severe in non-English clinical settings. Whether web-scale data curation also benefits encoder Masked Language Modeling (MLM) in a dense-terminology domain remains an open question. To address this, we introduce two complementary levers. Medical-term density filtering selects documents rich in medical terms. Signal-amplifying rephrasing uses an LLM to rewrite documents into denser variants with broader entity contexts. We instantiate the recipe on French medical NLP. The medical-term density filter outperforms the widely-used educational quality filter on downstream medical tasks, and the two complement each other. Signal-amplifying rephrasing alone improves on raw web data, and mixing it with filtered web data produces the largest gain. The recipe yields FineMed, a French medical pretraining corpus, and DoctoBERT, a state-of-the-art French medical encoder family evaluated on both the public benchmark DrBenchmark and a proprietary clinical Named Entity Recognition (NER) task.",
+      "authors": [
+        "Bofeng Huang",
+        "Jacques Sun",
+        "Diane Bouchacourt",
+        "Nicolas Barascud",
+        "Fajwel Fogel"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-06-20T14:54:27+00:00",
+      "link": "https://arxiv.org/pdf/2606.22079v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "encoder MLM pretraining on web data for dense-terminology domain",
+      "llm_evidence_cn": "医疗密集术语领域的编码器掩码语言模型预训练方法",
+      "llm_evidence": "医疗密集术语领域的编码器掩码语言模型预训练方法",
+      "canonical_evidence": "医疗密集术语领域的编码器掩码语言模型预训练方法",
+      "llm_tldr_en": "Proposes medical-term density filtering and signal-amplifying rephrasing for web-scale encoder MLM pretraining, addressing scalability limits in medical domain.",
+      "llm_tldr_cn": "针对医疗领域编码器预训练依赖小规模人工筛选语料的局限性，提出一种基于Web数据的食谱：医学术语密度过滤筛选富含术语的文档，信号增强改写利用LLM生成更密集且上下文更广的变体。在法语医疗数据上的实验验证了该方法能提升MLM预训练效果，为密集术语领域编码器的可扩展预训练提供了新路径。",
+      "llm_tldr": "针对医疗领域编码器预训练依赖小规模人工筛选语料的局限性，提出一种基于Web数据的食谱：医学术语密度过滤筛选富含术语的文档，信号增强改写利用LLM生成更密集且上下文更广的变体。在法语医疗数据上的实验验证了该方法能提升MLM预训练效果，为密集术语领域编码器的可扩展预训练提供了新路径。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "pretraining methods for language models",
+      "matched_requirement_id": "req-16",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.21974v1",
+      "source": "arxiv",
+      "title": "Fine-Tuning Large Language Models for Quantum Reasoning",
+      "abstract": "Large language models (LLMs) exhibit abilities beyond natural language modelling and text generation. Recent advances in their reasoning capabilities have spurred interest in applying LLMs to complex scientific tasks requiring deep domain expertise and sophisticated reasoning. Quantum computing, as a highly specialised field with significant knowledge barriers and hardware constraints, could greatly benefit from such advancements. However, a key open question that first must be answered is: How can we develop fine-tuning pipelines that instil genuine quantum reasoning in LLMs, rather than task-specific pattern matching? We study this question through quantum circuit simulation as a training objective, where the model must predict the measurement probability distribution resulting from a sequence of quantum gate operations. We propose and compare two fine-tuning pipelines: (1) Supervised Fine-Tuning (SFT) on explicit gate-by-gate state-vector simulation traces, and (2) a two-stage SFT+Group Relative Policy Optimisation (GRPO) approach that sequentially applies SFT followed by GRPO with verifiable rewards. Our findings show that SFT achieves near-perfect in-distribution and gate-count extrapolation accuracy, significantly outperforming both the base model and the GPT-OSS-120B baseline. SFT+GRPO trades some in-distribution precision for better generalisation to larger qubit systems that SFT alone cannot handle. Both pipelines significantly outperform the baselines, demonstrating that targeted fine-tuning on explicit reasoning traces is an effective strategy for advancing quantum reasoning in LLMs.",
+      "authors": [
+        "Katherine Ip",
+        "Casey R. Myers",
+        "Udaya Parampalli",
+        "James Quach",
+        "Peiyong Wang"
+      ],
+      "primary_category": "quant-ph",
+      "categories": [
+        "quant-ph",
+        "cs.AI"
+      ],
+      "published": "2026-06-20T10:06:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.21974v1",
+      "tags": [
+        "keyword:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "fine-tuning LLMs for quantum reasoning",
+      "llm_evidence_cn": "微调LLM用于量子推理",
+      "llm_evidence": "微调LLM用于量子推理",
+      "canonical_evidence": "微调LLM用于量子推理",
+      "llm_tldr_en": "Explores fine-tuning pipelines for LLMs to perform quantum circuit simulation, assessing whether they acquire genuine reasoning or pattern matching.",
+      "llm_tldr_cn": "大型语言模型在科学推理中展现潜力，但如何培养真正的量子推理能力而非模式匹配是关键挑战。本文以量子电路模拟为目标，研究微调流程使LLM预测测量概率分布。实验评估了不同训练策略，揭示了模型在量子推理上的能力与局限，为LLM在专业科学领域应用提供了经验。",
+      "llm_tldr": "大型语言模型在科学推理中展现潜力，但如何培养真正的量子推理能力而非模式匹配是关键挑战。本文以量子电路模拟为目标，研究微调流程使LLM预测测量概率分布。实验评估了不同训练策略，揭示了模型在量子推理上的能力与局限，为LLM在专业科学领域应用提供了经验。",
+      "llm_tags": [
+        "query:llm-papers:composite"
+      ],
+      "matched_query_tag": "query:llm-papers:composite",
+      "matched_query_text": "Papers central to 大模型重要论文检索, especially work that connects or combines: large language model survey; pretraining methods for language models; instruction tuning for large language models; RLHF training for language models; few-shot learning with large language models; seminal papers on large language model development; key research on transformer based language models; important works on instruction fine tuning and alignment.",
+      "matched_requirement_id": "req-composite-llm-papers",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22470v1",
+      "source": "arxiv",
+      "title": "PRIME: Evaluating Prompt Resolution Under Incompatible Instructions in LLMs",
+      "abstract": "Large language models (LLMs) often encounter conflicting prompts, although current instruction following benchmarks assess those meta-instructions in isolation, limiting the insights about how models process conflicting instructions. We introduce a framework \\textit{PRIME}(\\textit{Prompt Resolution under Incompatible Meta-Instructions Evaluation}) to analyze behavior of LLMs when provided with conflicting instructions. \\textit{PRIME} purposefully produces calibrated conflicts across response length, output format, and reasoning; classifying model responses with a deterministic behavioral taxonomy. We are evaluating five instruction tuned open weight LLMs in two distinct settings, balanced and naturally distributed. The conclusion we reach upon analysis is that conflict type is more significant in affecting behavior than model scale, and various failure modes across different categories of conflict. Our findings emphasize the value of developing conflict awareness and suggest ability of LLM to follow instructions cannot be assessed through isolated constraints alone.",
+      "authors": [
+        "Tehreem Javed",
+        "Shumaim Fatimah",
+        "Masooma Bakhtiari",
+        "Gibrail Islam",
+        "Mehwish Fatima"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI"
+      ],
+      "published": "2026-06-21T12:30:23+00:00",
+      "link": "https://arxiv.org/pdf/2606.22470v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "evaluating LLMs under conflicting instructions",
+      "llm_evidence_cn": "评估LLM在冲突指令下的行为",
+      "llm_evidence": "评估LLM在冲突指令下的行为",
+      "canonical_evidence": "评估LLM在冲突指令下的行为",
+      "llm_tldr_en": "Introduces PRIME framework to evaluate how LLMs handle conflicting meta-instructions, with a deterministic behavioral taxonomy, revealing model strategies and weaknesses.",
+      "llm_tldr_cn": "大语言模型常遇到冲突指令，现有基准孤立评估元指令。本文提出PRIME框架，设计长度、格式、推理三类冲突，并用确定性行为分类法分析模型响应。在五个指令微调的开源LLM上评估，揭示了模型在处理矛盾指令时的策略和不足，为指令对齐研究提供了新视角。",
+      "llm_tldr": "大语言模型常遇到冲突指令，现有基准孤立评估元指令。本文提出PRIME框架，设计长度、格式、推理三类冲突，并用确定性行为分类法分析模型响应。在五个指令微调的开源LLM上评估，揭示了模型在处理矛盾指令时的策略和不足，为指令对齐研究提供了新视角。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "instruction tuning for large language models",
+      "matched_requirement_id": "req-17",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.22043v1",
+      "source": "arxiv",
+      "title": "When Does a Video-Language Model Stop Watching? Reward Strength Controls the Formation and Reversal of Visual Shortcuts in Multimodal RLVR",
+      "abstract": "Reinforcement learning with verifiable rewards (RLVR) is increasingly applied to large vision-language models (LVLMs), yet outcome-only optimization can drive a model to stop attending to the video and instead exploit linguistic priors -- a failure we call a visual shortcut. While the existence of such perception bypass is by now documented, how it forms, whether it can be undone, and when intervention still helps remain open. We treat the strength of a grounding penalty, lambda, as a control knob and characterize the formation-reversal dynamics of visual shortcuts along the training time axis. On a held-out, out-of-distribution diagnostic set, we find: (i) a sharp onset -- shortcut reliance emerges abruptly over a narrow window of optimization steps and is robust across random seeds; (ii) a monotone dose-response -- increasing lambda progressively suppresses the shortcut, and at an intermediate dose the trajectory first forms and then reverses the shortcut, exposing a hysteresis-like asymmetry between acquiring and removing it; and (iii) a critical intervention window -- applying the penalty before onset arrests shortcut formation, whereas the same penalty applied after consolidation is markedly less effective. Together these results recast visual-shortcut collapse not as a binary defect but as a controllable, time-dependent, and asymmetric process, with direct implications for when and how strongly to regularize multimodal RLVR.",
+      "authors": [
+        "Zekun Xu"
+      ],
+      "primary_category": "cs.AI",
+      "categories": [
+        "cs.AI",
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-20T13:48:19+00:00",
+      "link": "https://arxiv.org/pdf/2606.22043v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Studies visual shortcuts in multimodal RLVR for large vision-language models, related to breakthroughs in computer vision with LLMs",
+      "llm_evidence_cn": "研究多模态RLVR中视觉捷径问题，涉及大视觉语言模型的研究",
+      "llm_evidence": "研究多模态RLVR中视觉捷径问题，涉及大视觉语言模型的研究",
+      "canonical_evidence": "研究多模态RLVR中视觉捷径问题，涉及大视觉语言模型的研究",
+      "llm_tldr_en": "Investigates how visual shortcuts form and reverse in video-language models during RLVR, controlled by reward strength and grounding penalty.",
+      "llm_tldr_cn": "强化学习与可验证奖励(RLVR)用于大视觉语言模型时，模型可能停止关注视频而利用语言先验，形成视觉捷径。通过调节接地惩罚强度，刻画了捷径的形成与反转动力学。发现捷径出现迅速，但通过适当惩罚可逆转，为多模态RLVR提供了重要指导。",
+      "llm_tldr": "强化学习与可验证奖励(RLVR)用于大视觉语言模型时，模型可能停止关注视频而利用语言先验，形成视觉捷径。通过调节接地惩罚强度，刻画了捷径的形成与反转动力学。发现捷径出现迅速，但通过适当惩罚可逆转，为多模态RLVR提供了重要指导。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22537v2",
+      "source": "arxiv",
+      "title": "NegAS: Negative Label Guided Attention and Scoring for Out-of-Distribution Object Detection with Vision-Language Models",
+      "abstract": "Out-of-Distribution (OOD) detection is essential for ensuring the robustness and reliability of object detection systems deployed in safety-critical applications. While prior research has mainly focused on uni-modal detectors or vision-language model (VLM) based classifiers, the potential of VLM-based object detectors in OOD scenarios remains underexplored. In this work, we take the first step toward building OOD object detection methods upon VLMs. We identify two challenges specific to VLM detectors: (i) their text-guided attention enhances foreground with ID labels but treats background uniformly, leaving potential OOD regions unexploited for separating in-distribution (ID) from OOD instances; and (ii) their sigmoid-based multi-label outputs are incompatible with softmax-based OOD scores, calling for scoring functions consistent with VLM probabilistic outputs. Hence, we introduce Negative Label Guided Attention and Scoring (NegAS). To address (i), we propose a negative label guided attention module (NegA), where LLM-generated, visually-similar but semantically-different negative labels are used to guide attention toward potential OOD background regions. To address (ii), we introduce a novel sigmoid-based OOD scoring function (NegS) that leverages both ID and negative labels, producing strong responses for ID instances and suppressed responses for OOD ones. Extensive experiments demonstrate that our approach improves OOD detection performance by a large margin while maintaining ID accuracy, e.g., reducing the FPR95 by 11.4% on the COCO dataset and 25.5% on the OpenImages dataset compared to the baseline model. While initially designed for dense VLM detectors like YOLO-World, we successfully adapt NegAS to Grounding DINO, a query-based VLM transformer and achieve significant improvements, demonstrating the generalizability of our framework.",
+      "authors": [
+        "Yingjie Zhang",
+        "Shuai Li",
+        "Peng Wang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T14:50:41+00:00",
+      "link": "https://arxiv.org/pdf/2606.22537v2",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Out-of-distribution object detection with vision-language models",
+      "llm_evidence_cn": "基于视觉语言模型的分布外目标检测",
+      "llm_evidence": "基于视觉语言模型的分布外目标检测",
+      "canonical_evidence": "基于视觉语言模型的分布外目标检测",
+      "llm_tldr_en": "NegAS proposes negative label guided attention and scoring for OOD object detection using VLMs, addressing background OOD region exploitation.",
+      "llm_tldr_cn": "针对视觉语言模型在分布外目标检测中未充分利用背景OOD区域的问题，提出负标签引导的注意力与打分机制。首次将VLM检测器用于OOD检测，通过负标签增强注意力以区分前后景，在多个基准测试中取得最优。",
+      "llm_tldr": "针对视觉语言模型在分布外目标检测中未充分利用背景OOD区域的问题，提出负标签引导的注意力与打分机制。首次将VLM检测器用于OOD检测，通过负标签增强注意力以区分前后景，在多个基准测试中取得最优。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.23132v1",
+      "source": "arxiv",
+      "title": "T-VSS: Test-Time Visual Subspace Steering for Adversarial Robustness of Vision-Language Models",
+      "abstract": "Vision-language models (VLMs) achieve strong zero-shot recognition, but they remain highly vulnerable to adversarial perturbations. Recent test-time adaptations improve robustness without retraining, but they do not directly adapt the corrupted visual representation itself. Prompt-based methods adapt the learnable text prompts, while input-space methods optimize pixels or padding at test time. These approaches can improve predictions, but they do so through an indirect and expensive optimization path. We propose Test-time Visual Subspace Steering (T-VSS), a lightweight defense that performs test-time adaptation directly in the visual feature space. T-VSS first builds a sample-specific low-rank subspace from multi-view feature residuals anchored at the attacked image. It then learns a shared feature correction within this subspace using reliability-weighted entropy minimization. By constraining adaptation to a compact visual geometry, T-VSS steers attacked features toward more stable and discriminative predictions while avoiding noisy full-space updates. Experiments on fine-grained, ImageNet, and ImageNet-OOD benchmarks show that T-VSS improves adversarial robustness while maintaining competitive clean accuracy and better efficiency than prior test-time adaptations.",
+      "authors": [
+        "Jaehyuk Jang",
+        "Minseok Seo. Seungju Cho",
+        "Kangwook Ko",
+        "Changick Kim"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T10:21:24+00:00",
+      "link": "https://arxiv.org/pdf/2606.23132v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "robustness of vision-language models via test-time adaptation in visual feature space",
+      "llm_evidence_cn": "通过视觉特征空间测试时适应增强视觉语言模型鲁棒性",
+      "llm_evidence": "通过视觉特征空间测试时适应增强视觉语言模型鲁棒性",
+      "canonical_evidence": "通过视觉特征空间测试时适应增强视觉语言模型鲁棒性",
+      "llm_tldr_en": "Proposes T-VSS, a lightweight defense that performs test-time adaptation directly in the visual feature space of VLMs to improve adversarial robustness.",
+      "llm_tldr_cn": "本文提出测试时视觉子空间引导（T-VSS）方法，以提升视觉语言模型（VLM）的对抗鲁棒性。现有测试时适应方法通过优化文本提示或输入像素来间接调整，耗时且不直接。T-VSS直接构造样本特定的低秩子空间，在视觉特征空间中进行轻量级调整。实验表明，该方法在不重新训练的情况下显著提高了VLM对对抗扰动的抵抗能力，且计算开销极小。",
+      "llm_tldr": "本文提出测试时视觉子空间引导（T-VSS）方法，以提升视觉语言模型（VLM）的对抗鲁棒性。现有测试时适应方法通过优化文本提示或输入像素来间接调整，耗时且不直接。T-VSS直接构造样本特定的低秩子空间，在视觉特征空间中进行轻量级调整。实验表明，该方法在不重新训练的情况下显著提高了VLM对对抗扰动的抵抗能力，且计算开销极小。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22543v1",
+      "source": "arxiv",
+      "title": "MAPS: Multi-Anchor Projection Similarity for Joint Vision-Language Geo-Localization",
+      "abstract": "Humans localize places by integrating perceptual cues from vision with semantic reasoning from language, forming a scene understanding that is both intuitive and structured. Although existing geo-localization models have made substantial progress in cross-view and cross-modal settings, they are largely built upon point-to-point alignment, which is insufficient for joint vision-language queries. In such queries, visual and textual cues do not simply act as independent references, but jointly define a semantic subspace for locating the target. In this paper, we formulate vision-language geo-localization (VLGL) with joint image-text queries as a multi-anchor geometric alignment problem and propose a unified framework for this setting. To realize this formulation, we propose Multi-Anchor Projection Similarity (MAPS), a new metric which constructs an anchor plane from visual and textual query features in a high-dimensional space and measures similarity by the projection length of the target feature onto this plane. Unlike cosine similarity which evaluates isolated pairwise relations, MAPS captures the geometric consistency between the target feature and the joint query subspace, providing a more discriminative ranking criterion during retrieval. To make the learned representation consistent with this geometry, we further introduce a MAPS-based contrastive loss that drives target features toward the corresponding anchor plane. The proposed framework, similarity metric, and training objective jointly yield state-of-the-art performance in VLGL.",
+      "authors": [
+        "Yutong Hu",
+        "Siyuan Tan",
+        "Shaocheng Yan",
+        "Pengcheng Shi",
+        "Qingwu Hu",
+        "Jiayuan Li"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T15:01:53+00:00",
+      "link": "https://arxiv.org/pdf/2606.22543v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Joint vision-language geo-localization using CLIP-like models",
+      "llm_evidence_cn": "利用类似CLIP的模型进行联合视觉语言地理定位",
+      "llm_evidence": "利用类似CLIP的模型进行联合视觉语言地理定位",
+      "canonical_evidence": "利用类似CLIP的模型进行联合视觉语言地理定位",
+      "llm_tldr_en": "MAPS formulates vision-language geo-localization as multi-anchor geometric alignment with image-text queries.",
+      "llm_tldr_cn": "针对现有地理定位模型仅支持点对点对齐而无法处理联合图像-文本查询的问题，提出多锚点投影相似度（MAPS）框架。将VLGL建模为多锚点几何对齐问题，在跨模态查询条件下实现精准定位。实验表明优于现有方法。",
+      "llm_tldr": "针对现有地理定位模型仅支持点对点对齐而无法处理联合图像-文本查询的问题，提出多锚点投影相似度（MAPS）框架。将VLGL建模为多锚点几何对齐问题，在跨模态查询条件下实现精准定位。实验表明优于现有方法。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.24156v1",
+      "source": "arxiv",
+      "title": "Accelerating Multimodal Large Language Models with Prior-Corrected Token Reduction",
+      "abstract": "Visual token reduction has emerged as an effective strategy for accelerating Multimodal Large Language Models (MLLMs). Many existing methods prune tokens by ranking text-visual attention scores. However, we show that attention is often dominated by a model-induced prior: even without textual instruction, MLLMs tend to focus on certain task-agnostic regions. Consequently, the attention scores of instruction-conditioned tokens are suppressed, increasing the risk that these tokens are discarded during pruning. To address this issue, we propose Prior-Corrected Token Reduction (PriorTR), a training-free token reduction method that explicitly separates task-conditioned attention from the model-induced prior. PriorTR estimates the attention map of the prior, and contrasts it with the task-conditioned attention distribution to measure the additional usable information contributed by each visual token. Importantly, PriorTR computes both the model-induced prior and the task-conditioned posterior within a single forward pass by introducing a null token that serves as an instruction-agnostic probe in the attention block. This design avoids duplicated propagation. Extensive experiments across multiple multimodal benchmarks and MLLMs demonstrate that PriorTR consistently improves the trade-off between accuracy and efficiency over strong training-free baselines, particularly under aggressive token budgets.",
+      "authors": [
+        "Zengjie Chen",
+        "Yuxiang Cai",
+        "Jingcai Guo",
+        "Taotao Cai",
+        "Jianwei Yin",
+        "Zhi Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T05:24:50+00:00",
+      "link": "https://arxiv.org/pdf/2606.24156v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "accelerates MLLMs via prior-corrected token reduction, relevant to computer vision breakthroughs with LLMs",
+      "llm_evidence_cn": "通过先验校正的标记减少加速多模态大语言模型，与结合大语言模型的计算机视觉突破相关",
+      "llm_evidence": "通过先验校正的标记减少加速多模态大语言模型，与结合大语言模型的计算机视觉突破相关",
+      "canonical_evidence": "通过先验校正的标记减少加速多模态大语言模型，与结合大语言模型的计算机视觉突破相关",
+      "llm_tldr_en": "Proposes PriorTR, a training-free token reduction method that separates task-conditioned attention from model-induced prior to accelerate Multimodal LLMs.",
+      "llm_tldr_cn": "多模态大语言模型（MLLMs）中视觉标记减少是加速的关键，但现有方法因模型先验而丢弃重要标记。本文提出无训练的先验校正标记减少（PriorTR），通过估计任务条件注意与模型先验分离来避免误删，显著提升MLLM推理效率，在保持性能的同时加速计算。",
+      "llm_tldr": "多模态大语言模型（MLLMs）中视觉标记减少是加速的关键，但现有方法因模型先验而丢弃重要标记。本文提出无训练的先验校正标记减少（PriorTR），通过估计任务条件注意与模型先验分离来避免误删，显著提升MLLM推理效率，在保持性能的同时加速计算。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22606v1",
+      "source": "arxiv",
+      "title": "Sub-Billion, Super-Frontier: Small Language Models Rival Zero-Shot Frontier LLMs on General and Literary Relation Extraction",
+      "abstract": "Large language models (LLMs) achieve strong relation extraction (RE), but their computational demands and reliance on proprietary APIs limit deployment in resource-constrained or privacy-sensitive settings. We investigate how far small language models (SLMs) can close this gap across general-domain and literary text. We evaluate five models from 360M to 3B parameters under three domain-composition regimes and two prompt-conditioned tuning styles (30 configurations), comparing them with zero-shot frontier LLMs and a discriminative RoBERTa baseline. Across nine benchmarks, the best sub-billion model, Qwen2.5-0.5B fine-tuned on pooled general-domain data, achieves a general-domain positive-class micro-F1 of 0.83, versus 0.69 for GPT-5.4 and 0.66 for Claude Sonnet 4.6 evaluated zero-shot. This does not imply that SLMs are intrinsically stronger; rather, targeted task adaptation enables 4-bit models deployable on a single consumer GPU to outperform general-purpose frontier systems under this protocol. An in-domain RoBERTa baseline also exceeds both frontier models, indicating that the gain stems from task adaptation rather than generative decoding. On literary RE, tuned SLMs reach 0.92 on the human-annotated Biographical benchmark versus 0.83 for GPT-5.4, and 0.833 versus 0.578 on the two-benchmark literary average. A targeted domain-adaptive pretraining case study yields no practically meaningful gain over supervised fine-tuning, while the cleanest within-family scale comparison shows only marginal improvement. These results show that, when task-specific data are available, compact task-adapted models can provide accurate, private, and hardware-efficient RE.",
+      "authors": [
+        "Despina Christou",
+        "Grigorios Tsoumakas"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.LG"
+      ],
+      "published": "2026-06-21T17:24:31+00:00",
+      "link": "https://arxiv.org/pdf/2606.22606v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "few-shot learning with small language models for relation extraction",
+      "llm_evidence_cn": "小语言模型在关系抽取中的少样本学习",
+      "llm_evidence": "小语言模型在关系抽取中的少样本学习",
+      "canonical_evidence": "小语言模型在关系抽取中的少样本学习",
+      "llm_tldr_en": "Sub-Billion SLMs fine-tuned on pooled data rival zero-shot LLMs on relation extraction, enabling few-shot deployment.",
+      "llm_tldr_cn": "大语言模型关系抽取能力强但计算成本高。该文探索小语言模型在通用和文学文本关系抽取中的表现，经过池化数据微调的0.5B模型在九个基准上达到与零样本大模型相当的性能，为少样本部署提供了高效方案。",
+      "llm_tldr": "大语言模型关系抽取能力强但计算成本高。该文探索小语言模型在通用和文学文本关系抽取中的表现，经过池化数据微调的0.5B模型在九个基准上达到与零样本大模型相当的性能，为少样本部署提供了高效方案。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "few-shot learning with large language models",
+      "matched_requirement_id": "req-19",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.24165v1",
+      "source": "arxiv",
+      "title": "Spectral Evolution-Guided Token Pruning in Multimodal Large Language Models",
+      "abstract": "Reducing visual token redundancy is critical for accelerating Multimodal Large Language Models (MLLMs) without degrading cross-modal reasoning performance. Existing token pruning methods typically rely on single-layer signals, such as attention scores or token similarities, which overlook the cross-layer transformation of visual representations and may exhibit positional bias in multimodal token sequences. To address this limitation, we propose a training-free token pruning framework based on Cross-Layer Spectral Evolution (CLSE). Instead of measuring token importance from single-layer feature magnitudes, CLSE quantifies how token representations evolve across Transformer layers in the frequency domain. This evolution reflects the transition from high-frequency structural details to low-frequency semantic abstractions. We observe that tokens with stronger spectral redistribution across layers are more likely to be semantically active and should therefore be preserved. By modeling cross-layer token dynamics, CLSE provides a stable importance criterion that mitigates positional bias. Extensive experiments on both image and video benchmarks demonstrate that CLSE achieves a superior trade-off between efficiency and accuracy under aggressive token reduction. Across multiple MLLMs, CLSE reduces FLOPs, KV cache memory, and latency while maintaining competitive or improved performance.",
+      "authors": [
+        "Bin Chen",
+        "Yuxiang Cai",
+        "Yadan Luo",
+        "Yi Zhang",
+        "Jianwei Yin",
+        "Zhi Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T05:39:52+00:00",
+      "link": "https://arxiv.org/pdf/2606.24165v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "spectral evolution-based token pruning for MLLMs, relevant to vision-language breakthroughs",
+      "llm_evidence_cn": "基于谱演化的多模态大语言模型标记剪枝，与视觉语言突破相关",
+      "llm_evidence": "基于谱演化的多模态大语言模型标记剪枝，与视觉语言突破相关",
+      "canonical_evidence": "基于谱演化的多模态大语言模型标记剪枝，与视觉语言突破相关",
+      "llm_tldr_en": "Proposes CLSE, a training-free token pruning framework using cross-layer spectral evolution to reduce visual tokens in MLLMs.",
+      "llm_tldr_cn": "多模态大语言模型（MLLM）中视觉标记剪枝常用单层信号，忽视跨层变换和位置偏差。本文提出跨层谱演化（CLSE）框架，通过频域量化标记表示演进来评估重要性，无需训练即可有效剪枝，在保持推理质量的同时加速MLLM。",
+      "llm_tldr": "多模态大语言模型（MLLM）中视觉标记剪枝常用单层信号，忽视跨层变换和位置偏差。本文提出跨层谱演化（CLSE）框架，通过频域量化标记表示演进来评估重要性，无需训练即可有效剪枝，在保持推理质量的同时加速MLLM。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.22702v1",
+      "source": "arxiv",
+      "title": "Modular Diffusion Models for Structured Visual Recognition",
+      "abstract": "Traditional supervised methods for structured visual recognition tasks -- such as object detection, segmentation, and scene graph generation -- often produce deterministic, fixed outputs, limiting their ability to capture the inherent uncertainty in complex visual scenes. As a consequence, such point estimates are unable to capture the prediction uncertainty (or multi modality) intrinsic to these problems, often arising from natural ambiguities (e.g., ambiguity in size of partially occluded objects, local ambiguity of exact segmentation boundary, etc.) as well as noise and sparsity of training data. To address this limitation, we present Modular Diffusion Models (MDMs), a simple and novel framework that learns a distribution over structured outputs for a given input image. MDMs decompose the diffusion process into distinct, task-specific modules, each focused on capturing a different aspect of the structured information space, such as object categories, spatial locations, and inter-object relationships. This modular design allows each component to be learned independently, with seamless integration at inference without additional training. Furthermore, the modularity of MDMs enables the diffusion process to easily operate over the heterogeneous output space common in many structured learning tasks (e.g., a continuous bounding boxes and discrete class labels). Experimental results over three distinct structured tasks -- object detection, instance segmentation, and scene graph generation -- highlight the benefits of our proposed framework.",
+      "authors": [
+        "Siddhesh Khandelwal",
+        "Björn Ommer",
+        "Leonid Sigal"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T22:38:35+00:00",
+      "link": "https://arxiv.org/pdf/2606.22702v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "diffusion models for structured visual recognition including object detection",
+      "llm_evidence_cn": "扩散模型用于结构化视觉识别（含目标检测）",
+      "llm_evidence": "扩散模型用于结构化视觉识别（含目标检测）",
+      "canonical_evidence": "扩散模型用于结构化视觉识别（含目标检测）",
+      "llm_tldr_en": "Modular Diffusion Models learn a distribution over structured outputs for object detection, segmentation, and scene graph generation.",
+      "llm_tldr_cn": "传统结构化视觉识别输出确定性结果，无法捕捉不确定性。本文提出模块化扩散模型MDM，将结构化输出建模为条件分布，通过扩散过程生成多样候选。在目标检测、分割和场景图生成任务上验证了预测不确定性建模的有效性。",
+      "llm_tldr": "传统结构化视觉识别输出确定性结果，无法捕捉不确定性。本文提出模块化扩散模型MDM，将结构化输出建模为条件分布，通过扩散过程生成多样候选。在目标检测、分割和场景图生成任务上验证了预测不确定性建模的有效性。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Find influential papers on object detection from CCF A computer vision conferences",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}

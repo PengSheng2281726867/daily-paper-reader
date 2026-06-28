@@ -1,0 +1,421 @@
+Title: First-Token Broadcasters: Mechanistic Origins of Language Identity and Distributed Robustness in Transformers
+
+URL Source: https://arxiv.org/pdf/2606.22361v1
+
+Published Time: Tue, 23 Jun 2026 02:02:10 GMT
+
+Number of Pages: 9
+
+Markdown Content:
+# First-Token Broadcasters: Mechanistic Origins of Language Identity and Distributed Robustness in Transformers 
+
+Arjun Pillai 1, Christian Hoang 2, Anjelo Jann Laroza 31Irvington High School, 2GenAI4E, 3Mapua University 
+
+Abstract 
+
+Why do multilingual language models some-times generate in the wrong language, and why is this so hard to fix? We introduce Lan-guage Identity Head Ablation (LIHA) , a causal intervention that zeros each attention head individually and measures the resulting language switch rate across a parallel dataset of 2,700 prompt-language pairs spanning seven languages. Applied to GPT-2, LIHA identifies a small set of first-token broadcaster heads— led by L6H1 (switch rate 0.32, 3.23 σ above the population mean)—that attend persistently to the first prompt token, propagating its language signal throughout generation. Compensatory redistribution when heads are ablated is statis-tically significant ( p < 10 −5) and follows a directional, hierarchical pattern: compensation always recruits heads in layers above the ab-lated head, suggesting a feedforward cascade rather than global diffusion. To probe how training regime shapes these circuits, we ap-ply LIHA to a controlled pair—Qwen2.5-1.5B-Base and Qwen2.5-1.5B-Instruct—identical in architecture and size, differing only in training. The base model is nearly flat (max SR =0.016, 200/336 heads at SR =0.0); the instruct model concentrates causal influence sharply at layer 0, led by L0H5 (SR =0.224, 8.93 σ above mean), with all other layers near zero. This controlled comparison provides direct causal evidence that instruction tuning reorganizes language identity circuits toward early-layer localization. Extended experiments with Chinese and Rus-sian confirm that first-token broadcasting is script-specific in GPT-2, with non-Latin lan-guages handled at layer 0—the same locus as the instruction-tuned model. Code and data will be released upon publication. 
+
+1 Introduction 
+
+Language identity confusion—where a model given a French prompt continues in English, or drifts mid-generation into the wrong language— has been documented across many models (Wendler et al., 2024; Zhang et al., 2023; Marchi-sio et al., 2024), but its internal mechanism is not well understood. Prior work has found neurons and heads whose activations correlate with language (Tang et al., 2024; Kojima et al., 2024), but correla-tion does not imply causation. We take a different approach: for each attention head in a model, we zero its output during generation and directly mea-sure how often the output language changes. This causal lens reveals not just which heads matter, but 
+
+why language confusion is so hard to fix—and how dramatically the answer changes across training regimes. Our main contributions for this paper are: 1. A causal, head-level analysis of language iden-tity across three model families (LIHA, Eq. 1), complementing prior correlational work (Tang et al., 2024; Kojima et al., 2024); 2. Discovery of first-token broadcasting as a con-crete interpretable mechanism; 3. Statistically validated hierarchical compen-satory redistribution : p < 10 −5, always downstream, never upstream; 4. The first controlled base-vs.-instruct evidence that instruction tuning reorganizes language identity circuits toward early-layer localiza-tion, using models identical in architecture and size. 
+
+2 Related Work 
+
+Mechanistic interpretability. Elhage et al. (2021) established the residual stream framework for component-level causal analysis of transform-ers. Wang et al. (2023) traced indirect object iden-tification in GPT-2 to a sparse 26-head circuit; Conmy et al. (2023) introduced automated circuit discovery; Meng et al. (2022) localized factual as-sociations to MLP modules. 
+
+Multilingual representations and language con-fusion. Conneau et al. (2020) showed multilin-1
+
+> arXiv:2606.22361v1 [cs.CL] 21 Jun 2026
+
+gual BERT acquires cross-lingual structure with-out explicit supervision; Wendler et al. (2024) found LLMs process inputs in English internally— consistent with our finding that English is immune to ablation. Marchisio et al. (2024) demonstrate that state-of-the-art models frequently switch to unintended languages; we approach this mechanis-tically via causal head ablation. 
+
+Language-specific components, probing, and steering. Tang et al. (2024) identified language-specific neurons; Kojima et al. (2024) found heads preferentially processing specific language families. Activation analysis identifies language-selective 
+
+components; ablation identifies language-causal 
+
+ones—sets that are not identical. Linear probing (Alain and Bengio, 2017; Tenney et al., 2019) pro-vides our second line of evidence. Zou et al. (2023) and Li et al. (2023) demonstrated inference-time steering; our negative amplification results distin-guish language identity from more localized steer-able properties. 
+
+3 Proposed Method 
+
+Let M be a transformer with L layers and H
+
+heads per layer. For head hl,i at layer l, head index i, define the ablated model M−hl,i as M
+
+with that head’s residual stream contribution set to zero. The switch rate of head hl,i over prompt set 
+
+X = {x1, . . . , x n} is: 
+
+S(hl,i ) = 1
+
+n
+
+> n
+
+X
+
+> j=1
+
+1
+
+h
+
+L(M−hl,i (xj )) ̸ = L(M(xj )) 
+
+i
+
+(1) A head with high S(hl,i ) is causally responsible for language identity: removing it reliably changes output language. 
+
+4 Experimental Setup 
+
+Models and implementation. Our experiments are conducted across diverse language model ar-chitectures to ensure cross-model generalizability. We evaluate GPT-2 small (Radford et al., 2019), which features 12 layers and 12 attention heads per layer ( dmodel = 768 ), totaling 144 heads. To inves-tigate the effects of scale and training regimes, we analyze Qwen2.5-1.5B (Team, 2025), comprising 28 layers with a Grouped-Query Attention (GQA) mechanism configured with 12 query heads and 2 key-value heads, totaling 336 heads; we compare its base and instruct variants, which share an iden-tical architecture and differ solely in their training optimization. Finally, to capture insights from a natively multilingual model family, we incorpo-rate BLOOM-560m (Workshop et al., 2022), fea-turing 24 layers with 16 attention heads per layer (dmodel = 1024 ), totaling 384 heads. Operating within the residual stream framework (Elhage et al., 2021), where each attention head contributes additively to the hidden states, we iso-late individual head dynamics by zeroing out their post-projection outputs. Mechanistically, this ab-lation is implemented via PyTorch forward hooks registered on the output projection matrix ( o_proj ). For evaluation, text generation is performed us-ing greedy decoding with a fixed budget of 40 to-kens per prompt, and downstream language classi-fication is determined via langdetect (Nakatani, 2010). 
+
+Dataset. We construct a parallel multilingual dataset drawn from Flores-200 (Costa-jussà et al., 2022), spanning five European languages (English, French, German, Spanish, Italian; 500 sentences each for GPT-2; 25 each for Qwen), Chinese (100 sentences), and Russian (100 sentences), yielding 2,700 prompt-language pairs in total. The first 5 prompts per language are hand-written sentence starters; the remainder are from the Flores-200 de-vtest split, filtered for quality (20–300 characters, 
+
+>50% alphabetic) and verified via 3-way majority vote ( langdetect , langid , fastText). All Euro-pean languages achieved ≥99.6% verified prompts. 
+
+Protocols. GPT-2 switch rates are computed on the full 500-prompt-per-language dataset (2,500 European prompts); multi-head ablation accuracy on the same set (1-percentage-point granularity). Switch rate measures change from baseline output ;accuracy measures absolute correctness —not cir-cularly defined. We sweep all 144 GPT-2 heads and all 336 Qwen2.5-1.5B heads (both variants). For BLOOM we sweep every third layer (128 heads). To test steerability, we scale top head outputs by 
+
+2×, 3×, and 5× (Li et al., 2023). All switch rates report 95% bootstrap CIs (10,000 samples). Com-pensatory redistribution significance uses 100,000-sample permutation tests on first-token attention weight deltas. Zero-ablation is the standard in-tervention in mechanistic interpretability (Elhage et al., 2021; Wang et al., 2023); we discuss mean ablation as an alternative and its limitations for English-dominant models in §9. 20 1 2 3 4 5 6 7 8 9 10 11 
+
+> Head Index
+> 0
+> 1
+> 2
+> 3
+> 4
+> 5
+> 6
+> 7
+> 8
+> 9
+> 10
+> 11
+> Layer
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Language Switch Rate
+
+Figure 1: Language switch rate across all 144 GPT-2 attention heads. A small cluster spanning layers 0–10 shows disproportionate causal influence. L6H1 leads at 0.32 (99.3rd percentile, 3.23 σ above mean); a second tier (L0H4, L3H1, L9H9) sits at 0.28. Table 1: Top five GPT-2 heads by switch rate with 95% bootstrap CIs (500 prompts per language).               
+
+> Head Switch Rate 95% CI
+> L6H1 0.32 [0.16, 0.52] L0H4 0.28 [0.12, 0.44] L3H1 0.28 [0.12, 0.48] L9H9 0.28 [0.12, 0.48] L7H3 0.24 [0.08, 0.40] Population mean 0.163 –
+
+5 Single-Model Results 
+
+5.1 Single-Head Ablation (GPT-2) 
+
+Figure 1 shows the language switch rate across all 144 GPT-2 heads. The map is sparse, with elevated rates in a cluster spanning layers 0–10. The mean switch rate is 0.163 ( σ=0 .049 ). L6H1 leads at SR =0.32 (99.3rd percentile, 3.23 σ above mean, 1.97 × effect size), the highest-ranked head by both switch rate and effect size. A second tier (L0H4, L3H1, L9H9) sits at 0.28; given the sample size at this prompt count, the 95% bootstrap CIs for these heads overlap with L6H1’s (Table 1), so we treat L6H1 as the leading candidate head rather than as statistically separated from this tier. Table 1 reports the top five GPT-2 heads. 
+
+Per-language breakdown. English is entirely immune: baseline accuracy is 99.2% and remains 99.2% under L6H1 ablation. Italian is most vul-nerable (switch rate 0.6 under L6H1 ablation; see Appendix D), consistent with GPT-2’s English-dominant training. 0 1 2 3 4 5 6 7 8 9 10 
+
+> Heads ablated (ranked by switch rate)
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> Language Accuracy
+> Language accuracy
+> Chance (0.20)
+
+Figure 2: Language accuracy under progressive multi-head ablation (2,500-prompt evaluation, 95% bootstrap CIs). Monotonic gradual degradation—never reaching chance—is the signature of redundant dis-tributed encoding. Dotted line: chance (0.20). 
+
+5.2 Redundancy and Amplification 
+
+Figure 2 shows language accuracy under progres-sive multi-head ablation on the full 2,500-prompt European set. Baseline accuracy is 43.5% [0.416, 0.454]—lower than the 25-prompt pilot (76%), cor-rectly reflecting GPT-2’s difficulty with French (6.6%) and Italian (20.4%) at scale; switch rate results are unaffected. Ablating L6H1 alone ( k=1 ) reduces accuracy to 39.2% [0.373, 0.411], a 4.3-point directional de-cline; the overlapping CIs are expected under dis-tributed encoding, where no single head accounts for a large share of the signal. Ablating the top ten heads reduces accuracy to 32.4% [0.306, 0.343], an 11.1-point total reduction. Critically, accuracy 
+
+never falls below chance (20%) and the degra-dation is monotonic—the signature of redundant distributed encoding (Wang et al., 2023). 
+
+Compensatory redistribution. We test whether compensation is significant via 100,000-sample permutation tests on first-token attention weight deltas. The top-5 mean delta exceeds the permu-tation null for all three ablated heads ( p < 10 −5). Individual compensators are significant: ablating L6H1, L9H8 shows z=3 .45 (p=0 .0006 ); ablating L0H4, L2H3 shows z=3 .97 (p< 0.0001 ). Table 2 reports the L6H1 compensators. This redistribution follows a directional, hierar-chical pattern: in all three ablation conditions, com-pensators concentrate in layers above the ablated head (layer-clustering p < 0.006 ). Ablating L0H4 (layer 0) recruits layer 2; ablating L6H1 (layer 6) 3Table 2: Top compensating heads when L6H1 is ab-lated. All individually significant ( p< 0.05 ). Compen-sators cluster in layers 7–9, above the ablated layer 6 (p=0 .002 ). 
+
+Head Base Ablated ∆ z
+
+L9H8 0.267 0.275 +0.007 3.45 ∗∗ 
+
+L7H3 0.745 0.751 +0.006 3.01 ∗∗ 
+
+L7H10 0.873 0.879 +0.006 2.70 ∗∗ 
+
+L7H1 0.833 0.838 +0.005 2.65 ∗∗ 
+
+L7H6 0.702 0.705 +0.003 2.10 ∗∗∗ p< 0.01 ; ∗p< 0.05 ; permutation test, n=100 ,000 .
+
+Table 3: Functional taxonomy of top language-critical heads. 
+
+Head Type First-Tok Attn Entropy 
+
+L6H1 Broadcaster 0.876 0.517 L10H4 Broadcaster 0.848 0.677 L7H3 Broadcaster 0.892 0.538 L1H10 Distributed 0.112 2.013 
+
+recruits layers 7–9; ablating L9H9 (layer 9) recruits layers 10–11. This consistent forward directional-ity suggests the language signal propagates through the residual stream as a feedforward cascade. 
+
+Amplification. Amplifying top heads by 2×, 3×,or 5× (Li et al., 2023) produces no accuracy im-provement at any scale, confirming that the redun-dancy is not overcome by increasing a single head’s contribution. 
+
+5.3 First-Token Broadcasting 
+
+Figure 3 shows L6H1’s attention on correct and confused prompts: every query position attends to the first token with weights 0.62–1.00. Table 3 introduces our functional taxonomy. Broadcaster heads attend to the first prompt to-ken with mean weight 0.85–0.89 at every genera-tion step. Entropy analysis confirms this is stable across all 40 steps (mean entropy 1.11 vs. 1.34 for random heads; Appendix A). Confused prompts show higher first-token attention in L6H1 (0.923 vs. 0.847 on correct prompts): confusion does not arise from a broadcasting failure but from downstream representational weakness. We note that first-token broadcasting describes a correlate of language iden-tity maintenance rather than a complete mechanis-tic account. Path patching (Wang et al., 2023)—to distinguish heads promoting the target language from those suppressing alternatives—remains an important next step. Le   
+
+> tem
+> ps
+> a
+> uj
+> our
+> d
+> '
+> h
+> ui
+> est
+> tr
+> Ã¨
+> s
+> Key (attended to)
+> Le
+> tem
+> ps
+> a
+> uj
+> our
+> d
+> '
+> h
+> ui
+> est
+> tr
+> Ã¨
+> s
+> Query (attending from)
+> 1.00
+> 0.95
+> 0.94
+> 0.95
+> 0.97
+> 0.71
+> 0.47
+> 0.32
+> 0.48
+> 0.78
+> 0.91
+> 0.87
+> 0.84
+> 0.62
+> L6H1 French (language-correct)
+> "Le temps aujourd'hui est très"
+> La
+> c
+> osa
+> pi
+> Ã
+> ¹
+> important
+> e
+> ne
+> lla
+> v
+> ita
+> Ã
+> ¨
+> Key (attended to)
+> La
+> c
+> osa
+> pi
+> Ã
+> ¹
+> important
+> e
+> ne
+> lla
+> v
+> ita
+> Ã
+> ¨
+> Query (attending from)
+> 1.00
+> 0.97
+> 0.97
+> 0.94
+> 0.83
+> 0.96
+> 0.95
+> 0.88
+> 0.94
+> 0.93
+> 0.92
+> 0.85
+> 0.96
+> 0.94
+> L6H1 Italian (language-confused)
+> "La cosa più importante nella vita è"
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+> 0.0
+> 0.2
+> 0.4
+> 0.6
+> 0.8
+> 1.0
+
+Figure 3: L6H1 attention on a correct French prompt (upper) and confused Italian prompt (lower). First-token focus is consistent in both cases; confusion arises downstream. 
+
+5.4 Convergent Evidence from Probing 
+
+In GPT-2, probing accuracy rises from 36% at the embedding layer to 96% at layers 10–11. In BLOOM, it reaches 100% at layer 18 through layer 24. Layers containing top causal heads show substantially higher probing accuracy in both mod-els (GPT-2: 85% vs. 58%, 27-point gap; BLOOM: top-switch layers all above 92%), providing conver-gent causal and representational evidence for the same layers. 
+
+6 Cross-Model Comparisons 
+
+To directly test whether training regime reorga-nizes language identity circuits, we apply LIHA to Qwen2.5-1.5B-Base and Qwen2.5-1.5B-Instruct— models with identical architecture, size, and GQA 4Table 4: Top five Qwen2.5-1.5B-Instruct heads by switch rate (125 prompts, 95% bootstrap CIs). English is immune across all heads.                       
+
+> Head SR 95% CI σabove mean
+> L0H5 0.224 [0.152, 0.296] 8.93 L0H11 0.144 [0.088, 0.208] 5.33 L1H9 0.136 [0.080, 0.200] 4.97 L0H7 0.120 [0.064, 0.176] 4.25 L1H7 0.112 [0.064, 0.168] 3.89 Population mean 0.026 ––
+
+configuration (2 KV heads, 12 Q heads, 28 layers, 336 total heads), differing only in whether instruc-tion tuning was applied. Both are swept fully across all 336 heads with 125 prompts (25 per language). 
+
+Base model: near-uniform flatness. The base model shows nearly uniform low causal in-fluence across all layers and heads: mean SR =0.0036 ( σ=0 .0046 ), maximum SR =0.016 (L0H0, z=2 .70 ), and 200 of 336 heads at SR =0.0. No head exceeds SR =0.1. This near-flat distribu-tion indicates that language identity is not strongly localized in any individual head of the pretrained model, consistent with distributed encoding. 
+
+Instruct model: sharp layer-0 concentration. 
+
+The instruct model shows a qualitatively differ-ent organization. L0H5 leads at SR =0.224 [0.152, 0.296], 8.93 σ above the population mean of 0.026 (σ=0 .022 )—a 14 × increase in max SR over the base model. All 12 layer-0 heads are elevated above the population mean (layer-0 mean SR =0.093 vs. 0.023 for layers 1–27, a 4.1 × difference). Table 4 reports the top five instruct heads with 95% boot-strap CIs. The instruct model is not fully localized to a sin-gle head: six heads exceed SR =0.1, and secondary peaks appear at layers 17 (L17H4, SR =0.080) and 21 (L21H3, SR =0.096). However, layer 0 is structurally dominant and the contrast with the flat base model is unambiguous. English is immune in both variants ( switch_en =0.0 for all top heads), and German is most vulnerable ( switch_de up to 0.44), replicating the language-specificity pattern observed in GPT-2. 
+
+Cross-model comparison. Table 5 summarizes all models. The progression from GPT-2 (dis-tributed, middle layers) to Qwen-Base (near-uniform) to Qwen-Instruct (layer-0 concentrated) reveals that instruction tuning is the causally active ingredient in circuit reorganization, since architec-ture and scale are held constant in the Qwen com-parison. BLOOM is included as a reference point illustrating maximal redundancy under balanced multilingual pretraining. 
+
+6.1 Generalization to Typologically Distant Languages 
+
+All GPT-2 experiments used Indo-European lan-guages in Latin script. We extend to Chinese (zh) and Russian (ru). Table 6 shows that L6H1, L0H4, L3H1, and L9H9—with European switch rates of 0.28–0.32—produce SR =0.0 on both Chinese and Russian. The first-token broadcasting mechanism is entirely inert for typologically distant languages. Different heads, concentrated in layers 0–4, gov-ern non-European languages—the same layer-0 locus as the instruction-tuned Qwen model. No-tably, L1H10—classified as a distributed (non-broadcaster) head in Table 3—retains a non-trivial switch rate on both Chinese (0.20) and Russian (0.20), where the European broadcasters (L6H1, L0H4, L3H1, L9H9) drop to zero (Table 6). This suggests that distributed heads may carry more cross-lingually general language information than the script-specific first-token broadcasters. 
+
+7 Discussion 
+
+A training-regime theory of language identity circuits. Our experiments reveal a clear progres-sion: language identity organization changes sys-tematically with training regime, and the Qwen base-vs.-instruct comparison isolates instruction tuning as the causal factor. Pretrained-only mod-els (GPT-2) distribute the language signal across 10+ heads in middle layers—redundant and resis-tant to intervention. Deliberately multilingual pre-trained models (BLOOM) show even greater redun-dancy, making single-head intervention essentially ineffective (0% accuracy drop from top-10 abla-tion). Instruction-tuned models (Qwen-Instruct) reorganize toward layer-0 concentration, with the base model of identical architecture remaining flat— directly implicating the instruction tuning process rather than architecture or scale. 
+
+The layer-0 convergence. A striking pattern runs through three independent findings: Chinese and Russian in GPT-2 use layer-0 heads; Qwen-Instruct concentrates at layer 0; and the Qwen base model, while flat, has its single strongest head also at layer 0 (L0H0, SR =0.016). Layer 0 is closest to 5Table 5: Cross-model comparison of language identity organization. The Qwen base/instruct pair isolates the effect of instruction tuning. BLOOM is shown as a redundancy reference.                                  
+
+> Property GPT-2 BLOOM-560m Qwen-1.5B Base Qwen-1.5B Instruct
+> Heads swept 144 128 †336 336 Max SR 0.32 0.16 0.016 0.224 Top head σ3.23 2.60 2.70 8.93 # heads SR >0.1 15 406# heads SR =0––200 19 Critical layers 0–10 0–21 none 0English immune YES YES YES YES
+> †Every 3rd layer sampled; 128 of 384 heads.
+
+Table 6: Language-family specificity. Left: top Eu-ropean heads show SR =0 on Chinese/Russian. Right: different heads govern non-European languages, con-centrated in layers 0–4.                                           
+
+> Head EU ZH RU Head All ZH RU
+> L6H1 0.32 0.00 0.00 L0H0 0.40 0.20 0.60 L0H4 0.28 0.00 0.00 L4H5 0.30 0.40 0.20 L3H1 0.28 0.00 0.00 L4H2 0.30 0.40 0.20 L9H9 0.28 0.00 0.00 L0H1 0.20 0.00 0.40 L1H10 0.24 0.20 0.20 L0H7 0.20 0.20 0.20
+
+the tokenizer: token IDs in Cyrillic, Chinese char-acters, or instruction-formatted text carry strong script-level signals immediately. Models that re-solve language identity early—either because the tokens are unambiguous (non-Latin scripts) or be-cause training has made language-following a pri-mary objective (instruction tuning)—converge on layer 0 as the locus of causal influence. 
+
+Why inference-time interventions fail (in GPT-2). Ablating ten heads causes only 11.1 points of monotonic accuracy decline, never reaching chance—compensation is statistically significant (p< 10 −5) and hierarchically absorbed downstream. Qwen-Instruct’s layer-0 concentration suggests instruction-tuned models may be more amenable to targeted intervention (Zou et al., 2023), since the signal is less redundantly distributed. 
+
+Future directions. Path patching (Wang et al., 2023) would distinguish heads that promote the target language from those that suppress alterna-tives. The directional redistribution pattern (Ta-ble 2) suggests a feedforward cascade structure worth characterizing precisely. Whether the layer-0 concentration in Qwen-Instruct extends to larger instruction-tuned models and whether it enables more reliable language control are important open questions. While this work maps the language identity circuits within text-based transformers, an important direction for future research is validat-ing these mechanistic dynamics in speech-driven, end-to-end multimodal architectures (Pham et al., 2025). 
+
+8 Conclusion 
+
+In this paper, we introduced Language Identity Head Ablation (LIHA) to causally investigate how multilingual models maintain language identity dur-ing generation. Applied to GPT-2, LIHA uncov-ers a distributed network of first-token broadcaster heads that exhibit robust, hierarchical downstream compensation when ablated. Crucially, through a controlled comparison of Qwen2.5-1.5B variants, we provide the first causal evidence that instruction tuning fundamentally reorganizes these circuits, shifting language identity localization from dis-tributed middle layers to the earliest layer. These findings offer a mechanistic explanation for lan-guage identity maintenance and highlight how train-ing regimes explicitly shape internal model cir-cuitry, opening new avenues for targeted inference-time interventions and multilingual robustness. 
+
+9 Limitations 
+
+Dataset and statistical power. GPT-2 switch rates use 500 prompts per European language; CIs remain moderately wide (L6H1: [0.16, 0.52]). Qwen switch rates use 125 prompts; the top head CI [0.152, 0.296] is sufficient for the base-vs.-instruct contrast but would benefit from expansion. At n=125 , the minimum resolvable nonzero switch rate is 1/125 ≈ 0.008 , so the large number of Qwen-Base heads at SR =0.0 (200/336) partly re-flects measurement resolution rather than a guar-antee of exactly zero causal effect; a larger-scale sweep of the base model would strengthen the flat-ness claim in §6. 
+
+Ablation methodology. Zero-ablation cannot distinguish heads promoting the correct language 6from those suppressing alternatives. Compensatory redistribution tests use summary statistics (means over prompts) rather than per-prompt observations, making the test conservative but appropriate. We additionally attempted mean ablation—replacing each head’s output with its mean activation across the dataset—as a methodological check. The re-sulting switch rates were uncorrelated with zero-ablation rankings (Spearman ρ=−0.24 ), a pattern we attribute to GPT-2’s English-dominant train-ing: the mean activation of language-critical heads encodes an English prior rather than a language-neutral baseline (Wendler et al., 2024), so mean ablation effectively substitutes one language sig-nal (English) for another (the prompt language) without removing language information altogether. This confirms that zero-ablation is the appropriate intervention for detecting language-causal heads in English-dominant models, and is consistent with its standard use throughout the mechanistic inter-pretability literature (Elhage et al., 2021; Wang et al., 2023; Conmy et al., 2023). 
+
+GQA caveat. Qwen2.5-1.5B uses Grouped Query Attention. Zeroing a Q-head slice in GQA has different internal semantics than in standard MHA, since multiple Q-heads share the same KV projections. We hook o_proj output for method-ological consistency across architectures, but head-level ablation in GQA requires further validation. 
+
+Model scope. GPT-2 small and BLOOM-560m are established mechanistic interpretability testbeds (Elhage et al., 2021; Wang et al., 2023; Conmy et al., 2023). The Qwen comparison controls for architecture and scale but a single model family; further replication across instruction-tuned model families is needed to generalize the training-regime theory. 
+
+Ethical Considerations 
+
+Understanding language identity mechanisms could inform more reliable multilingual systems. The redundancy we document acts as an incidental robustness property against adversarial language-switching attacks. All experiments use pub-licly available pretrained models and constructed prompts; no personal data was used. 
+
+Acknowledgments 
+
+Omitted for anonymous review. 
+
+References 
+
+Guillaume Alain and Yoshua Bengio. 2017. Under-standing intermediate layers using linear classifier probes. In ICLR Workshop .Arthur Conmy, Augustine N. Macdougall, Hannah McLean, and Neel Nanda. 2023. Towards automated circuit discovery for mechanistic interpretability. In 
+
+Advances in Neural Information Processing Systems ,volume 36. Alexis Conneau, Kartikay Khandelwal, Naman Goyal, Vishrav Chaudhary, Guillaume Wenzek, Francisco Guzmán, Édouard Grave, Myle Ott, Luke Zettle-moyer, and Veselin Stoyanov. 2020. Unsupervised cross-lingual representation learning at scale. In Pro-ceedings of ACL .Marta R. Costa-jussà, James Cross, Onur Çelebi, Maha Elbayad, Kenneth Heafield, Kevin Heffernan, Elahe Kalbassi, Janice Lam, Daniel Licht, Jean Mail-lard, Anna Sun, Skyler Wang, Guillaume Wenzek, Al Youngblood, Bapi Akula, Loïc Barrault, Gabriel Mejia-Gonzalez, Prangthip Hansanti, John Hoffman, and 19 others. 2022. The FLORES-200 evaluation benchmark for low-resource and multilingual ma-chine translation. In Transactions of the Association for Computational Linguistics , volume 10, pages 522– 545. Nelson Elhage, Neel Nanda, Catherine Olsson, Tom Henighan, Nicholas Joseph, Ben Mann, Amanda Askell, Yuntao Bai, Anna Chen, Tom Conerly, Nova DasSarma, Dawn Drain, Deep Ganguli, Zac Hatfield-Dodds, Danny Hernandez, Andy Jones, Jackson Kernion, Liane Lovitt, Kamal Ndousse, and 6 others. 2021. A mathematical framework for transformer circuits. Transformer Circuits Thread .Takashi Kojima, Shixiang Shane Gu, Machel Reid, Yu-taka Matsuo, and Yusuke Iwasawa. 2024. Multi-lingual mechanistic interpretability: Cross-lingual circuits in large language models. In Proceedings of EMNLP .Kenneth Li, Oam Patel, Fernanda Viégas, Hanspeter Pfister, and Martin Wattenberg. 2023. Inference-time intervention: Eliciting truthful answers from a lan-guage model. In Advances in Neural Information Processing Systems , volume 36. Kelly Marchisio, Wei-Yin Ko, Alexandre Bérard, Théo Dehaze, and Sebastian Ruder. 2024. Understanding and mitigating language confusion in LLMs. In Pro-ceedings of the 2024 Conference on Empirical Meth-ods in Natural Language Processing , pages 6653– 6677, Miami, Florida, USA. Association for Compu-tational Linguistics. Kevin Meng, David Bau, Alex Andonian, and Yonatan Belinkov. 2022. Locating and editing factual associ-ations in GPT. In Advances in Neural Information Processing Systems , volume 35. 
+
+7Shuyo Nakatani. 2010. Language detection library for Java. Tan-Hanh Pham, Phu-Vinh Nguyen, Chris Ngo, Truong-Son Hy, and 1 others. 2025. Silvar: Speech-driven multimodal model for reasoning visual question an-swering and object localization. In Proceedings of the 2025 Conference on Empirical Methods in Natu-ral Language Processing , pages 11674–11685. Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, and Ilya Sutskever. 2019. Language models are unsupervised multitask learners. OpenAI Blog , 1(8). Tianyi Tang, Wenyang Zhang, Haoyang Sun, Xu-ancheng Wang, Wayne Xin Zhao, and Ji-Rong Wen. 2024. Language-specific neurons: The key to mul-tilingual capabilities in large language models. In 
+
+Proceedings of ACL .Qwen Team. 2025. Qwen2.5 technical report. arXiv preprint arXiv:2412.15115 .Ian Tenney, Dipanjan Das, and Ellie Pavlick. 2019. BERT rediscovers the classical NLP pipeline. In 
+
+Proceedings of ACL .Kevin Wang, Luc Alexandre, Arthur Conmy, Arthur Variengien, and Jacob Steinhardt. 2023. Interpretabil-ity in the wild: A circuit for indirect object identifica-tion in GPT-2 small. In Proceedings of ICLR .Chris Wendler, Veniamin Veselovsky, Giovanni Monea, and Robert West. 2024. Do LLMs think in English? exploring latent language representations and emer-gent multilingual pitfalls. In Proceedings of EMNLP .BigScience Workshop, Teven Le Scao, Angela Fan, Christopher Akiki, Ellie Pavlick, Suzana Ili´ c, Daniel Hesslow, Roman Castagné, Alexandra Sasha Luc-cioni, François Yvon, and 1 others. 2022. Bloom: A 176b-parameter open-access multilingual language model. arXiv preprint arXiv:2211.05100 .Chaojun Zhang, Daya Guo, Nan Duan, Duyu Tang, Ming Zhou, and Jian Yin. 2023. Plug-and-play docu-ment modules for pre-trained models. In Findings of ACL .Andy Zou, Long Phan, Sarah Chen, James Campbell, Phillip Guo, Richard Ren, Alexander Pan, Xuwang Yin, Mantas Mazeika, Ann-Kathrin Dombrowski, Shashwat Goel, Nathaniel Li, Michael J. Byun, Zifan Wang, Alex Mallen, Steven Basart, Sanmi Koyejo, Dawn Song, Matt Fredrikson, and 2 others. 2023. Representation engineering: A top-down approach to AI transparency. arXiv preprint arXiv:2310.01405 .
+
+8A Entropy Over Generation Time 1 5 10 20 30 40 
+
+> Generation step (tokens generated)
+> 0.0
+> 0.5
+> 1.0
+> 1.5
+> 2.0
+> Attention entropy
+> Broadcaster heads
+> (low, stable entropy)
+> Broadcaster Heads Maintain Low Entropy Throughout Generation
+> L0H4
+> L9H9
+> L6H1
+> L2H5 (rand)
+> L4H8 (rand)
+> L8H3 (rand)
+
+Figure 4: Attention entropy over generation steps. 
+
+Broadcaster heads (solid) maintain lower entropy (mean 1.11) than random heads (dashed, mean 1.34) across all 40 steps. 
+
+B Bootstrap and Permutation Test Details 
+
+Switch rate CIs use 10,000 bootstrap samples (resampling with replacement, 2.5th/97.5th per-centiles). Compensatory redistribution uses 100,000-sample permutation tests: the observed top-5 mean delta is compared against the distribu-tion of top-5 means from 100,000 random draws of size 5 from the full 143-head delta population. Layer-clustering tests compare observed layer en-tropy of top-5 compensators against the entropy from 100,000 random 5-head draws. 
+
+C Full GPT-2 Ablation Sweep 
+
+Table 7: All GPT-2 heads with switch rate > 0.15 .
+
+Head Switch Rate Delta Acc. 
+
+L6H1 0.32 +0.04 L0H4 0.28 +0.04 L9H9 0.28 −0.12 L3H1 0.28 +0.00 L10H4 0.24 −0.08 L9H11 0.24 −0.04 L8H6 0.24 +0.00 L9H4 0.24 +0.00 L7H3 0.24 −0.04 L1H0 0.24 +0.08 L1H10 0.24 +0.04 L5H1 0.24 +0.00 L6H8 0.24 −0.04 L3H4 0.20 −0.04 L4H11 0.20 +0.00 
+
+D Per-Language Switch Rates (GPT-2) 
+
+Table 8: Per-language switch rates for the top five GPT-2 heads from Table 1, computed on the 5 hand-written sentence-starter prompts per language (§4). 
+
+Head EN FR DE ES IT 
+
+L6H1 0.0 0.2 0.2 0.4 0.6 L0H4 0.0 0.2 0.2 0.4 0.4 L3H1 0.0 0.2 0.2 0.4 0.4 L9H9 0.0 0.2 0.0 0.4 0.6 L7H3 0.0 0.2 0.2 0.2 0.4 Note: this qualitative breakdown uses the 5 hand-written prompts per language and therefore differs slightly from the aggregate switch rates over the full 500-prompt set reported in Table 1. 
+
+E Extended Language Prompts 
+
+Table 9: Chinese and Russian prompts used in the extended language experiments. Russian is shown in transliteration; Cyrillic originals are in 
+
+data/prompts_ru.csv .
+
+Lang Prompt 
+
+zh 今天的天气非常
+
+zh 我想告诉你关于
+
+zh 科学家 们发现了
+
+zh 生活中最重要的事是
+
+zh 从前有一个 
+
+ru Segodnya pogoda ochen' 
+
+ru Ya khotel by rasskazat' vam o 
+
+ru Uchyonye obnaruzhili, chto 
+
+ru Samoye vazhnoye v zhizni — eto 
+
+ru Odnazhdy zhil-byl 
+
+9
