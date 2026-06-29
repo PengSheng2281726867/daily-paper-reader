@@ -1,0 +1,733 @@
+{
+  "mode": "standard",
+  "generated_at": "2026-06-29T21:40:21.645387+00:00",
+  "stats": {
+    "mode": "standard",
+    "tag_count": 3,
+    "deep_divecandidates": 4,
+    "deep_cap": 8,
+    "deep_selected": 4,
+    "quick_candidates": 27,
+    "quick_skim_target": 13,
+    "quick_selected": 13
+  },
+  "deep_dive": [
+    {
+      "id": "2606.27864v1",
+      "source": "arxiv",
+      "title": "A Unified Framework for Vision Transformers Equivariant to Discrete Subgroups of $\\mathrm{O}(2)$",
+      "abstract": "Vision transformers have become a dominant architecture for visual recognition. However, standard models do not explicitly encode the planar symmetries that arise in many vision domains. We introduce a family of vision transformers equivariant to arbitrary discrete subgroups of $\\mathrm{O}(2)$, providing a unified framework that generalizes prior flipping- and $D_4$-equivariant transformer architectures. Our construction yields equivariant analogues of the core transformer components, together with expressivity guarantees for the resulting layers. In particular, we show that whenever $H \\le G$, the class of $G$-equivariant ViTs embeds naturally into the class of $H$-equivariant ViTs. We also prove that, in the single-head setting, the corresponding equivariant self-attention layer realizes every $G$-equivariant self-attention map representable by ordinary self-attention. We further construct a $D_6$-equivariant model based on hexagonal patches, making the architecture compatible with six-fold rotational symmetries. We evaluate the resulting models on the PatternNet aerial image dataset in artificially data-scarce regimes across subgroups of $D_4$ and $D_6$. Our experiments compare two equivariant attention mechanisms and analyze how the choice of homogeneous-space configurations used in the nonlinearities affects performance. Preliminary results under matched parameter budgets indicate that equivariance can improve recognition accuracy, motivating further study of how discrete symmetry groups shape transformer-based visual recognition models.",
+      "authors": [
+        "Tīkun Ông",
+        "Georg Bökman"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.LG"
+      ],
+      "published": "2026-06-26T09:05:47+00:00",
+      "link": "https://arxiv.org/pdf/2606.27864v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 9.0,
+      "llm_evidence_en": "vision transformer equivariant to O(2) subgroups",
+      "llm_evidence_cn": "对O(2)离散子群等变的视觉Transformer",
+      "llm_evidence": "对O(2)离散子群等变的视觉Transformer",
+      "canonical_evidence": "对O(2)离散子群等变的视觉Transformer",
+      "llm_tldr_en": "This paper introduces a unified framework for vision transformers equivariant to discrete subgroups of O(2), generalizing prior equivariant architectures and providing expressivity guarantees.",
+      "llm_tldr_cn": "标准视觉Transformer没有显式编码平面对称性。本文构建了一类对O(2)任意离散子群等变的视觉Transformer族，统一了先前的翻转和D4等变架构。理论证明了G-等变ViT到H-等变ViT的自然嵌入，并提供了单头设置的表达能力保证。该工作为视觉Transformer中融入对称性提供了通用理论框架。",
+      "llm_tldr": "标准视觉Transformer没有显式编码平面对称性。本文构建了一类对O(2)任意离散子群等变的视觉Transformer族，统一了先前的翻转和D4等变架构。理论证明了G-等变ViT到H-等变ViT的自然嵌入，并提供了单头设置的表达能力保证。该工作为视觉Transformer中融入对称性提供了通用理论框架。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Vision Transformer ViT important paper computer vision",
+      "matched_requirement_id": "req-1",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.24187v2",
+      "source": "arxiv",
+      "title": "Towards Fast and Effective Long Video Understanding of Multimodal Large Language Models via Adaptive Quasi-Gaussian Sampling",
+      "abstract": "Long video understanding remains a daunting challenge for Multimodal Large Language Models (MLLMs) due to the excessive computation and memory footprint. Thus, keyframe selection is often adopted to mitigate this shortcoming, which however still suffers from low flexibility and high noise due to its hard sampling principle. In this paper, we define video frame selection as a problem of Quasi-Gaussian Sampling, and propose an adaptive and training-free approach termed AdaQ. Inspired by the 3-$σ$ rule of Gaussian distribution, the objective of AdaQ is to achieve the optimal 3-$σ$ interval for different examples, i.e., a smaller 3-$σ$ interval for the local query and a larger one for the global query, thereby facilitating robust and adaptive frame sampling. To validate AdaQ, we apply it to four MLLMs with three embedding models. The extensive experimental results not only show its obvious performance gains over the default MLLMs and the SOTA keyframe selection methods, e.g., helping Qwen3-VL-8B outperform GPT4o by 15.8% on average by using only 64 frames, but also confirm its superior robustness and high efficiency for long-video understanding, e.g., only 1 hyper-parameter needs to be set.",
+      "authors": [
+        "Kun Zhang",
+        "Chenxin Fang",
+        "Tao Chen",
+        "Baiyang Song",
+        "Yunhang Shen",
+        "Yiyi Zhou",
+        "Rongrong Ji"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T06:13:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.24187v2",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "long video understanding with multimodal LLMs using adaptive sampling",
+      "llm_evidence_cn": "基于自适应采样的多模态大模型长视频理解",
+      "llm_evidence": "基于自适应采样的多模态大模型长视频理解",
+      "canonical_evidence": "基于自适应采样的多模态大模型长视频理解",
+      "llm_tldr_en": "AdaQ proposes adaptive Quasi-Gaussian Sampling for keyframe selection in long video understanding with MLLMs, achieving efficient and noise-robust performance.",
+      "llm_tldr_cn": "针对多模态大模型在长视频理解中计算和内存开销大的问题，本文提出AdaQ方法，将帧选择视为拟高斯采样问题，通过自适应确定3-σ区间实现高效关键帧选择。该方法无需训练，根据查询类型灵活调整采样密度，在保持推理速度的同时提升了视频理解准确率，为长视频与多模态大模型的结合提供了实用方案。",
+      "llm_tldr": "针对多模态大模型在长视频理解中计算和内存开销大的问题，本文提出AdaQ方法，将帧选择视为拟高斯采样问题，通过自适应确定3-σ区间实现高效关键帧选择。该方法无需训练，根据查询类型灵活调整采样密度，在保持推理速度的同时提升了视频理解准确率，为长视频与多模态大模型的结合提供了实用方案。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.25674v1",
+      "source": "arxiv",
+      "title": "BitNet Text Embeddings",
+      "abstract": "LLM-based text embedders have substantially improved retrieval and semantic representation quality, but their deployment remains costly: large backbone models slow down embedding inference, while high-dimensional full-precision embeddings impose substantial storage and bandwidth overhead on large-scale indexes. In this paper, we present BITEMBED, an extreme low-bit framework for LLM-based text embedding that jointly targets encoding efficiency and vector storage. BITEMBED converts pretrained LLM backbones into BitNet-style embedding encoders with ternary weights, quantized activations, and lightweight normalization refinement. The converted model is adapted to representation learning through continual contrastive pre-training, followed by supervised contrastive fine-tuning with both similarity-distribution distillation and attention-relation distillation from a full-precision teacher. Beyond quantizing the backbone, BITEMBED further trains output embeddings to support multiple storage precisions meeting different storage needs in various scenarios. Experiments on MMTEB (eng, v2) with Qwen3-0.6B and Gemma3-270M show that BITEMBED is largely comparable to full precision teacher embedders. Moreover, BITEMBED flexibly obtains text embeddings of various precisions, achieving a trade-off between performance and storage cost.",
+      "authors": [
+        "Zhen Li",
+        "Xin Huang",
+        "Liang Wang",
+        "Nan Yang",
+        "Ting Song",
+        "Yan Xia",
+        "Xun Wu",
+        "Shaohan Huang",
+        "Huishuai Zhang",
+        "Furu Wei",
+        "Dongyan Zhao"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.IR"
+      ],
+      "published": "2026-06-24T10:37:01+00:00",
+      "link": "https://arxiv.org/pdf/2606.25674v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "BitNet text embeddings for efficient LLM inference and storage",
+      "llm_evidence_cn": "BitNet文本嵌入实现高效的大模型推理和存储",
+      "llm_evidence": "BitNet文本嵌入实现高效的大模型推理和存储",
+      "canonical_evidence": "BitNet文本嵌入实现高效的大模型推理和存储",
+      "llm_tldr_en": "Proposes BITEMBED, an extreme low-bit framework for LLM-based text embedding that converts pretrained LLMs into BitNet-style encoders with ternary weights and quantized activations, achieving efficient encoding and storage.",
+      "llm_tldr_cn": "针对LLM文本嵌入部署成本高的问题，本文提出BITEMBED框架，将预训练LLM转换为BitNet风格的编码器，采用三值权重和量化激活，并通过连续对比预训练和监督对比微调适应表示学习，显著降低存储和带宽开销，同时保持语义表示质量。",
+      "llm_tldr": "针对LLM文本嵌入部署成本高的问题，本文提出BITEMBED框架，将预训练LLM转换为BitNet风格的编码器，采用三值权重和量化激活，并通过连续对比预训练和监督对比微调适应表示学习，显著降低存储和带宽开销，同时保持语义表示质量。",
+      "llm_tags": [
+        "query:llm-papers:composite"
+      ],
+      "matched_query_tag": "query:llm-papers:composite",
+      "matched_query_text": "Papers central to 大模型重要论文检索, especially work that connects or combines: large language model survey; pretraining methods for language models; instruction tuning for large language models; RLHF training for language models; few-shot learning with large language models; seminal papers on large language model development; key research on transformer based language models; important works on instruction fine tuning and alignment.",
+      "matched_requirement_id": "req-composite-llm-papers",
+      "selection_source": "fresh_fetch"
+    },
+    {
+      "id": "2606.24297v1",
+      "source": "arxiv",
+      "title": "Training-free Cross-domain Few-shot Segmentation via Robust Semantic Representation and Matching",
+      "abstract": "Cross-domain Few-shot Segmentation (CD-FSS) aims to transfer knowledge learned from source domain to distinct target domains, segmenting unseen target classes with only a few annotated samples. Although existing methods have made significant progress, they still rely on training or fine-tuning processes, which incur high computational costs and risk overfitting. We observe that when powerful and general-purpose vision foundation models are incorporated into these methods, their performance shows only marginal improvement or even degrades due to overfitting. To address this, we eliminate trainable parameters and propose a training-free framework to avoid both training overhead and overfitting. Built upon the self-supervised vision encoder DINOv3, our framework addresses cross-domain challenges through three core modules. First, the Semantic-aware Feature Re-fusion (SAFR) module identifies and re-fuses features that emphasize semantic patterns, generating representations with enhanced semantic discriminability. Additionally, the Adaptive Support Enhancement (ASE) module narrows semantic gaps between support and query through robust query information aggregation. Finally, the Hybrid Prototype Matching (HPM) module integrates matching results from diverse prototypes to adapt to varying semantic complexity across domains. Extensive experiments on four target domain datasets demonstrate that our method achieves state-of-the-art performance in CD-FSS without any training.",
+      "authors": [
+        "Sujun Sun",
+        "Mingwu Ren",
+        "Haofeng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T08:19:30+00:00",
+      "link": "https://arxiv.org/pdf/2606.24297v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 8.0,
+      "llm_evidence_en": "Self-supervised vision foundation models applied to cross-domain few-shot segmentation",
+      "llm_evidence_cn": "自监督视觉基础模型用于跨域少样本分割",
+      "llm_evidence": "自监督视觉基础模型用于跨域少样本分割",
+      "canonical_evidence": "自监督视觉基础模型用于跨域少样本分割",
+      "llm_tldr_en": "A training-free framework for cross-domain few-shot segmentation using self-supervised vision foundation models, eliminating fine-tuning to avoid overfitting and computational costs.",
+      "llm_tldr_cn": "现有跨域少样本分割方法依赖训练或微调，计算成本高且易过拟合，引入视觉基础模型后性能提升有限甚至下降。本文提出完全免训练框架，基于自监督视觉模型提取鲁棒语义表示，并通过匹配机制分割目标，无需任何可训练参数。实验证明该方法在多个目标域上超越现有方法，且避免了训练开销。",
+      "llm_tldr": "现有跨域少样本分割方法依赖训练或微调，计算成本高且易过拟合，引入视觉基础模型后性能提升有限甚至下降。本文提出完全免训练框架，基于自监督视觉模型提取鲁棒语义表示，并通过匹配机制分割目标，无需任何可训练参数。实验证明该方法在多个目标域上超越现有方法，且避免了训练开销。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "self-supervised learning with vision transformers",
+      "matched_requirement_id": "req-5",
+      "selection_source": "fresh_fetch"
+    }
+  ],
+  "quick_skim": [
+    {
+      "id": "2606.22631v1",
+      "source": "arxiv",
+      "title": "4DVLT: Dynamic Scene Understanding with Worldline-Centered Vision-Language Tracking",
+      "abstract": "4D dynamic scene understanding requires grounding language to a persistent worldline that binds identity, metric 3D motion, and synchronized multi-view 2D projections. Existing paradigms capture only part of this structure: large multimodal models reason over rich visual evidence but rarely preserve metric topology, while vision-language tracking remains tied to fragmented 2D or 3D outputs and local continuation. We therefore introduce \\textbf{4DVLT}, a worldline-centered task for instruction-conditioned 4D dynamic scene understanding in fully observed multi-view video, and \\textbf{Instruct-4D}, a benchmark with 129.4K question-answer pairs, 64.7K target entities, 851 scenes, and 9 reasoning-oriented query types. To address this setting, we present \\textbf{4DTrack}, which casts instruction-conditioned tracking as graph-conditioned worldline inference through an object-centric 4D state graph, metric-guided routing, bidirectional decoding, and kinematic calibration. On Instruct-4D, 4DTrack-Qwen3.5-9B reaches 62.68 $\\mathrm{TGA}_{\\mathrm{Top1}}$ and surpasses the best adapted VLT baseline by 19.62 points. These results show that worldline-centered modeling improves both target grounding and recovered worldline quality. The project page is available at https://github.com/mikubaka88/4DVLT.",
+      "authors": [
+        "Chaoyue Li",
+        "Boxue Yang",
+        "Shengyao Zhou",
+        "Haoyang Wu",
+        "Rui Qian",
+        "Linfeng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T18:33:15+00:00",
+      "link": "https://arxiv.org/pdf/2606.22631v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "worldline-centered vision-language tracking for 4D scene understanding",
+      "llm_evidence_cn": "以世界线为中心的视觉语言跟踪用于4D场景理解",
+      "llm_evidence": "以世界线为中心的视觉语言跟踪用于4D场景理解",
+      "canonical_evidence": "以世界线为中心的视觉语言跟踪用于4D场景理解",
+      "llm_tldr_en": "Introduces 4DVLT, a task for instruction-conditioned 4D dynamic scene understanding, with a large benchmark and a novel worldline-centered approach.",
+      "llm_tldr_cn": "4D动态场景理解需要将语言与持续的世界线（标识、运动、多视角投影）结合。现有方法或丢失度量拓扑或局限于2D跟踪。本文提出4DVLT任务和Instruct-4D基准（包含12.94万个问答对），并设计世界线中心的视觉语言跟踪方法，在多个推理查询类型上验证了有效性。",
+      "llm_tldr": "4D动态场景理解需要将语言与持续的世界线（标识、运动、多视角投影）结合。现有方法或丢失度量拓扑或局限于2D跟踪。本文提出4DVLT任务和Instruct-4D基准（包含12.94万个问答对），并设计世界线中心的视觉语言跟踪方法，在多个推理查询类型上验证了有效性。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "CLIP model connecting text and images",
+      "matched_requirement_id": "req-4",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.22424v2",
+      "source": "arxiv",
+      "title": "FlowDec: Temporal Conditional Flow Decorruptor for Robust Continuous Vision-Language Navigation",
+      "abstract": "Vision-and-Language Navigation in Continuous Environments (VLN-CE) requires agents to follow natural-language instructions in unseen scenes. While Large Models (LMs) have advanced VLN-CE, their performance remains severely degraded by real-world visual corruptions, a critical yet underexplored domain constraint. We introduce Temporal Conditional Flow Decorruptor (FlowDec), a novel image restoration framework tailored for LM-based VLN-CE. FlowDec integrates a hybrid temporal conditioning strategy to align the generative flow path with historical context and employs action-centroid guided filtering to dynamically assess and integrate outputs. Extensive experiments demonstrate that FlowDec outperforms state-of-the-art decorruption methods in both navigation accuracy and generation latency. Our approach establishes a robust, efficient paradigm for resilient embodied navigation in unpredictable real-world conditions.",
+      "authors": [
+        "Yufei Zhang",
+        "Changhao Chen"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T10:24:16+00:00",
+      "link": "https://arxiv.org/pdf/2606.22424v2",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "uses large models for vision-language navigation and proposes image restoration for robustness, a CV breakthrough with LLMs",
+      "llm_evidence_cn": "利用大模型进行视觉语言导航并提出图像恢复增强鲁棒性，属于大模型在计算机视觉中的突破",
+      "llm_evidence": "利用大模型进行视觉语言导航并提出图像恢复增强鲁棒性，属于大模型在计算机视觉中的突破",
+      "canonical_evidence": "利用大模型进行视觉语言导航并提出图像恢复增强鲁棒性，属于大模型在计算机视觉中的突破",
+      "llm_tldr_en": "FlowDec integrates temporal conditioning flow-based image restoration with LM-based VLN-CE to robustly handle visual corruptions.",
+      "llm_tldr_cn": "在连续视觉语言导航（VLN-CE）中，真实世界的视觉退化严重损害大模型性能。提出FlowDec，一种时序条件流去噪框架，通过混合时序条件策略对齐生成流与历史上下文，并采用动作质心引导滤波动态集成输出。实验证明FlowDec在多种退化下优于现有去噪方法，提升了基于大模型的VLN-CE的鲁棒性。",
+      "llm_tldr": "在连续视觉语言导航（VLN-CE）中，真实世界的视觉退化严重损害大模型性能。提出FlowDec，一种时序条件流去噪框架，通过混合时序条件策略对齐生成流与历史上下文，并采用动作质心引导滤波动态集成输出。实验证明FlowDec在多种退化下优于现有去噪方法，提升了基于大模型的VLN-CE的鲁棒性。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.23670v1",
+      "source": "arxiv",
+      "title": "Tapered Language Models",
+      "abstract": "Modern language models, including transformer, recurrent, and memory-based variants, share a common chassis: a stack of identical layers in which parameters are allocated uniformly across depth. This is a default inherited from the original transformer and largely unchanged since, yet a growing body of evidence suggests that layers contribute non-uniformly to the final output, with later layers refining the residual stream rather than transforming it. We ask whether parameter capacity should reflect this asymmetry. Our controlled experiment shows that, under a fixed budget, allocating more capacity to earlier layers and less to later layers improves perplexity over a uniform-width baseline, while the reverse allocation hurts. Building on this result, we introduce Tapered Language Models (TLMs), an architectural principle in which a parameter-bearing component is monotonically tapered across depth under a fixed total budget. MLPs are the natural site for this instantiation: they dominate parameter count across all modern LM families and expose width as a single, clean axis of variation. Across three model scales and four architectures (Transformer, Gated Attention, Hope-attention, and Titans), tapering MLP width via a smooth cosine schedule consistently improves perplexity and downstream benchmark performance over uniform baselines, at no additional parameter or compute cost. These findings establish depth-aware capacity allocation as a simple, architecture-agnostic axis of language model design, a free lever hidden in plain sight.",
+      "authors": [
+        "Reza Bayat",
+        "Ali Behrouz",
+        "Aaron Courville"
+      ],
+      "primary_category": "cs.LG",
+      "categories": [
+        "cs.LG",
+        "cs.AI",
+        "cs.CL"
+      ],
+      "published": "2026-06-22T17:56:25+00:00",
+      "link": "https://arxiv.org/pdf/2606.23670v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "tapered parameter allocation in transformer language models",
+      "llm_evidence_cn": "Transformer语言模型中的锥形参数分配",
+      "llm_evidence": "Transformer语言模型中的锥形参数分配",
+      "canonical_evidence": "Transformer语言模型中的锥形参数分配",
+      "llm_tldr_en": "Tapered Language Models allocate more capacity to earlier layers, improving perplexity under fixed compute budget.",
+      "llm_tldr_cn": "当前语言模型各层容量均等，但研究表明不同层对输出的贡献不均。本文提出锥形语言模型（TLMs），在固定参数预算下将更多容量分配给底层，更少给顶层。实验证明，锥形结构相比均匀分配显著提升了困惑度，而反向分配则有害。该发现挑战了传统等宽设计，为更高效的语言模型架构提供了新方向。",
+      "llm_tldr": "当前语言模型各层容量均等，但研究表明不同层对输出的贡献不均。本文提出锥形语言模型（TLMs），在固定参数预算下将更多容量分配给底层，更少给顶层。实验证明，锥形结构相比均匀分配显著提升了困惑度，而反向分配则有害。该发现挑战了传统等宽设计，为更高效的语言模型架构提供了新方向。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.22546v1",
+      "source": "arxiv",
+      "title": "Venice-H1: Failure-Aware Query Re-Ranking with Multi-Scale Grid Signatures for Referring Image Segmentation",
+      "abstract": "Modern Referring Image Segmentation (RIS) systems generate multiple candidate masks per expression but rely on a simple heuristic--typically the argmax detection score--to select the final output. We identify query selection as a failure-case bottleneck: although heuristic selection succeeds on 82-93% of samples, the residual 7-18% of failures dominate the error budget, leaving a best-query selection gap of 3-11% mIoU. We introduce Venice-H1, a lightweight, backbone-decoupled post-hoc re-ranking module that encodes each candidate through multi-scale grid signatures--compact spatial descriptors pooled onto 4x4, 8x8, and 16x16 grids--and feeds them to a Transformer-based re-ranker with a Failure Gate (ROCAUC 0.78-0.82) that intervenes only when the default choice is likely suboptimal. Instantiated on DeRIS-L and DeRIS-B, Venice-H1 achieves delta_fail of +1.40 and +0.89 mIoU with strictly positive 95% CIs on all 16/16 (split, backbone) pairs and harmful-switch rates below 0.53%. Zero-shot transfer to medical referring segmentation (MS-CXR, M3D-RefSeg-2D) yields +1.16 and +0.51 mIoU without RIS-backbone fine-tuning. The module adds approximately 11.3M parameters and under 1 ms latency.",
+      "authors": [
+        "Nicolò Savioli"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-21T15:06:45+00:00",
+      "link": "https://arxiv.org/pdf/2606.22546v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Proposes Venice-H1 for failure-aware re-ranking in referring image segmentation",
+      "llm_evidence_cn": "提出Venice-H1用于指代图像分割中的失败感知重排序",
+      "llm_evidence": "提出Venice-H1用于指代图像分割中的失败感知重排序",
+      "canonical_evidence": "提出Venice-H1用于指代图像分割中的失败感知重排序",
+      "llm_tldr_en": "Identifies query selection as a bottleneck in referring image segmentation and proposes a lightweight re-ranking module using multi-scale grid signatures and a Transformer re-ranker with a Failure Gate.",
+      "llm_tldr_cn": "现代指代图像分割系统生成多个候选掩码，但启发式选择导致7-18%的失败样本。本文提出Venice-H1轻量级重排序模块，通过多尺度网格签名编码候选掩码，并用Transformer重排序器与失败门控选择最佳掩码。实验将失败率降低3-11% mIoU。",
+      "llm_tldr": "现代指代图像分割系统生成多个候选掩码，但启发式选择导致7-18%的失败样本。本文提出Venice-H1轻量级重排序模块，通过多尺度网格签名编码候选掩码，并用Transformer重排序器与失败门控选择最佳掩码。实验将失败率降低3-11% mIoU。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Retrieve seminal works on deep learning based visual recognition from CCF A venues",
+      "matched_requirement_id": "req-9",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.24092v1",
+      "source": "arxiv",
+      "title": "Progressive Pixel-Neighborhood Deformable Cross-Attention for Multispectral Object Detection",
+      "abstract": "Effective cross-modal feature alignment and interaction are central challenges in multispectral object detection. Although global cross-attention provides strong long-range modeling ability, its quadratic complexity with respect to feature size limits deployment on resource-constrained platforms. We therefore propose Progressive Pixel-Neighborhood Deformable Cross-Attention for multispectral feature fusion, termed PNAFusion. The proposed framework is motivated by two observations: weak misalignment between visible and thermal images is usually concentrated around local neighborhoods, and semantic correspondence across modalities often follows non-linear spatial mappings that fixed receptive fields cannot model well. To address these issues, PNAFusion incorporates local spatial priors into its architectural design to concentrate feature interaction and alignment on the most relevant neighborhoods. Specifically, a Pixel-Neighborhood Cross-Attention (PNCA) module is introduced to avoid redundant global feature matching and suppress background noise. Meanwhile, an Adaptive Deformable Alignment (ADA) module captures non-linear spatial correspondences through learned pixel-wise offsets. These components are further integrated through an iterative feedback mechanism to progressively refine cross-modal feature alignment. Experiments on FLIR, M3FD, and DroneVehicle show that PNAFusion achieves 84.2, 90.5, and 85.5 mAP@0.5, respectively, under the YOLOv5 detector, and further reaches 86.8 mAP@0.5 on FLIR and 90.8 mAP@0.5 on M3FD when transferred to Co-DETR. Efficiency analysis indicates that PNAFusion reduces allocated GPU memory by 33.0\\% compared with ICAFusion and reduces theoretical FLOPs from 194.8 G to 156.4 G, although the deformable sampling and iterative refinement introduce additional latency. Our code will be available at https://github.com/DanielQiuTian/PNAFusion.",
+      "authors": [
+        "Tian Qiu",
+        "Jifeng Shen",
+        "Xin Zuo"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T03:14:27+00:00",
+      "link": "https://arxiv.org/pdf/2606.24092v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "progressive pixel-neighborhood deformable cross-attention for multispectral object detection",
+      "llm_evidence_cn": "渐进像素邻域可变形交叉注意力用于多光谱目标检测",
+      "llm_evidence": "渐进像素邻域可变形交叉注意力用于多光谱目标检测",
+      "canonical_evidence": "渐进像素邻域可变形交叉注意力用于多光谱目标检测",
+      "llm_tldr_en": "Proposes PNAFusion, a cross-attention mechanism for multispectral object detection that is efficient and handles local misalignment and non-linear spatial mappings.",
+      "llm_tldr_cn": "多光谱目标检测面临跨模态特征对齐和交互挑战。本文提出渐进像素邻域可变形交叉注意力（PNAFusion），利用局部邻域和可变形映射解决弱对齐和非线性对应问题，在保持线性复杂度的同时提升检测性能。实验表明该方法在多个数据集上优于现有融合方法。",
+      "llm_tldr": "多光谱目标检测面临跨模态特征对齐和交互挑战。本文提出渐进像素邻域可变形交叉注意力（PNAFusion），利用局部邻域和可变形映射解决弱对齐和非线性对应问题，在保持线性复杂度的同时提升检测性能。实验表明该方法在多个数据集上优于现有融合方法。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "DETR transformer for object detection paper",
+      "matched_requirement_id": "req-2",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.23069v1",
+      "source": "arxiv",
+      "title": "Rethinking Prototype-based Similarity Learning for Few-Shot Object Detection",
+      "abstract": "Few-shot object detection aims to detect novel object categories from only a few labeled examples, avoiding costly large-scale annotation. Recent prototype-based similarity learning approaches enable training-free adaptation by matching query features with class prototypes. However, they suffer from two fundamental limitations: (i) class confusion arising from inter-class similarity margin collapse, and (ii) insufficient visual cues for precise localization, as similarity scores capture only class-level semantic affinity while providing limited spatial information. To address these issues, we introduce two complementary components. Text-Anchored Semantic Mask (TSMa) leverages class-level text features as semantic anchors to identify semantically aligned channels through channel-wise interaction between visual and text features. By suppressing style-induced spurious responses and emphasizing class-intrinsic signals, TSMa enlarges inter-class similarity margins and mitigates class confusion. We further propose Stage-Aligned Hierarchical Autoregressive Regression (SHARe), which reformulates localization as a hierarchical autoregressive process that progressively refines bounding boxes across multiple stages. SHARe leverages the layer-wise characteristics of ViT representations by aligning feature abstraction levels with regression stages: deeper layers guide early coarse localization, while shallower layers rich in edge and texture cues refine spatial details in later stages. Experiments on COCO demonstrate a new state of the art, outperforming the previous best by +10.1 nAP, with extensive analysis validating each component. The code is available at https://github.com/VisualScienceLab-KHU/ReSet.",
+      "authors": [
+        "KunHo Heo",
+        "Seungjae kim",
+        "Wongyu Lee",
+        "SuYeon Kim",
+        "MyeongAh Cho"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T09:18:00+00:00",
+      "link": "https://arxiv.org/pdf/2606.23069v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "few-shot object detection with text-anchored semantic masks",
+      "llm_evidence_cn": "小样本目标检测，利用文本锚定语义掩码",
+      "llm_evidence": "小样本目标检测，利用文本锚定语义掩码",
+      "canonical_evidence": "小样本目标检测，利用文本锚定语义掩码",
+      "llm_tldr_en": "This work improves few-shot object detection by addressing class confusion and insufficient localization via Text-Anchored Semantic Mask and spatial enhancement.",
+      "llm_tldr_cn": "针对小样本目标检测中相似类别混淆和定位不精确的问题，本文提出了文本锚定语义掩码（TSMa）和空间增强模块，利用文本特征作为语义锚点来区分类别，并补充空间信息以改进定位。在多个小样本检测基准上，该方法显著提升了检测精度，尤其对相似类别效果明显。",
+      "llm_tldr": "针对小样本目标检测中相似类别混淆和定位不精确的问题，本文提出了文本锚定语义掩码（TSMa）和空间增强模块，利用文本特征作为语义锚点来区分类别，并补充空间信息以改进定位。在多个小样本检测基准上，该方法显著提升了检测精度，尤其对相似类别效果明显。",
+      "llm_tags": [
+        "query:vit:composite"
+      ],
+      "matched_query_tag": "query:vit:composite",
+      "matched_query_text": "Papers central to 计算机视觉CCF-A类会议重要论文检索, especially work that connects or combines: Vision Transformer ViT important paper computer vision; DETR transformer for object detection paper; Masked Autoencoder MAE visual representation learning; CLIP model connecting text and images; self-supervised learning with vision transformers; generative adversarial networks for computer vision at CCF-A venues; landmark papers in computer vision after the introduction of Transformer; Find influential papers on object detection from CCF A computer vision conferences; Retrieve seminal works on deep learning based visual recognition from CCF A venues.",
+      "matched_requirement_id": "req-composite-vit",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.24248v1",
+      "source": "arxiv",
+      "title": "M^2C-EvDet: Multi-Domain Multi-Order Cross-Modal Knowledge Distillation for Event-based Object Detection",
+      "abstract": "Event-based object Detection (EvDet), as a biologically inspired visual perception paradigm, demonstrates superior performance in scenarios demanding high temporal resolution and a wide dynamic range. Nevertheless, the inherent sparse representations and inadequate visual semantics of event data result in a considerable performance disparity between EvDet and frame-based object detection. Previous works attempt to alleviate this cross-modal discrepancy through knowledge distillation, yet they only focus on spatial visual semantics or pair-wise relational information, thus limiting performance in more complex scenarios. To address this challenge, this paper proposes M^2C-EvDet, a Multi-domain and Multi-order Cross-modal knowledge distillation framework for EvDet. Built upon frequency learning and hypergraph computation, M^2C-EvDet integrates two specialized modules: Adaptive Frequency-Decoupled Feature Distillation (AF^2D^2) and Multi-Order Relational Distillation (MORD).",
+      "authors": [
+        "Wei Bao",
+        "Siqi Li",
+        "Shouan Pan",
+        "Yi Xie",
+        "Yue Gao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-23T07:35:49+00:00",
+      "link": "https://arxiv.org/pdf/2606.24248v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Proposes multi-domain multi-order cross-modal knowledge distillation for event-based object detection",
+      "llm_evidence_cn": "提出多域多阶跨模态知识蒸馏用于事件相机目标检测",
+      "llm_evidence": "提出多域多阶跨模态知识蒸馏用于事件相机目标检测",
+      "canonical_evidence": "提出多域多阶跨模态知识蒸馏用于事件相机目标检测",
+      "llm_tldr_en": "Introduces M^2C-EvDet, a method that distills knowledge from frame-based detectors to event-based detectors across multiple domains and orders, improving detection performance.",
+      "llm_tldr_cn": "事件相机目标检测因稀疏表示和缺乏视觉语义而性能不佳。本文提出M^2C-EvDet，通过多域（空间、时间、频域）和多阶（一阶、二阶）跨模态知识蒸馏，从帧基检测器迁移知识。在多个事件检测数据集上显著缩小了与帧基检测器的差距。",
+      "llm_tldr": "事件相机目标检测因稀疏表示和缺乏视觉语义而性能不佳。本文提出M^2C-EvDet，通过多域（空间、时间、频域）和多阶（一阶、二阶）跨模态知识蒸馏，从帧基检测器迁移知识。在多个事件检测数据集上显著缩小了与帧基检测器的差距。",
+      "llm_tags": [
+        "query:vit"
+      ],
+      "matched_query_tag": "query:vit",
+      "matched_query_text": "Find influential papers on object detection from CCF A computer vision conferences",
+      "matched_requirement_id": "req-8",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.23270v1",
+      "source": "arxiv",
+      "title": "BoxCtrl: 3D-Aware Visual Prompting for Geometric Image Editing",
+      "abstract": "As instruction-based editing models and multimodal large language models advance, diverse image editing tasks have become feasible. However, achieving precise and consistent geometric image editing, such as translating, scaling, and rotating in 3D space, remains a major challenge. In this work, we introduce BoxCtrl, a 3D-aware visual prompting framework. Unlike text-only or coarse 2D-guided approaches, our method introduces informative RGB 3D bounding boxes projected onto 2D images as visual prompts. The three orthogonal faces of each box are painted with distinct RGB colors, simultaneously encoding position, size, and orientation to provide a compact, intuitive in-context visual example. The key to BoxCtrl's success lies in these well-designed bounding boxes, which decouple geometric control from appearance control. This enables the model to learn consistent correspondences between faces of the same color in the latent space, leading to a precise understanding of geometric intentions and accurate editing results. We introduce a two-stage training paradigm: Supervised Fine-Tuning (SFT) followed by Reinforcement Learning (RL). To address paired data scarcity, we construct a large-scale synthetic dataset for SFT, equipping the model with fundamental editing capabilities. To bridge the synthetic-to-real domain gap, we incorporate an online RL stage leveraging unpaired real-world data. Guided by a reward function evaluating geometric accuracy and visual fidelity, our SFT-RL strategy significantly enhances geometric precision while maintaining photorealistic quality. Extensive experiments demonstrate that BoxCtrl achieves state-of-the-art performance across translation, rotation, scaling, and composite editing tasks.",
+      "authors": [
+        "Feifei Wang",
+        "Shiyuan Yang",
+        "Xiaoyu Li",
+        "Jing Liao"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T12:49:29+00:00",
+      "link": "https://arxiv.org/pdf/2606.23270v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "3D-aware visual prompting for image editing with MLLM",
+      "llm_evidence_cn": "基于多模态大模型的3D感知视觉提示图像编辑",
+      "llm_evidence": "基于多模态大模型的3D感知视觉提示图像编辑",
+      "canonical_evidence": "基于多模态大模型的3D感知视觉提示图像编辑",
+      "llm_tldr_en": "Introduces BoxCtrl, a 3D-aware visual prompting framework using RGB 3D bounding boxes as prompts for geometric image editing.",
+      "llm_tldr_cn": "针对多模态大模型在精确几何编辑上的不足，本文提出一种3D感知视觉提示方法，通过投影的RGB 3D边界框编码位置、大小和方向。该方法无需文本指示即可实现准确的3D变换编辑，显著提升了编辑的几何一致性。",
+      "llm_tldr": "针对多模态大模型在精确几何编辑上的不足，本文提出一种3D感知视觉提示方法，通过投影的RGB 3D边界框编码位置、大小和方向。该方法无需文本指示即可实现准确的3D变换编辑，显著提升了编辑的几何一致性。",
+      "llm_tags": [
+        "query:cv-lm"
+      ],
+      "matched_query_tag": "query:cv-lm",
+      "matched_query_text": "breakthroughs in computer vision with large language models",
+      "matched_requirement_id": "req-14",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.24767v1",
+      "source": "arxiv",
+      "title": "Compact Object-Level Representations with Open-Vocabulary Understanding for Indoor Visual Relocalization",
+      "abstract": "Indoor visual relocalization plays a critical role in emerging spatial and embodied AI applications. However, prior research was predominantly devoted to low-level vision schemes, struggling to perceive scene semantics and compositions, which limits both interpretability and applicability. In this paper, we explore the issue of how to organize rich object information in a scene, including semantics, layout, and geometry, into a structured map representation, thereby utilizing object units exclusively to drive the camera relocalization task. To this end, we propose OpenReLoc, a camera relocalization system designed to provide scene understanding and accurate pose estimation capabilities. Leveraging recent foundation models, we first introduce a multi-modal mechanism to integrate open-vocabulary semantic knowledge for effective 2D-3D object matching. Additionally, we design object-oriented reference frames as position priors, paired with a reference frame selection strategy based on the Distance-IoU (DIOU), enabling extension to scalable scenes. Moreover, to ensure stable and accurate pose optimization, we also propose a dual-path 2D Iterative Closest Pixel loss guided by object shape. Experimental results demonstrate that OpenReLoc achieves superior relocalization recall and accuracy across various datasets. Our source code will be released upon acceptance.",
+      "authors": [
+        "Zhaopeng Cui",
+        "Jiarui Hu",
+        "Jingbo Liu",
+        "Boming Zhao",
+        "Xiyue Guo",
+        "Boyin Feng",
+        "Haocheng Peng",
+        "Yujun Shen",
+        "Hujun Bao",
+        "Guofeng Zhang"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV",
+        "cs.RO"
+      ],
+      "published": "2026-06-23T16:27:04+00:00",
+      "link": "https://arxiv.org/pdf/2606.24767v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Open-vocabulary understanding leveraging foundation models for visual relocalization",
+      "llm_evidence_cn": "利用基础模型的开放词汇理解进行视觉重定位",
+      "llm_evidence": "利用基础模型的开放词汇理解进行视觉重定位",
+      "canonical_evidence": "利用基础模型的开放词汇理解进行视觉重定位",
+      "llm_tldr_en": "OpenReLoc uses compact object-level representations with open-vocabulary understanding from foundation models to achieve camera relocalization using only object units.",
+      "llm_tldr_cn": "室内视觉重定位传统方法依赖低层视觉特征，缺乏场景语义理解。本文提出OpenReLoc，利用基础模型的开放词汇能力，将场景中的对象信息（语义、布局、几何）组织为结构化地图，仅利用对象单元驱动相机重定位。实验证明该方法在精度和可解释性上均优于传统方案。",
+      "llm_tldr": "室内视觉重定位传统方法依赖低层视觉特征，缺乏场景语义理解。本文提出OpenReLoc，利用基础模型的开放词汇能力，将场景中的对象信息（语义、布局、几何）组织为结构化地图，仅利用对象单元驱动相机重定位。实验证明该方法在精度和可解释性上均优于传统方案。",
+      "llm_tags": [
+        "query:cv-lm:composite"
+      ],
+      "matched_query_tag": "query:cv-lm:composite",
+      "matched_query_text": "Papers central to 计算机视觉在大模型领域的重要论文检索, especially work that connects or combines: large vision model recent advances; vision transformer survey; influential papers on large vision models recent; important research on pre trained vision models; breakthroughs in computer vision with large language models.",
+      "matched_requirement_id": "req-composite-cv-lm",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.23634v1",
+      "source": "arxiv",
+      "title": "Pose Anything Anywhere:Model-free Object Poses from Arbitrary References",
+      "abstract": "Estimating the 6D pose of unseen objects is a fundamental yet challenging problem for open-world robotics and embodied perception. Model-based methods are accurate but depend on CAD assets or heavy onboarding, while most model-free approaches are still limited to pairwise single-anchor matching and thus fail under occlusion and large viewpoint changes with low query-reference overlap. Therefore, we present PANY, a unified model-free framework that seamlessly supports both RGB and RGB-D inputs, operates on one or sparse pose-free reference views, and generalizes effectively to novel objects. Built on a multi-view transformer geometry backbone, PANY moves beyond pairwise matching by learning view-consistent geometry and cross-view alignment cues that remain stable under wide baselines and limited overlap. When additional unposed assist views are available, PANY aggregates them via pose-graph canonical registration to increase geometric coverage and reinforce the final pose. Extensive experiments show that PANY achieves state-of-the-art performance across multiple benchmarks, substantially outperforming existing model-free methods, improving pose accuracy by +12% on YCB-V and over +20% on LM-O. Furthermore, PANY consistently performs well under both single-reference and sparse-reference settings, demonstrating strong robustness in real-world environments.",
+      "authors": [
+        "Hongli Xu",
+        "Jiaqi Hu",
+        "Junwen Huang",
+        "Boyang Zhong",
+        "Peter KT Yu",
+        "Nassir Navab",
+        "Benjamin Busam",
+        "Slobodan Ilic"
+      ],
+      "primary_category": "cs.CV",
+      "categories": [
+        "cs.CV"
+      ],
+      "published": "2026-06-22T17:23:57+00:00",
+      "link": "https://arxiv.org/pdf/2606.23634v1",
+      "tags": [
+        "keyword:cv-lm",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:vit"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "Multi-view transformer for 6D object pose estimation",
+      "llm_evidence_cn": "多视图Transformer用于6D物体姿态估计",
+      "llm_evidence": "多视图Transformer用于6D物体姿态估计",
+      "canonical_evidence": "多视图Transformer用于6D物体姿态估计",
+      "llm_tldr_en": "PANY is a model-free 6D pose estimation framework using multi-view transformer geometry backbone, supporting one or sparse reference views and generalizing to novel objects.",
+      "llm_tldr_cn": "无模型6D姿态估计在遮挡和大视角变化下性能有限。本文提出PANY框架，基于多视图Transformer几何骨干，支持RGB和RGB-D输入，从稀疏参考视角学习视图一致的几何特征，在公开数据集上显著优于现有无模型方法。",
+      "llm_tldr": "无模型6D姿态估计在遮挡和大视角变化下性能有限。本文提出PANY框架，基于多视图Transformer几何骨干，支持RGB和RGB-D输入，从稀疏参考视角学习视图一致的几何特征，在公开数据集上显著优于现有无模型方法。",
+      "llm_tags": [
+        "query:vit:composite"
+      ],
+      "matched_query_tag": "query:vit:composite",
+      "matched_query_text": "Papers central to 计算机视觉CCF-A类会议重要论文检索, especially work that connects or combines: Vision Transformer ViT important paper computer vision; DETR transformer for object detection paper; Masked Autoencoder MAE visual representation learning; CLIP model connecting text and images; self-supervised learning with vision transformers; generative adversarial networks for computer vision at CCF-A venues; landmark papers in computer vision after the introduction of Transformer; Find influential papers on object detection from CCF A computer vision conferences; Retrieve seminal works on deep learning based visual recognition from CCF A venues.",
+      "matched_requirement_id": "req-composite-vit",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.24773v1",
+      "source": "arxiv",
+      "title": "Posterior Refinement: Fast Language Generation via Any-Order Flow Maps",
+      "abstract": "Non-autoregressive generation offers a powerful paradigm for iterative refinement, allowing models to recursively critique, erase and regenerate arbitrary subsets of tokens. However, existing non-autoregressive models fail to realize this potential. Masked Diffusion Models (MDMs) suffer from factorization error, causing sample quality to collapse when generating multiple tokens simultaneously. Flow Map Language Models (FMLMs) circumvent this bottleneck via joint sequence transport for excellent few-step generation, but sacrifice the inference-time flexibility of MDMs. We introduce FMLM+, a framework that bridges this gap by equipping FMLM with masking-style noise schedules. While generating the full sequence in a single step, FMLM+ simultaneously scores the global consistency of each token a posteriori. We leverage this to introduce Posterior Refinement, a novel inference-time refinement strategy that enables the model to adaptively self-correct its outputs, matching the performance of discrete baselines with 32x fewer NFEs. Across diverse benchmarks, we demonstrate that FMLM+ with Posterior Refinement improves the speed--quality tradeoff over both MDM and FMLM families, providing a scalable foundation for high-fidelity language modeling.",
+      "authors": [
+        "Manan Agarwal",
+        "Sheel Shah",
+        "Chanhyuk Lee",
+        "Jaehoon Yoo",
+        "Jerry Huang",
+        "Seunghoon Hong",
+        "Aditi Raghunathan",
+        "Jinwoo Kim",
+        "Nicholas M. Boffi"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-23T16:33:13+00:00",
+      "link": "https://arxiv.org/pdf/2606.24773v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Proposes FMLM+ for fast language generation using transformer-based flow maps",
+      "llm_evidence_cn": "提出基于transformer流映射的快速语言生成方法FMLM+",
+      "llm_evidence": "提出基于transformer流映射的快速语言生成方法FMLM+",
+      "canonical_evidence": "提出基于transformer流映射的快速语言生成方法FMLM+",
+      "llm_tldr_en": "Introduces FMLM+, a framework that bridges masked diffusion models and flow map language models for fast few-step language generation while maintaining flexibility.",
+      "llm_tldr_cn": "现有非自回归生成模型存在因子化误差或灵活性不足的问题。本文提出FMLM+框架，通过向流映射语言模型中引入掩码式噪声调度，实现了单步全序列生成同时保持推理时灵活性。实验表明该方法在生成速度和样本质量之间取得了更好的平衡，为非自回归文本生成提供了新思路。",
+      "llm_tldr": "现有非自回归生成模型存在因子化误差或灵活性不足的问题。本文提出FMLM+框架，通过向流映射语言模型中引入掩码式噪声调度，实现了单步全序列生成同时保持推理时灵活性。实验表明该方法在生成速度和样本质量之间取得了更好的平衡，为非自回归文本生成提供了新思路。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    },
+    {
+      "id": "2606.24259v1",
+      "source": "arxiv",
+      "title": "SURGELLM: Rethinking Multi-Task Evaluation through Task-Aware Feature Gating with Class-Balanced Normalization",
+      "abstract": "Fine-tuned encoders deployed across heterogeneous NLP tasks face three compounding problems: mismatched inductive biases, class-imbalance corruption of feature statistics, and no mechanism to condition attention on external lexical knowledge. We introduce \\textbf{\\surgellm}, a unified transformer framework that addresses each with a dedicated lightweight module: a \\emph{surgical feature gate} (learned per-dimension sigmoid over curated lexical indicators and \\texttt{[CLS]}; provably degenerates to identity when features are uninformative), \\emph{task-conditioned prefix tokens} (quantized feature values and task identity prepended to every input), and \\emph{Instance-Weighted Normalization} (IWN; removes class-prior bias from gate statistics). We prove an excess-risk bound linking gate benefit to \\emph{surgical feature alignment}. Across four tasks, SST-2, multi-hop retrieval, LLM-prompt attribution, and authorship detection, covering 17,830 examples and eleven model variants over three seeds, the IWN variant achieves macro-F1 \\textbf{0.940} ($+0.036$ over the strongest non-IWN baseline; $+0.130$ on authorship detection). A random-vocabulary control ($-0.028$ avg.\\ F1) confirms gains are lexical, not parametric. Code, vocabularies, and a $99.5\\%$-recovery auto-extraction recipe are released.",
+      "authors": [
+        "Noor Islam S. Mohammad",
+        "Ulug Bayazit"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL",
+        "cs.AI"
+      ],
+      "published": "2026-06-23T07:47:21+00:00",
+      "link": "https://arxiv.org/pdf/2606.24259v1",
+      "tags": [
+        "keyword:llm-papers",
+        "keyword:vit",
+        "query:cv-lm",
+        "query:llm-papers"
+      ],
+      "llm_score": 6.0,
+      "llm_evidence_en": "unified transformer framework for multi-task NLP evaluation",
+      "llm_evidence_cn": "用于NLP多任务评估的统一Transformer框架",
+      "llm_evidence": "用于NLP多任务评估的统一Transformer框架",
+      "canonical_evidence": "用于NLP多任务评估的统一Transformer框架",
+      "llm_tldr_en": "Introduces SURGELLM, a unified transformer framework with surgical feature gate and task-conditioned prefixes for robust multi-task evaluation.",
+      "llm_tldr_cn": "针对微调编码器在异构NLP任务中面临的归纳偏差、类别不平衡和缺少外部知识等问题，提出SURGELLM统一Transformer框架，包含外科特征门控、任务条件前缀令牌和实例加权归一化模块，在多个任务上提升评估鲁棒性，是Transformer语言模型的重要工作。",
+      "llm_tldr": "针对微调编码器在异构NLP任务中面临的归纳偏差、类别不平衡和缺少外部知识等问题，提出SURGELLM统一Transformer框架，包含外科特征门控、任务条件前缀令牌和实例加权归一化模块，在多个任务上提升评估鲁棒性，是Transformer语言模型的重要工作。",
+      "llm_tags": [
+        "query:llm-papers"
+      ],
+      "matched_query_tag": "query:llm-papers",
+      "matched_query_text": "key research on transformer based language models",
+      "matched_requirement_id": "req-21",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "6"
+    },
+    {
+      "id": "2606.25354v1",
+      "source": "arxiv",
+      "title": "Efficient and Trainable Language Model Test-Time Scaling via Local Branch Routing",
+      "abstract": "Test-time scaling improves language-model reasoning, but existing approaches often face a difficult trade-off: long chain-of-thought sampling remains single-threaded, while sentence- or solution-level search can be computationally expensive and hard to train end-to-end. We introduce Local Branch Routing (LBR), a token-level test-time scaling framework that expands a small local lookahead tree, forwards all sampled branches through the language model, and uses a lightweight router to select the depth-1 subtree to commit. By routing over the hidden states of candidate local futures, LBR allows each token decision to use evidence beyond the root next-token distribution while avoiding full solution-level search. The resulting prune-shift-grow decoding process preserves discrete branch identities and defines a tractable tree-trajectory likelihood: newly grown nodes are counted when first sampled, and router decisions are assigned explicit probabilities. This enables end-to-end reinforcement learning with verifiable rewards, jointly optimizing the base model and router under the same likelihood-ratio principle as discrete-token RLVR. On synthetic hierarchical-planning tasks, LBR shows that post-candidate hidden states provide useful routing evidence. On mathematical reasoning benchmarks, LBR improves both Pass@1 and Pass@32 over discrete chain-of-thought, vanilla discrete-token RLVR, and RL-compatible soft-token branching baselines. These results suggest that lightweight local branching offers an efficient, trainable, and discrete form of language-model test-time scaling.",
+      "authors": [
+        "Yutong Yin",
+        "Mingyu Jin",
+        "Jin Pan",
+        "Changyi Yang",
+        "Zijie Xia",
+        "Dhruv Pai",
+        "Shuming Hu",
+        "Zhen Zhang",
+        "Chenyang Zhao",
+        "Jinman Zhao",
+        "Wujiang Xu",
+        "Raymond Li",
+        "Xin Eric Wang",
+        "Julian McAuley",
+        "Zhaoran Wang"
+      ],
+      "primary_category": "cs.CL",
+      "categories": [
+        "cs.CL"
+      ],
+      "published": "2026-06-24T03:42:44+00:00",
+      "link": "https://arxiv.org/pdf/2606.25354v1",
+      "tags": [
+        "keyword:llm-papers",
+        "query:llm-papers"
+      ],
+      "llm_score": 7.0,
+      "llm_evidence_en": "Test-time scaling for language model reasoning via local branch routing",
+      "llm_evidence_cn": "通过局部分支路由实现语言模型推理的测试时扩展",
+      "llm_evidence": "通过局部分支路由实现语言模型推理的测试时扩展",
+      "canonical_evidence": "通过局部分支路由实现语言模型推理的测试时扩展",
+      "llm_tldr_en": "Local Branch Routing (LBR) enables token-level test-time scaling for language models by expanding a local lookahead tree and using a lightweight router to select branches, improving reasoning without full search.",
+      "llm_tldr_cn": "现有语言模型测试时扩展面临单线程长思维链与搜索开销大的矛盾。本文提出局部分支路由（LBR），在token级别扩展局部前瞻树，利用轻量路由器选择最优子结构。该方法避免了全解搜索，在保持效率的同时提升了推理质量，实验显示在多项推理任务上优于基线。",
+      "llm_tldr": "现有语言模型测试时扩展面临单线程长思维链与搜索开销大的矛盾。本文提出局部分支路由（LBR），在token级别扩展局部前瞻树，利用轻量路由器选择最优子结构。该方法避免了全解搜索，在保持效率的同时提升了推理质量，实验显示在多项推理任务上优于基线。",
+      "llm_tags": [
+        "query:llm-papers:composite"
+      ],
+      "matched_query_tag": "query:llm-papers:composite",
+      "matched_query_text": "Papers central to 大模型重要论文检索, especially work that connects or combines: large language model survey; pretraining methods for language models; instruction tuning for large language models; RLHF training for language models; few-shot learning with large language models; seminal papers on large language model development; key research on transformer based language models; important works on instruction fine tuning and alignment.",
+      "matched_requirement_id": "req-composite-llm-papers",
+      "selection_source": "fresh_fetch",
+      "quick_tier": "7"
+    }
+  ]
+}
