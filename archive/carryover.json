@@ -1,20 +1,242 @@
 {
-  "generated_at": "2026-06-29T21:40:21.646792+00:00",
-  "updated_date": "20260629",
+  "generated_at": "2026-07-01T22:04:35.860058+00:00",
+  "updated_date": "20260701",
   "carryover_days": 9,
   "tag_states": {
     "vit": {
-      "updated_date": "20260629",
+      "updated_date": "20260701",
       "carryover_days": 9,
-      "items": []
+      "items": [
+        {
+          "id": "2606.31015v1",
+          "source": "arxiv",
+          "title": "Dual Sparse Aggregation Transformer for Multispectral Object Detection",
+          "abstract": "Transformer-based approaches have obtained excellent performance in multispectral object detection tasks due to their ability to model long-range dependencies and capture complementary information. However, previous transformer-based multispectral detection methods tend to use all available tokens for similarity calculation, which results in redundant information interaction from irrelevant areas, leading to degraded detection performance. To overcome this challenge, we propose a novel Dual Sparse Aggregation Transformer (DSAFormer) for multispectral object detection, which consists of a Dual Sparse Transformer (DSFormer) and a Learnable Addition Fusion Block (LAFB). Specifically, the DSFormer is designed to exploit and boost cross-modal complementary information, thereby improving detection performance. It incorporates three key components: A Spatial Sparse Multi-Head Cross-Attention (SSMHCA) mechanism selectively captures cross-modal relationships at the spatial level by reserving only the high query-key similarity scores, eliminating irrelevant interactions. A Channel Sparse Multi-Head Cross-Attention (CSMHCA) mechanism performs similar sparse calculations at the channel level to enhance feature representation and filter out low matching query-key. A Multi-Scale Feature Refinement Layer (MSFRL) is developed to aggregate hierarchical features and suppress redundant information. To effectively fuse multimodal features, the LAFB is introduced to aggregate intramodal and intermodal feature information by feature reweighting. Extensive experimental results have demonstrated that our proposed DSAFormer achieves better detection performance against state-of-the-art methods on four public datasets, including the MFAD, FLIR, M$^3$FD, and LLVIP. The source code of our DSAFormer will be released at https://github.com/WenCongWu/DSAFormer.",
+          "authors": [
+            "Wencong Wu",
+            "Xiuwei Zhang",
+            "Hanlin Yin",
+            "Hongxi Zhang",
+            "Yanning Zhang"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-06-30T01:05:24+00:00",
+          "link": "https://arxiv.org/pdf/2606.31015v1",
+          "tags": [
+            "keyword:cv-lm",
+            "keyword:vit",
+            "query:cv-lm",
+            "query:vit"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "dual sparse transformer for multispectral object detection",
+          "llm_evidence_cn": "双稀疏transformer用于多谱目标检测",
+          "llm_evidence": "双稀疏transformer用于多谱目标检测",
+          "canonical_evidence": "双稀疏transformer用于多谱目标检测",
+          "llm_tldr_en": "DSAFormer introduces dual sparse attention and learnable fusion for efficient multispectral object detection.",
+          "llm_tldr_cn": "现有基于transformer的多谱检测方法使用所有token计算相似度，导致冗余交互和性能下降。本文提出DSAFormer，包含双稀疏transformer（DSFormer）和可学习加法融合模块（LAFB），DSFormer通过稀疏注意力机制筛选互补区域，减少无关信息干扰。在多个多谱检测数据集上，DSAFormer在精度和效率上均超越现有方法。",
+          "llm_tldr": "现有基于transformer的多谱检测方法使用所有token计算相似度，导致冗余交互和性能下降。本文提出DSAFormer，包含双稀疏transformer（DSFormer）和可学习加法融合模块（LAFB），DSFormer通过稀疏注意力机制筛选互补区域，减少无关信息干扰。在多个多谱检测数据集上，DSAFormer在精度和效率上均超越现有方法。",
+          "llm_tags": [
+            "query:vit"
+          ],
+          "matched_query_tag": "query:vit",
+          "matched_query_text": "DETR transformer for object detection paper",
+          "matched_requirement_id": "req-2",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.31015v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.31222v1",
+          "source": "arxiv",
+          "title": "Thinking Before Retrieving: Robust Zero-Shot Composed Image Retrieval via Strategic Planning and Self-Criticism",
+          "abstract": "Composed image retrieval requires identifying a target image from a gallery by integrating a reference image with a textual modification instruction. In a training-free zero-shot setting, this task relies on constructing a retrieval-oriented textual query within a frozen vision--language embedding space at inference time. Existing approaches predominantly rely on a single-pass generation strategy that fuses the reference context and modification text into a unified description. This strategy makes it difficult to detect or correct semantic distortions and omissions during generation. Consequently, the preservation of reference attributes and the integration of textual requirements interfere with each other, which degrades retrieval precision. To address these challenges, we introduce PEC-CIR, a training-free framework that structures query construction as a multi-stage reasoning pipeline. The framework operates through a Planner--Executor--Critic architecture where the Planner extracts explicit constraints, the Executor generates multiple candidate target descriptions, and the Critic evaluates these candidates based on constraint compliance. By reframing query construction as a staged inference process instead of a single-pass output, PEC-CIR reduces the propagation of generative errors by explicitly evaluating candidate queries before retrieval, thereby improving retrieval stability.",
+          "authors": [
+            "Gunho Jung",
+            "Jeong-Woo Park",
+            "Seon Bin Kim",
+            "Seong-Whan Lee"
+          ],
+          "primary_category": "cs.AI",
+          "categories": [
+            "cs.AI"
+          ],
+          "published": "2026-06-30T07:04:05+00:00",
+          "link": "https://arxiv.org/pdf/2606.31222v1",
+          "tags": [
+            "keyword:cv-lm",
+            "keyword:llm-papers",
+            "keyword:vit",
+            "query:cv-lm",
+            "query:llm-papers",
+            "query:vit"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Zero-shot composed image retrieval with vision-language embeddings",
+          "llm_evidence_cn": "利用视觉语言嵌入的零样本组合图像检索",
+          "llm_evidence": "利用视觉语言嵌入的零样本组合图像检索",
+          "canonical_evidence": "利用视觉语言嵌入的零样本组合图像检索",
+          "llm_tldr_en": "Proposes a zero-shot composed image retrieval method that uses strategic planning and self-criticism to construct query embeddings in a frozen vision-language space, avoiding semantic distortions.",
+          "llm_tldr_cn": "针对零样本组合图像检索中单次生成策略导致的语义失真和遗漏问题，本文提出基于战略规划与自我批评的推理方法，在冻结的视觉-语言嵌入空间中逐步构建检索查询。通过迭代规划与自我修正，方法在多个基准上显著提升了检索精度，为训练免费的组合检索提供了新思路。",
+          "llm_tldr": "针对零样本组合图像检索中单次生成策略导致的语义失真和遗漏问题，本文提出基于战略规划与自我批评的推理方法，在冻结的视觉-语言嵌入空间中逐步构建检索查询。通过迭代规划与自我修正，方法在多个基准上显著提升了检索精度，为训练免费的组合检索提供了新思路。",
+          "llm_tags": [
+            "query:vit"
+          ],
+          "matched_query_tag": "query:vit",
+          "matched_query_text": "CLIP model connecting text and images",
+          "matched_requirement_id": "req-4",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.31222v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.31201v1",
+          "source": "arxiv",
+          "title": "ExPLoRe: Expert Patch-Level Loss Routing for Multi-Objective Masked Image Modeling",
+          "abstract": "Multi-objective masked image modeling (MIM) combines complementary learning signals (token distillation, CLS alignment, and pixel reconstruction) but existing methods weight these objectives with global scalars, ignoring spatial heterogeneity across patches. We present ExPLoRe (Expert Patch-Level Loss Routing), which repurposes Soft Mixture of Experts (MoE) dispatch weights as learned, per-patch loss coefficients. The key mechanism is loss-coupling: allowing loss gradients to flow through dispatch weights to the router enables content-dependent specialization, where different patches receive different emphases across objectives. A detach ablation confirms loss-coupling as the core mechanism, degrading performance by 1.6% when gradients are blocked. On ImageNet-1K with ViT-Base, ExPLoRe improves over non-MoE baselines on two objective combinations (Token+CLS: +0.5% k-NN, +4.4% linear probe; Token+Pixel: +2.2% k-NN), achieving 80.6% linear probe and 85.3% finetuning accuracy, competitive with published methods. For downstream transfer, we develop adaptation recipes (Freeze Routing, Expert Dropout, and Freeze Attention) that improve MoE finetuning by +1.5% over the vanilla MoE, and close a 2.5--2.9 mIoU segmentation gap so that MoE models match or exceed non-MoE baselines on ADE20K.",
+          "authors": [
+            "Konstantinos Georgiou",
+            "Maofeng Tang",
+            "Hairong Qi"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-06-30T06:31:18+00:00",
+          "link": "https://arxiv.org/pdf/2606.31201v1",
+          "tags": [
+            "keyword:cv-lm",
+            "keyword:vit",
+            "query:cv-lm",
+            "query:vit"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Multi-objective masked image modeling with expert routing, similar to MAE but with multiple losses",
+          "llm_evidence_cn": "使用专家路由的多目标掩码图像建模，类似于MAE但具有多个损失",
+          "llm_evidence": "使用专家路由的多目标掩码图像建模，类似于MAE但具有多个损失",
+          "canonical_evidence": "使用专家路由的多目标掩码图像建模，类似于MAE但具有多个损失",
+          "llm_tldr_en": "ExPLoRe uses soft MoE dispatch weights as per-patch loss coefficients for multi-objective MIM, enabling content-dependent specialization.",
+          "llm_tldr_cn": "该论文提出ExPLoRe，将软混合专家网络的调度权重作为每个补丁的损失系数，用于多目标掩码图像建模。解决了全局标量权重忽略空间异质性的问题。实验表明，损失耦合机制是核心，在ImageNet分类和下游任务上优于单目标MIM和固定权重多目标方法，为MIM训练提供了更灵活高效的优化策略。",
+          "llm_tldr": "该论文提出ExPLoRe，将软混合专家网络的调度权重作为每个补丁的损失系数，用于多目标掩码图像建模。解决了全局标量权重忽略空间异质性的问题。实验表明，损失耦合机制是核心，在ImageNet分类和下游任务上优于单目标MIM和固定权重多目标方法，为MIM训练提供了更灵活高效的优化策略。",
+          "llm_tags": [
+            "query:vit"
+          ],
+          "matched_query_tag": "query:vit",
+          "matched_query_text": "Masked Autoencoder MAE visual representation learning",
+          "matched_requirement_id": "req-3",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.31201v1",
+          "carry_days": 1
+        }
+      ]
     },
     "cv-lm": {
-      "updated_date": "20260629",
+      "updated_date": "20260701",
       "carryover_days": 9,
-      "items": []
+      "items": [
+        {
+          "id": "2606.31383v1",
+          "source": "arxiv",
+          "title": "MS-Resampler: Multi-Scope Visual Resampling for Efficient Multimodal LLMs",
+          "abstract": "Multimodal large language models (MLLMs) typically employ resampling-based projectors to transform dense visual features into a compact token sequence for language modeling. Most existing resamplers adopt a single, fixed aggregation scope via global cross-attention, which can blur fine-grained local evidence and limit the ability to capture both local details and global context within a fixed token budget. In this work, we propose MS-Resampler, a multi-scope visual resampling framework for MLLMs. MS-Resampler instantiates multiple scope-specific resamplers by injecting explicit spatial scope priors into the resampling attention, enabling each branch to aggregate visual information at a particular granularity from local to global. The outputs of these scope-specific resamplers are then adaptively fused to produce the final visual representations for language modeling. Extensive experiments on ten public multimodal benchmarks show that MS-Resampler consistently improves visual understanding and multimodal reasoning over conventional single-scope resamplers, while introducing only minimal computational overhead.",
+          "authors": [
+            "Zhongyang Li",
+            "Yaqian Li",
+            "Faming Fang",
+            "Rinyoichi Takezoe",
+            "Zi-Hao Bo",
+            "Cheng Qian",
+            "Mo Guang",
+            "Guixu Zhang",
+            "Kaiwen Long"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-06-30T09:11:50+00:00",
+          "link": "https://arxiv.org/pdf/2606.31383v1",
+          "tags": [
+            "keyword:cv-lm",
+            "keyword:llm-papers",
+            "keyword:vit",
+            "query:cv-lm",
+            "query:llm-papers",
+            "query:vit"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Multi-scope resampling for efficient MLLMs",
+          "llm_evidence_cn": "多尺度视觉重采样方法提升多模态大语言模型效率",
+          "llm_evidence": "多尺度视觉重采样方法提升多模态大语言模型效率",
+          "canonical_evidence": "多尺度视觉重采样方法提升多模态大语言模型效率",
+          "llm_tldr_en": "Proposes MS-Resampler, a multi-scope visual resampling framework for MLLMs that injects spatial scope priors to aggregate local and global visual information within a fixed token budget, improving efficiency and representation quality.",
+          "llm_tldr_cn": "针对现有重采样器因单一固定聚合范围而模糊局部细节的问题，本文提出MS-Resampler，通过注入显式空间范围先验实现多分支多粒度视觉聚合。该方法在保持固定token预算的同时，有效平衡了局部细节与全局上下文。实验表明，MS-Resampler在多个多模态任务上提升了效率与准确性，为多模态大模型的高效视觉表征提供了新范式。",
+          "llm_tldr": "针对现有重采样器因单一固定聚合范围而模糊局部细节的问题，本文提出MS-Resampler，通过注入显式空间范围先验实现多分支多粒度视觉聚合。该方法在保持固定token预算的同时，有效平衡了局部细节与全局上下文。实验表明，MS-Resampler在多个多模态任务上提升了效率与准确性，为多模态大模型的高效视觉表征提供了新范式。",
+          "llm_tags": [
+            "query:cv-lm"
+          ],
+          "matched_query_tag": "query:cv-lm",
+          "matched_query_text": "breakthroughs in computer vision with large language models",
+          "matched_requirement_id": "req-14",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.31383v1",
+          "carry_days": 1
+        },
+        {
+          "id": "2606.31982v1",
+          "source": "arxiv",
+          "title": "ERA: Entropy-Guided Visual Token Pruning with Rectified Attention for Efficient MLLMs",
+          "abstract": "Multimodal Large Language Models (MLLMs) incur prohibitive inference costs due to long visual token sequences. Training-free visual token reduction provides an efficient solution. However, existing methods distort attention distributions, giving rise to a phenomenon we term Attention Logit Collapse. To address this issue, we propose ERA, an Entropy-guided visual token pruning framework with Rectified Attention for efficient MLLMs. Specifically, ERA comprises three crucial components: Dual-view Entropy Pruning (DEP), Bias-aware Token Recycling (BTR), and Logit-preserving Attention Rectification (LAR). First, DEP identifies representative anchor tokens by jointly modeling visual diversity and head-wise saliency. BTR then recycles pruned tokens into their corresponding anchors while estimating a cluster-level logit bias. Building upon this, LAR injects the estimated bias into attention logits, effectively rectifying the collapse induced by token reduction. Together, these components preserve visual evidence even under aggressive compression, enabling robust performance across single-image, multi-image, and video settings on a wide range of MLLMs. Beyond delivering practical acceleration, ERA establishes logit-preserving visual token pruning as a principled framework for efficient MLLMs, unifying theoretical foundation, algorithmic design, and practical deployment. The code is at https://github.com/924973292/ERA.",
+          "authors": [
+            "Yuhao Wang",
+            "Mu Qiao",
+            "Haiwen Diao",
+            "Yunzhi Zhuge",
+            "Pingping Zhang",
+            "Xindong Zhang",
+            "Lei Zhang",
+            "Huchuan Lu"
+          ],
+          "primary_category": "cs.CV",
+          "categories": [
+            "cs.CV"
+          ],
+          "published": "2026-06-30T17:20:29+00:00",
+          "link": "https://arxiv.org/pdf/2606.31982v1",
+          "tags": [
+            "keyword:cv-lm",
+            "keyword:llm-papers",
+            "keyword:vit",
+            "query:cv-lm",
+            "query:llm-papers",
+            "query:vit"
+          ],
+          "llm_score": 8.0,
+          "llm_evidence_en": "Efficient MLLMs via visual token pruning for large vision models",
+          "llm_evidence_cn": "通过视觉令牌剪枝实现高效多模态大模型，属于大视觉模型前沿",
+          "llm_evidence": "通过视觉令牌剪枝实现高效多模态大模型，属于大视觉模型前沿",
+          "canonical_evidence": "通过视觉令牌剪枝实现高效多模态大模型，属于大视觉模型前沿",
+          "llm_tldr_en": "Proposes ERA, an entropy-guided visual token pruning framework with rectified attention to reduce inference cost of MLLMs without retraining.",
+          "llm_tldr_cn": "多模态大语言模型（MLLM）因长视觉令牌序列导致推理成本高昂。现有训练无关的令牌缩减方法会扭曲注意力分布，引发注意力对数塌缩。本文提出ERA框架，包含双视角熵剪枝、偏置感知令牌回收和对数保持注意力修正，在保持性能的前提下大幅减少令牌数。在多个基准上，ERA降低了MLLM推理开销，且无需额外训练。",
+          "llm_tldr": "多模态大语言模型（MLLM）因长视觉令牌序列导致推理成本高昂。现有训练无关的令牌缩减方法会扭曲注意力分布，引发注意力对数塌缩。本文提出ERA框架，包含双视角熵剪枝、偏置感知令牌回收和对数保持注意力修正，在保持性能的前提下大幅减少令牌数。在多个基准上，ERA降低了MLLM推理开销，且无需额外训练。",
+          "llm_tags": [
+            "query:cv-lm"
+          ],
+          "matched_query_tag": "query:cv-lm",
+          "matched_query_text": "large vision model recent advances",
+          "matched_requirement_id": "req-10",
+          "selection_source": "carryover_cache",
+          "paper_id": "2606.31982v1",
+          "carry_days": 1
+        }
+      ]
     },
     "llm-papers": {
-      "updated_date": "20260629",
+      "updated_date": "20260701",
       "carryover_days": 9,
       "items": []
     }
